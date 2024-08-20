@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Wormhole</title>
+        <meta charset=utf-8>
+        <meta name=viewport content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name=author content="Paul Masson">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/build/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/examples/js/CurveExtras.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/examples/js/utils/SceneUtils.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/examples/jsm/loaders/GLTFLoader"></script>
+        <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/examples/jsm/loaders/FBXLoader"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/postprocessing@7.0.0-alpha-1/dist/index.min.js"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.4/dist/gsap.min.js"></script>
+    </head>
+    <body>
+        <!--<script src="Wormhole.js"></script>
+        <script src="Parameters.js"></script>
+        <script src="Library.js"></script>-->
+        <!--<canvas width="940" height="500" id="wormhole" style="width:940px;height:500px;">-->
+        <div style="position:absolute;border-radius: 6px;padding:10px;left:40px;top:20px;width:500px;height:32px;background-color:lightblue;opacity:0.2;"></div>
+        <div style="position:absolute;border-radius: 6px;padding:10px;left:40px;top:20px;width:500px;height:32px;opacity:1;">
+            <button id="startstop" style="width:80px;height:30px;border-radius: 6px;background-color:blue;color:white;opacity:1;" onclick="startStop()">Stop</button>
+            <button id="inout" style="width:140px;height:30px;border-radius: 6px;background-color:blue;color:white;opacity:1;" onclick="followShip()">Out of Ship</button>
+            <button id="wireframe" style="width:100px;height:30px;border-radius: 6px;background-color:blue;color:white;opacity:1;" onclick="toWireframe()">Wireframe</button>
+            <button id="changeLoader" style="width:40px;height:30px;border-radius: 6px;background-color:blue;color:white;opacity:1;" onclick="changeLoader()">+</button>
+            <a href="https://github.com/paulmasson" style="font-size:8px;right:2px;color:white;">based on Paul Masson work</a>
+        </div>
+        <script>
+            //var canvas = document.getElementById("wormhole");
+            var scene;
+            var camera;
+            var cameraFollows = true;
+            var controls;
+            var renderer;
+            var range = 5;
+            var ship;
+            var capsule;
+            var inShip = true;
+            var renderId;
+            var isRunning = true;
+            var wormhole = {
+                CameraPositionIndex: 0,
+                speed: 1500
+            }
+            var isWireframe = false;
+            var wormholeMaterial;
+            var wormholeTubeMesh;
+            var wormholeTexture;
+            var textureIdx=1;
+            //const parameters = new Parameters();
+            //const library = new Library();
+
+            function generateScene(){
+                //create scene object
+                scene = new THREE.Scene();
+                //create the renderer
+                renderer = new THREE.WebGLRenderer( { antialias: true, logarithmicDepthBuffer: true, } );
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                renderer.setClearColor( 0x000000, 1 );
+                document.body.appendChild( renderer.domElement );
+                //create the camera
+                camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 20000 );
+                camera.up.set( 0, 0, 1);
+                camera.position.set( 0.0, 2500.0, 0.0 );//2, 1.5, 2.5
+                //create the controls
+                controls = new THREE.OrbitControls( camera, renderer.domElement );
+                controls.zoomSpeed = 2.0;
+                controls.panSpeed = 0.4;
+                window.removeEventListener( 'resize', windowResize);
+                window.addEventListener( 'resize', windowResize);
+                //create lights
+                light = new THREE.DirectionalLight( 0xffffff, .8 );
+                light.position.set( -range, range, 0 );
+                camera.add( light );
+                scene.add( camera );
+                ambient = new THREE.AmbientLight( 0x999999 );
+                scene.add( ambient );
+                ship = new THREE.Group();
+                //front ring
+                const geom1 = new THREE.TorusGeometry( 3*range+2, 8, 16, 100 );
+                const mater1 = new THREE.MeshBasicMaterial( { transparent:true, opacity:0.6, color: 0x0000ff, reflectivity:1, refractionRatio:0.64 } );
+                const frontRing = new THREE.Mesh( geom1, mater1 );
+                //back ring
+                const geom2 = new THREE.TorusGeometry( 3*range+2, 8, 16, 100 );
+                const mater2 = new THREE.MeshBasicMaterial( { transparent:true, opacity:0.6, color: 0x0000ff, reflectivity:1, refractionRatio:0.64 } );
+                const backRing = new THREE.Mesh( geom2, mater2 );
+                //capsule
+                const capsGeom = new THREE.CylinderGeometry(0.9*range, 0.9*range, 15*range, 64, 32);
+                // const capsGeom = new THREE.CubeGeometry(2.0*range, 4.0*range, 0.8);
+                 const capsMater = new THREE.MeshStandardMaterial( { transparent:true, opacity:0.8, color: 0x00ffff, metalness:0.5, wireframe:false } );
+                 capsule = new THREE.Mesh( capsGeom, capsMater);
+                 capsule.rotateX(Math.PI/2);
+                 capsule.position.set(0, 1, 0);
+                frontRing.position.set(0, 0, 10);
+                backRing.position.set(0, 0, -10);
+                ship.add(frontRing);
+                ship.add(backRing);
+                ship.add(capsule);
+                scene.add( ship );
+                //universe
+                var skyGeo = new THREE.SphereGeometry(10000, 25, 25); 
+                var loader  = new THREE.TextureLoader();
+                // load a resource
+                var material;
+                loader.load(
+                    // resource URL
+                    "./img/stars2.jpg",
+                    // Function when resource is loaded
+                    function ( texture ) {
+                        texture.wrapS = THREE.RepeatingWrapping;
+                        texture.wrapT = THREE.MirroredRepeatWrapping;
+                        texture.repeat.set(2,2);
+                        // do something with the texture
+                        material = new THREE.MeshPhongMaterial( {
+                            map: texture,
+                            
+                            side:THREE.BackSide,
+                            //flatShading: true,
+                        });
+                        var sky = new THREE.Mesh(skyGeo, material);
+                        scene.add(sky);
+                    },
+                    // Function called when download progresses
+                    function ( xhr ) {
+                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                    },
+                    // Function called when download errors
+                    function ( xhr ) {
+                        console.log( 'An error happened: '+xhr.toString() );
+                    }
+                );
+                wormhole.shape = new THREE.Curves.TorusKnot(500);
+                const wormholeGeometry = new THREE.TubeGeometry(wormhole.shape, 800, range, 24, true);
+                loader.load(
+                    // resource URL
+                    "./img/galaxy"+textureIdx+".jpg",
+                    // Function when resource is loaded
+                    function ( texture ) {
+                        wormholeTexture = texture;
+                        wormholeTexture.wrapS = THREE.RepeatingWrapping;;
+                        wormholeTexture.wrapT = THREE.MirroredRepeatWrapping;
+                        wormholeTexture.repeat.set(2,2);
+                        // do something with the texture
+                        wormholeMaterial = new THREE.MeshBasicMaterial({
+                            map: texture,
+                            transparent: false,
+                            wireframe: false,
+                            color: 0x99ff99,
+                            blending: THREE.AdditiveBlending,
+                            opacity:0.9,
+                            side:THREE.BackSide
+                        });
+                        wormholeTubeMesh = new THREE.Mesh( wormholeGeometry, wormholeMaterial );
+                        scene.add(wormholeTubeMesh);
+                    },
+                    // Function called when download progresses
+                    function ( xhr ) {
+                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                    },
+                    // Function called when download errors
+                    function ( xhr ) {
+                        console.log( 'An error happened: '+xhr.toString() );
+                    }
+                );
+            }
+
+            function windowResize(){
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+            }
+
+            generateScene();
+
+            
+            function updatePositionInWormhole () {
+                wormhole.CameraPositionIndex++;
+                if (wormhole.CameraPositionIndex > wormhole.speed) {
+                    wormhole.CameraPositionIndex = 0;
+                }
+                const wormholeCameraPosition = wormhole.shape.getPoint(wormhole.CameraPositionIndex / wormhole.speed);
+                if(cameraFollows){
+                    camera.position.x = wormholeCameraPosition.x;
+                    camera.position.y = wormholeCameraPosition.y;
+                    camera.position.z = wormholeCameraPosition.z;
+                    camera.lookAt(wormhole.shape.getPoint((wormhole.CameraPositionIndex + 1) / wormhole.speed));
+                }
+                ship.position.x = wormholeCameraPosition.x;
+                ship.position.y = wormholeCameraPosition.y;
+                ship.position.z = wormholeCameraPosition.z;
+                ship.lookAt(wormhole.shape.getPoint((wormhole.CameraPositionIndex + 1) / wormhole.speed));
+                renderer.render(scene, camera);
+            }
+
+            function animate() {
+                if(isRunning){
+                    updatePositionInWormhole();
+                    renderer.render( scene, camera );
+			        controls.update();
+                }else{
+                    renderer.render( scene, camera );
+			        controls.update();
+                }
+                renderId = requestAnimationFrame(animate);
+            }
+
+            function startStop(){
+                isRunning = !isRunning;
+                if(isRunning){
+                    document.getElementById("startstop").textContent="Stop";
+                    animate();
+                }else{
+                    inShip = !inShip;
+                    followShip();
+
+                    cancelAnimationFrame(renderId);
+                    const wormholeCameraPosition = wormhole.shape.getPoint(wormhole.CameraPositionIndex / wormhole.speed);
+                    camera.position.x = wormholeCameraPosition.x;
+                    camera.position.y = wormholeCameraPosition.y;
+                    camera.position.z = wormholeCameraPosition.z;
+                    camera.lookAt(wormhole.shape.getPoint((wormhole.CameraPositionIndex + 1) / wormhole.speed));
+
+                    document.getElementById("startstop").textContent="Start";
+                }
+            }
+
+            function followShip(){
+                inShip = !inShip;
+                cameraFollows = inShip;
+                if(inShip){
+                    const wormholeCameraPosition = wormhole.shape.getPoint(wormhole.CameraPositionIndex / wormhole.speed);
+                    camera.position.x = wormholeCameraPosition.x;
+                    camera.position.y = wormholeCameraPosition.y;
+                    camera.position.z = wormholeCameraPosition.z;
+                    camera.lookAt(wormhole.shape.getPoint((wormhole.CameraPositionIndex + 1) / wormhole.speed));
+                    renderer.render(scene, camera);
+                    document.getElementById("inout").textContent = "Out of Ship";
+                }else{
+                    camera.position.set( 0.0, 2500.0, 0.0 );
+                    camera.lookAt(new THREE.Vector3(0,0,0));
+                    renderer.render(scene, camera);
+                    document.getElementById("inout").textContent = "In Ship";
+                }
+            }
+
+            function toWireframe(){
+                isWireframe = !isWireframe;
+                wormholeTubeMesh.material.wireframe = isWireframe;
+                wormholeTubeMesh.material.map = (isWireframe ? null : wormholeTexture);
+                if(isWireframe){
+                    document.getElementById("wireframe").textContent = "Solid";
+                }else{
+                    document.getElementById("wireframe").textContent = "Wireframe";
+                }
+                renderer.render(scene, camera);
+            }
+
+            function changeLoader(){
+                textureIdx++;
+                if(textureIdx==6)textureIdx=1;
+                var loader  = new THREE.TextureLoader();
+                loader.load(
+                    // resource URL
+                    "./img/galaxy"+textureIdx+".jpg",
+                    // Function when resource is loaded
+                    function ( texture ) {
+                        wormholeTexture = texture;
+                        wormholeTexture.wrapS = THREE.RepeatingWrapping;;
+                        wormholeTexture.wrapT = THREE.MirroredRepeatWrapping;
+                        wormholeTexture.repeat.set(2,2);
+                        // do something with the texture
+                        wormholeMaterial = new THREE.MeshBasicMaterial({
+                            map: texture,
+                            transparent: false,
+                            wireframe: false,
+                            color: 0x99ff99,
+                            blending: THREE.AdditiveBlending,
+                            opacity:0.9,
+                            side:THREE.BackSide
+                        });
+                        wormholeTubeMesh.material = wormholeMaterial;
+                        //wormholeTubeMesh = new THREE.Mesh( wormholeGeometry, wormholeMaterial );
+                        //scene.add(wormholeTubeMesh);
+                    },
+                    // Function called when download progresses
+                    function ( xhr ) {
+                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                    },
+                    // Function called when download errors
+                    function ( xhr ) {
+                        console.log( 'An error happened: '+xhr.toString() );
+                    }
+                );
+            }
+
+            updatePositionInWormhole();
+            renderer.render(scene, camera);
+            animate();
+        </script>
+        
+    </body>
+</html>
