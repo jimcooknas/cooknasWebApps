@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<header>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="importmap">
+		{
+		  "imports": {
+			"three": "./js/libs/three.module.min.js",
+			"three/addons/": "./examples/jsm/"
+		  }
+		}
+	  </script>
+    <!--<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/build/three.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"></script>-->
+	<!--<script src="./examples/jsm/controls/OrbitControls.js"></script>
+	<script type="module" src="three.module.min.js"></script>-->
+    <!--<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/examples/js/controls/OrbitControls.js"></script>
+    <script src="CCapture.all.min.js"></script>-->
+</header>
+<body>
+    <canvas id="rendererCanvas" style="width:100%;height:100%;background-color: gray;"></canvas>
+	<div id="panel" class="panel">
+		<div id="particlesPanel" style="width:100%;">
+			<p style="font-size:16px;font-weight: bold;text-align: center;margin-bottom:4px;margin-top:5px;">Three Bodies</p>
+			<div style="margin-bottom:5px;">
+				<label class="label" for="predefinedSelect">Select Scene</label>
+				<select id="predefinedSelect" style="position:absolute;margin-left:2px;margin-top:2px;width:110px;right:10px;">
+					<option value="0" text="Scenario 1"></option>
+					<option value="1" text="Scenario 2"></option>
+					<option value="2" text="Scenario 3"></option>
+				</select>
+			</div>
+			<label class="label" for="numOfBalls">Number of balls</label><br>
+			<div style="width:100%;display:table;right:0px;vertical-align: middle;margin-bottom:4px;">
+				<input type="text" id="numOfBalls" style="display: table-cell;width:60px;font-size:14px;font-weight:bold;text-align:center;border-radius:6px;" value="3">
+				<input type="button" id="btnSet" class="btn" style="width:100px;font-size:14px;display:table-cell;float:right;margin-left:10px;" value="Set"><!--onclick="startStop()-->
+			</div>
+			<div>
+				<label class="label" for="selectedObjectSelect">Select Body</label>
+				<select id="selectedObjectSelect" style="position:absolute;margin-left:10px;width:100px;right:10px;">
+					<option value="0" text="Object 1"></option>
+					<option value="1" text="Object 2"></option>
+					<option value="2" text="Object 3"></option>
+				</select>
+			</div>
+			<div id="properties" class="content">
+				<table>
+					<tr>
+						<div style="width:100%;display:table;clear:both;">
+							<label class="label" style="display: table-cell;" for="massSlider">Object Mass</label>
+							<label id="massLabel" class="label-val" style="display: table-cell;text-align: right;" for="massSlider">1.4</label>
+						</div>
+						<input type="range" id="massSlider" min="1" max="50" value="14" step="1" class="slider" >
+					</tr>
+					<tr>
+						<td>
+							<div style="width:100%;display:table;clear:both;">
+								<label class="label" style="display: table-cell;" for="posXSlider">Pos X</label>
+								<label id="posXLabel" class="label-val" style="display: table-cell;text-align: right;" for="posXSlider">1.4</label>
+							</div>
+							<input type="range" id="posXSlider" min="-50000" max="50000" value="14" step="1" class="slider" ><!--onchange="radiusSlider()"-->
+						</td>
+						<td>
+							<div style="width:100%;display:table;clear:both;">
+								<label class="label" style="display: table-cell;" for="velXSlider">Vel X</label>
+								<label id="velXLabel" class="label-val" style="display: table-cell;text-align: right;" for="velXSlider">1.4</label>
+							</div>
+							<input type="range" id="velXSlider" min="-5000" max="5000" value="14" step="1" class="slider" ><!--onchange="radiusSlider()"-->
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div style="width:100%;display:table;clear:both;">
+								<label class="label" style="display: table-cell;" for="posYSlider">Pos Y</label>
+								<label id="posYLabel" class="label-val" style="display: table-cell;text-align: right;" for="posYSlider">0.8</label>
+							</div>
+							<input type="range" id="posYSlider" min="-50000" max="50000" value="8" step="1" class="slider" ><!--onchange="radiusSlider()"--> 
+						</td>
+						<td>
+							<div style="width:100%;display:table;clear:both;">
+								<label class="label" style="display: table-cell;" for="velYSlider">Vel Y</label>
+								<label id="velYLabel" class="label-val" style="display: table-cell;text-align: right;" for="velYSlider">0.8</label>
+							</div>
+							<input type="range" id="velYSlider" min="-5000" max="5000" value="8" step="1" class="slider" ><!--onchange="radiusSlider()"--> 
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div style="width:100%;display:table;clear:both;">
+								<label class="label" style="display: table-cell;" for="posZSlider">Pos Z</label>
+								<label id="posZLabel" class="label-val" style="display: table-cell;text-align: right;" for="posZSlider">0.3</label>
+							</div>
+							<input type="range" id="posZSlider" min="-50000" max="50000" value="03" step="1" class="slider" style="padding-bottom: 4px;"><!--onchange="radiusSlider()"--> 
+						</td>
+						<td>
+							<div style="width:100%;display:table;clear:both;">
+								<label class="label" style="display: table-cell;" for="velZSlider">Vel Z</label>
+								<label id="velZLabel" class="label-val" style="display: table-cell;text-align: right;" for="velZSlider">0.3</label>
+							</div>
+							<input type="range" id="velZSlider" min="-5000" max="5000" value="03" step="1" class="slider" style="padding-bottom: 4px;"><!--onchange="radiusSlider()"--> 
+						</td>
+					</tr>
+				</table>
+			</div>
+			<br>
+			<label class="container" style="margin-top: 4px;margin-bottom: 4px;" for="checkAsStar">Objects As Stars
+				<input type="checkbox" id="checkAsStar" checked="checked">
+				<span class="checkmark"></span>
+			</label>
+			<!--<div id="ballColorContainer" style="width:100%;display:table;height:fit-content;">
+				<label for="ballColor" style="font-size:13px;display: table-cell;vertical-align: middle;">Ball Color</label>
+				<input type="color" id="ballColor" style="display: table-cell;float:right;vertical-align: middle;" name="ballColor" value="#ff9000">
+			</div>-->
+			<br>
+			<div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;" for="timeScaleSlider">Time scale</label>
+				<label id="timeScaleLabel" class="label-val" style="display: table-cell;text-align: right;" for="timeScaleSlider">0.01</label>
+			</div>
+			<input type="range" id="timeScaleSlider" min="1" max="100" value="10" step="1" class="slider" style="padding-bottom: 4px;"><!--onchange="radiusSlider()"--> 
+			<br>
+			
+			<!--<input type="range" id="collisionLoss" min="0" max="50" value="0" class="slider" onchange="collisionLossSlider()">
+			<br><br>-->
+			<div style="width:100%;left:10px;right:10px">
+				<input type="button" id="btnStartStop" class="btn" style="width:100%;height:35px;" value="Start"><!--onclick="startStop()"-->
+			</div>
+			<div style="width:100%;display:table;clear:both;padding-top:4px;">
+				<label class="label" style="display: table-cell;" for="timeValue">Time:</label>
+				<label id="timeValue" class="label-val" style="display: table-cell;text-align: right;padding-right: 4px;">00:00:00</label>
+			</div>
+			
+			<div style="display:block;width:100%;align-content: center;padding-bottom: 10px;">
+				<input type="radio" id="velocity" name="velposGroup" value="vel" checked>
+				<label for="velocity" class="label">Velocity</label>
+				<input type="radio" id="position" name="velposGroup" value="pos">
+				<label for="position" class="label">Position</label>
+			</div>
+			<div style="width:100%;display:table;clear:both;">
+				<a class="label" style="display: table-row;padding-top:4px;">Object A:</a>
+				<a id="objA" class="label-val" style="display: table-row;text-align:center;padding-top:2px;">0.0 / 0.0</a>
+			</div>
+			<br>
+			<div style="width:100%;display:table;clear:both;">
+				<a class="label" style="display: table-row;padding-top:4px;">Object B:</a>
+				<a id="objB" class="label-val" style="display: table-row;text-align: center;padding-top:2px;">0.0 / 0.0</a>
+			</div>
+			<br>
+			<div style="width:100%;display:table;clear:both;">
+				<a class="label" style="display: table-row;padding-top:4px;">Object C:</a>
+				<a id="objC" class="label-val" style="display: table-row;text-align: center;padding-top:2px;">0.0 / 0.0</a>
+			</div>
+			<!-- <div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;padding-top:4px;">Collisions:</label>
+				<label id="numOfCollisions" class="label-val" style="display: table-cell;text-align: right;padding-top:2px;">0</label>
+			</div> -->
+			<!-- <div style="width:100%;left:10px;right:10px">
+				<input type="button" id="btnSave" class="btn" style="width:100%;height:35px;" value="Save Animation" onclick="saveAnimation()">
+			</div> -->
+		</div>
+		<!-- <div id="dnaPanel" style="width:100%;display:none;">
+			<p style="font-size:18px;font-weight: bold;text-align: center;">Double Helix</p>
+			<div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;">Helix Radius</label>
+				<label id="helixRadiusLabel" class="label-val" style="display: table-cell;text-align: right;">2.0</label>
+			</div>
+			<input type="range" id="helixRadiusSlider" min="5" max="40" value="20" class="slider" onchange="helixRadiusSlider()">
+			<br>
+		</div> 
+		<div style="width:100%;padding:10px;left:0px;">
+			<input type="button" id="btnTogglePanel" class="toggleButton" style="width:90%;height:35px;" value="Go to Double Helix" onclick="toggleParticlesDNA()">
+		</div>-->
+		<div id="panelHandle" class="panelHandle" ><!--onclick="showHidePanel()"-->
+			<i id="eyeSymbol" class="fa fa-eye-slash" style="width:100%;text-align: center;margin-top: 5px;"></i>
+		</div>
+	</div>
+
+    <!--<script type='text/javascript' src= 'body.js'></script>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type='module' src= './js/bodies.js'></script>
+</body>
+</html>
