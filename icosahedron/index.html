@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spherically spinning points</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <canvas id="rendererCanvas" style="width:100%;height:100%;background-color: black;"></canvas>
+    <div id="panel" class="panel">
+      <div id="particlesPanel" style="width:100%;">
+        <p style="font-size:18px;font-weight: bold;text-align: center;">Icosahedron Points</p>
+        <label class="label" for="numOfBalls">Body Properties</label><br>
+
+        <div style="width:100%;display:table;clear:both;">
+          <label class="label" style="display: table-cell;" for="icosDetailSlider">Icosahedron Detail (0-5)</label>
+          <label id="icosDetailLabel" class="label-val" style="display: table-cell;text-align: right;" for="icosDetailSlider">3</label>
+        </div>
+        <input type="range" id="icosDetailSlider" min="0" max="5" value="3" step="1" class="slider" >
+        <br>
+        <div style="width:100%;display:table;clear:both;">
+          <label class="label" style="display: table-cell;" for="xRotationSlider">X Rotation Speed</label>
+          <label id="xRotationLabel" class="label-val" style="display: table-cell;text-align: right;" for="xRotationSlider">0.0075</label>
+        </div>
+        <input type="range" id="xRotationSlider" min="0" max="100" value="75" step="1" class="slider" >
+        <br>
+        <div style="width:100%;display:table;clear:both;">
+          <label class="label" style="display: table-cell;" for="yRotationSlider">Y Rotation Speed</label>
+          <label id="yRotationLabel" class="label-val" style="display: table-cell;text-align: right;" for="yRotationSlider">0.0050</label>
+        </div>
+        <input type="range" id="yRotationSlider" min="0" max="100" value="50" step="1" class="slider" style="padding-bottom: 4px;">
+        <br><br>
+
+        <label class="label" for="numOfBalls">Effects Parameters</label><br>
+
+        <div style="width:100%;display:table;clear:both;">
+          <label class="label" style="display: table-cell;" for="fogValSlider">Fog Value (0.01-0.10)</label>
+          <label id="fogValLabel" class="label-val" style="display: table-cell;text-align: right;" for="fogValSlider">0.06</label>
+        </div>
+        <input type="range" id="fogValSlider" min="1" max="10" value="6" step="1" class="slider" >
+        <br>
+        <div style="width:100%;display:table;clear:both;">
+          <label class="label" style="display: table-cell;" for="bloomPassStrengthSlider">Bloom Strength (0-10)</label>
+          <label id="bloomPassStrengthLabel" class="label-val" style="display: table-cell;text-align: right;" for="bloomPassStrengthSlider">3.0</label>
+        </div>
+        <input type="range" id="bloomPassStrengthSlider" min="0" max="100" value="30" step="1" class="slider" >
+        <br>
+        <div style="width:100%;display:table;clear:both;">
+          <label class="label" style="display: table-cell;" for="dampEffectSlider">Damp Value (0-0.975)</label>
+          <label id="dampEffectLabel" class="label-val" style="display: table-cell;text-align: right;" for="dampEffectSlider">0.975</label>
+        </div>
+        <input type="range" id="dampEffectSlider" min="0" max="975" value="975" step="1" class="slider" style="padding-bottom: 4px;">
+        <div style="width:100%;display:table;clear:both;">
+          <label class="label" style="display: table-cell;" for="colorHueSlider">Color Hue Value (0-1)</label>
+          <label id="colorHueLabel" class="label-val" style="display: table-cell;text-align: right;" for="colorHueSlider">0.975</label>
+        </div>
+        <input type="range" id="colorHueSlider" min="0" max="100" value="50" step="1" class="slider" style="padding-bottom: 4px;">
+        <br>
+        <label class="container" style="margin-top: 10px;margin-bottom: 4px;" for="checkShowWireframe">Show Wireframe
+          <input type="checkbox" id="checkShowWireframe">
+          <span class="checkmark"></span>
+        </label>
+        <br><br>
+        <div style="width:100%;left:10px;right:10px">
+          <input type="button" id="btnStartStop" class="btn" style="width:100%;height:35px;" value="Stop">
+        </div>
+        <br>
+       
+      </div>
+      <div id="panelHandle" class="panelHandle" >
+        <i id="eyeSymbol" class="fa fa-eye-slash" style="width:100%;text-align: center;margin-top: 5px;"></i>
+      </div>
+    </div>
+    <script type="module" src="index.js"></script>
+  </body>
+</html>
