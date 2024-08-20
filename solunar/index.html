@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+<head>
+    <link href='https://unpkg.com/leaflet@1.3.4/dist/leaflet.css' rel='stylesheet' />
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+    <script src="https://kit.fontawesome.com/f0601b0fb2.js" crossorigin="anonymous"></script>
+	<script type='module' src='https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.esm.js'></script>
+	<script nomodule='' src='https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="components">
+            <div style="height:100%;">
+            <table style="height:100%;">
+                <tr style="height: 25px;">
+                    <td style="text-align:center;">
+                        <span style="top:20px;font-size:18px;font-weight:bold;text-align:center;">Solunar Tables</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="height:100%">
+                            <tr style="height: 25px;">
+                                <td style="width: 100px;"><label for="dateVal" >Date:</label></td>
+                                <td><input type="date" id="dateVal" min="1858-11-17" max="2100-12-31" style="width: 100px;"/></td>
+                            </tr>
+                            <tr style="height: 25px;">
+                                <td style="width: 100px;"><label for="latVal" >Latitude:</label></td>
+                                <td><input type="text" id="latVal" value="40.278527" style="width: 100px;"/></td>
+                                
+                            </tr>
+                            <tr style="height: 25px;">
+                                <td style="width: 100px;"><label for="lngVal" >Longitude:</label></td>
+                                <td><input type="text" id="lngVal"  value="23.402611" style="width: 100px;"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input type="button" onclick="getLatLng()" value="Get Location" class="btn__secondary" style="width: 200px;height:40px;border-radius: 0.5rem;"/>
+                                </td>
+                            </tr>
+                            <tr style="height: 25px;">
+                                <td>
+                                    <input type="button" id="showDetails" onclick="showDetails()" value="Show Details" class="btn__secondary" style="width:100px;height:40px;border-radius:0.5rem;padding:0px 4px;"/>
+                                </td> 
+                                <td>   
+                                    <input type="button" onclick="getMonth()" value="Show Month" class="btn__secondary" style="width:100px;height:40px;border-radius: 0.5rem;padding:0px 4px;"/>
+                                </td>
+                                
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="data_class">
+                            <div id="data_output">
+                                
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="output_class" class="output_class">
+                            <div id="text_output">
+                                
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <input type="button" onclick="solunar()" value="Solunar" class="btn btn__primary" style="bottom:4px;"/>
+                        </div>
+                    </td>
+                </tr>
+                
+            </table>
+            </div>
+        </div>
+        <div>
+            <!-- Map hidden at first-->
+            <div id="map">
+                
+            </div>
+        </div>
+        <div>
+            <!-- Month hidden at first-->
+            <div id="month" class="month_class">
+                <div style="width: 24rem;text-align: center;padding: 40px 2px 10px 2px;">
+                    <span class="fa fa-chevron-left" id="prevMonth" onclick="prevMonth()" style="left: 10px;cursor: pointer;font-size:20px;"></span>
+                    <span id="monthName" style="font-size: 20px;text-align: center;padding: 1em">December</span>
+                    <span class="fa fa-chevron-right" id="nextMonth" onclick="nextMonth()" style="right: 10px;cursor: pointer;font-size:20px;"></span>
+                </div>
+                <table id="myTable" style="border-spacing:10px 10px;">
+                    <tr id="row_0">
+                        <td id="cell_0_0" style="text-align: center;background: var(--grayDark)"><b>S</b></td>
+                    </tr>
+                </table>
+                <div style="text-align: center; padding: 5px 10px">Press on a day to see its solunar</div>
+                <div style="width:24rem; position:absolute; bottom:5px">
+                    <input type="button" id="btnBack" value="Back" class="btnBack" onclick="goBack()"></input>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script language="javascript" type="text/javascript" src="suncalc.js"></script>
+    <script language="javascript" type="text/javascript" src="solunar.js"></script>
+    <script language="javascript" type="text/javascript" src="script.js"></script>
+</body>
+</html>

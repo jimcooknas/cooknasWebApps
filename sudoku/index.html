@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+	<head>
+		<meta charset="utf-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+		<link rel="stylesheet" media="all" type="text/css" href="sudokuJS.css">
+		<style>
+			* {
+				margin:0; padding:0;
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+                font-family: verdana;
+                text-align: center;
+			}
+            h1{
+                font-size:18px;
+                padding:5px;
+            }
+			.wrap {
+				padding: 2em 1em;
+				width: 400px;
+				max-width: 100%;
+				margin-left: auto;
+				margin-right: auto;
+			}
+            button{
+                min-width: 80px;
+                border-radius: 6px;
+                padding: 10px;
+                margin:5px;
+                background-color: #aaccdd;
+                cursor: pointer;
+                box-shadow: 3px 3px 2px darkgray;
+            }
+            button:after{
+                background-color: #336688;
+                color: white;
+            }
+
+            button:hover{
+                background-color: #225577;
+                color: white;
+            }
+            label{
+                text-align: center;
+                /*float:inline-start;*/
+            }
+            .panel{
+                background-color:lightgray;
+                min-width:700px;
+                width:100%;
+                display:table-cell;
+                min-height:40px;
+                position:absolute;
+                left:0px;
+                top:4px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            .panelBtn{
+                min-width: 40px;
+                border-radius: 4px;
+                padding: 5px;
+                margin:5px;
+                background-color: #aaccdd;
+                cursor: pointer;
+            }
+            .backlight-highlight-val{
+                background-color: yellow;
+            }
+            .selected-button{
+                background-color: yellow;
+            }
+			@media(min-width: 30em){
+				.wrap{
+					width: 490px;
+				}
+				.sudoku-board input {
+					font-size: 24px;
+					font-size: 1.5rem;
+				}
+				.sudoku-board .candidates {
+					font-size: .8em;
+				}
+			}
+
+		</style>
+
+		<title>Cooknas Sudoku (with SudokuJS) - </title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+		<script type="text/javascript" src="sudokuJS.js"></script>
+	</head>
+
+	<body>
+	<div class="wrap">
+		<h1><br>Cooknas Sudoku </h1>
+        
+        <div id="panel" class="panel">
+            <!--show candidates toggle-->
+            <label for="toggleCandidates">Show candidates </label>
+            <input id="toggleCandidates" class="js-candidate-toggle" type="checkbox"/>
+            <!--analyze board btn-->
+            <button type="button" class="js-analyze-board-btn">Analyze</button>
+            <!--solve buttons-->
+            Solve: <button type="button" class="js-solve-step-btn">One Step</button>
+            <button type="button" class="js-solve-all-btn">Solve</button>
+            <!--clear board btn-->
+            Level:
+            <select id="selectDifficulty" class="js-select-difficulty">
+                <option>Easy</option>
+                <option selected="true">Medium</option> 
+                <option>Hard</option> 
+                <option>Very Hard</option> 
+            </select> 
+            <button type="button" class="js-clear-board-btn">Start New</button>
+            <a href="https://github.com/pocketjoso/sudokuJS" style="font-size:8px;">(library: SudokuJS)</a>
+        </div>
+        <!--the only required html-->
+        <div id="sudoku" class="sudoku-board"></div>
+        <div id="numPanel" class="numPanel"></div>
+        <div class="sudoku-sidepanel">
+            <p id="sidePanelText" class="sudoku-sidePanelText" style="width:100%;height:90%;text-align:left">Side panel</p>
+        </div>
+	</div>
+
+	<script>
+        var selectedIndex = null;
+        var prevButton = null;
+		var board = [
+			 , , ,4, ,8, ,2,9
+			, , , , , , , , ,4
+			,8,5, , ,2, , , ,7
+			, , ,8,3,7,4,2, ,
+			, ,2, , , , , , ,
+			, , ,3,2,6,1,7, ,
+			, , , , ,9,3,6,1,2
+			,2, , , , , ,4, ,3
+			,1,3, ,6,4,2, ,7,undefined //NOTE: if last cell of board is empty 'undefined' has to be used as value!
+		],
+			
+
+        $candidateToggle = $(".js-candidate-toggle"),
+        $analyzeBoardBtn = $(".js-analyze-board-btn"),
+
+        $solveStepBtn = $(".js-solve-step-btn"),
+        $solveAllBtn = $(".js-solve-all-btn"),
+        $clearBoardBtn = $(".js-clear-board-btn"),
+        $selectDifficulty = $(".js-select-difficulty"),
+        $sidePanel=$(".sudoku-sidepanel"),
+        $sidePanelText=$(".sudoku-sidePanelText"),
+
+        mySudokuJS = $("#sudoku").sudokuJS({
+            board: board,
+            //change state of our candidate showing checkbox on change in sudokuJS
+            candidateShowToggleFn : function(showing){
+                $candidateToggle.prop("checked", showing);
+            },
+            boardUpdatedFn: function(data){
+                var updated = data.cellsUpdated;
+                var b = mySudokuJS.getBoard();
+                for(var i; i<updated.length; i++){
+                    //if(board[i]!='')
+                    board[i].style.set('weight','bold');
+                    //selectedIndex=data
+                    
+                }
+                //console.log(updated);
+            },
+            boardErrorFn: function(data){
+                //data.msg -- f.e. "board incorrect"
+                alert("Board error: "+data.msg);
+            }
+        });
+
+		$solveStepBtn.on("click", mySudokuJS.solveStep);
+		$solveAllBtn.on("click", mySudokuJS.solveAll);
+		$clearBoardBtn.on("click", newGame);
+        
+        function newGame(){
+            $(document.body).css("cursor", "wait");
+            mySudokuJS.clearBoard();
+            //$(".js-select-difficulty :selected").text()
+            var diff = $(".js-select-difficulty :selected").text();
+            mySudokuJS.generateBoard(diff.toLowerCase());
+            var b = mySudokuJS.getBoard();
+            removeBackLight(b);
+            for(var i=0;i < b.length;i++){
+                if(b[i].val != null && b[i].val != ''){
+                    document.getElementById("input-"+i).classList.add('init-highlight-val');
+                    document.getElementById("input-"+i).disabled=true;
+                }
+            }
+            $(document.body).css("cursor", "default");
+            var counter=0;
+            for(var i=0;i < b.length;i++){
+                if(document.getElementById("input-"+i).classList.contains('init-highlight-val'))
+                    counter++;
+            }
+            console.log("New game started (at "+diff+" level) with "+counter+" numbers revealed...");
+            $analyzeBoardBtn.click();
+        }
+        // $(document.body).on("click", function(){
+        //     var b = mySudokuJS.getBoard();
+        //     removeBackLight(b);
+        //     console.log("body clicked");
+        // });
+
+		$analyzeBoardBtn.on("click", function(){
+			var data = mySudokuJS.analyzeBoard();
+
+			var msg = "Sudoku Analysis Summary<br><br>";
+			if(data.error){
+				msg += "This board can not be solved because it is incorrect.";
+			}
+			else if (data.finished === false) {
+				msg += "Woah!<br>"
+					+"Tough board you got there!<br>"
+					+"<br>This board requires very advanced strategies to solve, more advanced than the ones this solver uses. Or possibly, it can't even be solved.<br>"
+					+"<br>Rank: Evil";
+			} else {
+				msg += "Rank: <b>" + data.level + "</b><br>";
+				msg += "<br>This board requires use of the following strategies:<br>";
+				for (var i=0; i < data.usedStrategies.length; i++){
+					msg += "&nbsp;&nbsp;&nbsp;-<b>"+data.usedStrategies[i].title+"</b><br>";
+				}
+			}
+            //console.log(msg);
+            $sidePanelText.html(msg);
+		});
+
+		$candidateToggle.on("change", function(){
+			if($candidateToggle.is(":checked"))
+				mySudokuJS.showCandidates();
+			else
+				mySudokuJS.hideCandidates();
+		});
+		$candidateToggle.trigger("change");
+
+        $numPanel = $(".numPanel");
+        var panelBtn = []
+        for(var i=0;i<9;i++){
+            var pnlBtn = document.createElement('button'); 
+            pnlBtn.textContent = (i+1).toString();
+            pnlBtn.id = "panelBtn-"+(i+1);
+            pnlBtn.classList.add('panelBtn');
+            //pnlBtn.width=mySudokuJS.width/9+'px';
+            pnlBtn.addEventListener("click", btnNumPressed);
+            panelBtn.push(pnlBtn);
+            $(pnlBtn).appendTo($numPanel);
+        }
+
+        function btnNumPressed(e){
+            //alert("Pressed "+e.target.textContent);
+            var b = mySudokuJS.getBoard();
+            removeBackLight(b);
+            removeSelectedButton();
+            var counter=0;
+            if(prevButton!=e.target)
+                selectedIndex=null;
+            else
+                selectedIndex = mySudokuJS.getSelectedIndex();
+            //console.log("btnPressed selectedIndex:" + selectedIndex );
+            //console.log("text previous: "+$('#input-' +selectedIndex).text());
+            if(selectedIndex!=undefined){
+                if(!$('#input-' +selectedIndex).hasClass('init-highlight-val')){
+                    //console.log("Setting content "+e.target.textContent + " to cell " + selectedIndex);
+                    $('#input-' + selectedIndex).val(parseInt(e.target.textContent));
+                    board[selectedIndex] = parseInt(e.target.textContent);
+                    //console.log("text after: "+$('#input-' +selectedIndex).val());
+                    mySudokuJS.keyboardNumberInput($('#input-' + selectedIndex), selectedIndex);
+                    //console.log("text after: "+$('#input-' +selectedIndex).text());
+                }
+            }
+            for(var i=0;i < b.length;i++){
+                if(b[i].val != null){
+                    //board[i].style.set('weight','bold');
+                    if(b[i].val.toString() == e.target.textContent){
+                        $('#input-'+i).parent().addClass('backlight-highlight-val');
+                        counter++;
+                    }
+                }
+            }
+            if(counter==9){
+                var par = $("#panelBtn-"+e.target.textContent);
+                par.css('visibility', 'hidden');
+            }
+            e.target.classList.add('selected-button');
+            prevButton = e.target;
+        }
+
+        function removeBackLight(b){
+            for(var i=0;i < b.length;i++){
+                var par = $('#input-'+i).parent();//document.getElementById("input-"+i).parent();
+                if(par.hasClass('backlight-highlight-val')){
+                    par.removeClass('backlight-highlight-val');
+                }
+                document.getElementById("input-"+i).disabled=false;
+            }
+            //console.log('backlight-highlight-val removed');
+        }
+
+        function removeSelectedButton(){
+            for(var i=0;i<panelBtn.length;i++){
+                var par = $("#panelBtn-"+(i+1));//document.getElementById("input-"+i).parent();
+                if(par.hasClass('selected-button'))
+                    par.removeClass('selected-button');
+            }
+        }
+
+        newGame();
+        var pos = $("#sudoku").position();
+        var wid = $("#sudoku").outerWidth();
+        $sidePanel.css({position:"absolute", top: ""+pos.top+"px", left:""+(pos.left+wid+20)+"px",});
+	</script>
+	</body>
+</html>

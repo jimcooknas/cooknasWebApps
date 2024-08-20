@@ -1,0 +1,1 @@
+[["Cooknas",10000],["Jim-Jim",9000],["Mitsos",8000],["Mitsaras",7000],["Cooknas5",6000],["Cooknas6",5000],["Cooknas7",4000],["Cooknas8",3000],["Cooknas9",2000],["Cooknas10",1000]]

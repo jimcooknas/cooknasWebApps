@@ -1,0 +1,669 @@
+<!--
+Copyright 2022 Cooknas - Math
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+	<head>
+		<title>Terrain Generation</title>
+		<!--Bootstrap 4.1 styles links-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="CCapture.all.min.js"></script>
+		<style>
+			body {
+				font-family: verdana; 
+				font-size: 15px;
+			}	
+			td {
+				padding-left: 4px;
+				padding-right: 4px;
+			}		
+			.button {
+				background-color: #606060;
+				border: none;
+				border-radius: 15px;
+				color: white;
+				padding: 10px 22px;
+				font-size: 16px;
+				margin: 4px 2px;
+				cursor: pointer;
+				display: float;
+			}
+
+			/* solution1 */
+			.has-search .form-control {
+				padding-left: 2.375rem;
+			}
+
+			.has-search .form-control-feedback {
+				position: absolute;
+				z-index: 2;
+				display: block;
+				width: 2.375rem;
+				height: 2.375rem;
+				line-height: 2.375rem;
+				text-align: center;
+				pointer-events: none;
+				color: #aaa;
+			}
+		</style>
+
+	</head>
+	
+	<body>
+
+		<table>
+			<tr style="height:30px;">	
+				<td>
+					<h3>Terrain Generation</h3> 
+				</td>			
+				<td>
+					<!-- solution 1 -->
+					<div class="input-group" style="width:124px;margin-left:20px;">
+						<input type="text" class="form-control" name="focus" id="numberOfPeaks" value="10">
+						<div class="input-group-append">
+						  <button class="btn btn-secondary" type="button" onclick="StartMove()">
+							<i class="fa fa-arrow-right"></i>
+						  </button>
+						</div>
+					  </div>
+					<!-- solution 2
+					<div class="search-wrapper">
+						<input type="text" id="moveString" name="focus" required class="search-box" placeholder="enter move" />
+						<button class="close-icon" type="reset"></button>
+					</div>-->
+				<td>
+				<td>
+					<!--<button id = "buttonRun" onclick="run()" class="button">Run</button> -->
+					<button onclick="run()" id="StartStop" class="button">Stop</button>
+					<input type = "checkbox" id="chkShowWireframe" onclick = "onShowWireframe()" checked="true">Wireframe</input>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<label id="vacuumEnergyLbl">Vacuum Energy:<b>5</b></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="range" id="vacuumEnergy" max="20" min="1" value="5" step="0.2" onchange="changeVacuum()">
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<button id = "buttonSave" onclick="saveAnimation()" class="button">Save</button>
+				</td>
+			</tr>
+		</table>
+		<br>	
+        <div id="container"></div>
+        <!-- script links -->
+        <script src="https://unpkg.com/three@0.139.2/build/three.min.js"></script>
+        <script src="https://unpkg.com/three@0.139.2/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://unpkg.com/three@0.139.2/addons/libs/stats.module.js"></script>
+        <script src="simplex.js"></script>
+        <script src="ParticlePeak.js"></script>
+		<!--<script src="https://unpkg.com/three@0.139.2/examples/jsm/geometries/ParametricGeometry.js"></script>-->
+		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/expr-eval/2.0.2/bundle.min.js"></script>-->
+		<!--<script src="parser.js"></script>-->
+		<script>
+			var lblRot0 = document.getElementById("lblRot0");
+			var lblRot1 = document.getElementById("lblRot1");
+			var numOfPeaksElem = document.getElementById("numberOfPeaks");
+			var letters = "abcdefgh";
+			var btnStartStop = document.getElementById("StartStop");
+			//scene
+			var threeScene;
+			var renderer;
+			var camera;
+			var cameraControl;	
+			//walls
+			var tankMaterial
+            var box1;
+            var box2;
+            var box3;
+            var box4;
+            var box5;
+            var box6;
+			//graph plot area
+			var axisX;
+			var axisY;
+			var axisZ;
+			var gridXZ;
+			var gridXY;
+			var gridYZ;
+			var boardWidth = 1000;
+			var tileSize = boardWidth/8;
+			var whiteMaterial;
+			var blackMaterial;
+            var boxShow = false;
+
+			//var balls = [];
+			//var velocity = [];
+			var bDrawAxes = false;
+			var bDrawGrid = false;
+
+            //terrain variables
+            var groundWidth = 1000;
+            var groundHeight = 1000;
+            //var displacement = 1000;
+            var numHor = 81;
+            var numVer = 81;
+            var groundMesh;
+            var lastZ = 0;
+            let clock;
+            let groundGeo;
+            //let nPos = [];
+            let pos;
+            let uv;
+            let vUv = new THREE.Vector2();
+            let radius = 10;
+            //let noise;
+            var peaks = [];
+			var vacuumEnergy = 5;
+			//capturing the animaion
+			var capturer = null;
+			var animCounter = 0;
+			var savingAnim = false;
+			var rotation = 0.005;
+			var renderId;
+
+			//each slider change callback function
+			function sliderValue(){
+				if(physicsScene.paused){
+					rot0 = document.getElementById("slider0").value;
+					document.getElementById('lblRot0').textContent=Number(rot0).toFixed(2);
+					rot1 = document.getElementById("slider1").value;
+					document.getElementById('lblRot1').textContent=Number(rot1).toFixed(2);
+					rot2 = document.getElementById("slider2").value;
+					document.getElementById('lblRot2').textContent=Number(rot2).toFixed(2);
+					rot3 = document.getElementById("slider3").value;
+					document.getElementById('lblRot3').textContent=Number(rot3).toFixed(2);
+				}
+			}
+
+			//ungroups an object from it's group, but keeps it on the scene 
+			function unGroupObject(scene, obj, groupObj){
+				var objId = obj.id;
+				var objUngroup = scene.getObjectById(objId);
+				var pos = new THREE.Vector3();
+				objUngroup.getWorldPosition(pos);
+				var rot = new THREE.Quaternion();
+				objUngroup.getWorldQuaternion(rot);
+				scene.remove(scene.getObjectById(objId));
+				scene.add(objUngroup);
+				objUngroup.position.copy(pos);
+				objUngroup.quaternion.copy(rot);
+			}
+
+			function groupObject(scene, obj, groupObj){
+				//attach add the obj to groupObj without changing its world position-rotation
+				groupObj.attach(obj);;
+			}
+			
+			// ----- math on vector arrays -------------------------------------------------------------
+
+			function vecScale(a,anr, scale) {
+				anr *= 3;
+				a[anr++] *= scale;
+				a[anr++] *= scale;
+				a[anr]   *= scale;
+			}
+
+			function vecCopy(a,anr, b,bnr) {
+				anr *= 3; bnr *= 3;
+				a[anr++] = b[bnr++]; 
+				a[anr++] = b[bnr++]; 
+				a[anr]   = b[bnr];
+			}
+			
+			function vecAdd(a,anr, b,bnr, scale = 1.0) {
+				anr *= 3; bnr *= 3;
+				a[anr++] += b[bnr++] * scale; 
+				a[anr++] += b[bnr++] * scale; 
+				a[anr]   += b[bnr] * scale;
+			}
+
+			function vecSetDiff(dst,dnr, a,anr, b,bnr, scale = 1.0) {
+				dnr *= 3; anr *= 3; bnr *= 3;
+				dst[dnr++] = (a[anr++] - b[bnr++]) * scale;
+				dst[dnr++] = (a[anr++] - b[bnr++]) * scale;
+				dst[dnr]   = (a[anr] - b[bnr]) * scale;
+			}
+
+			function vecLengthSquared(a,anr) {
+				anr *= 3;
+				let a0 = a[anr], a1 = a[anr + 1], a2 = a[anr + 2];
+				return a0 * a0 + a1 * a1 + a2 * a2;
+			}
+
+			function vecDistSquared(a,anr, b,bnr) {
+				anr *= 3; bnr *= 3;
+				let a0 = a[anr] - b[bnr], a1 = a[anr + 1] - b[bnr + 1], a2 = a[anr + 2] - b[bnr + 2];
+				return a0 * a0 + a1 * a1 + a2 * a2;
+			}	
+
+			function vecDot(a,anr, b,bnr) {
+				anr *= 3; bnr *= 3;
+				return a[anr] * b[bnr] + a[anr + 1] * b[bnr + 1] + a[anr + 2] * b[bnr + 2];
+			}	
+
+			// ------------------------------------------------------------------
+			function toDEG(rad){
+				return 180*rad/Math.PI;
+			}
+
+			function toRAD(deg){
+				return Math.PI*deg/180;
+			}
+
+			var physicsScene = 
+			{
+				gravity : [0.0, -9.81, 0.0],
+				dt : 1.0 / 60.0,
+				worldBounds :  [-boardWidth/2, -boardWidth/2, -boardWidth/2, boardWidth/2, boardWidth/2, boardWidth/2],
+				paused: true,
+			};
+		
+			
+			function onShowWireframe(){
+				groundGeo.material = new THREE.MeshStandardMaterial({color: 0x5577cc, wireframe: false,});
+				groundGeo.material.needsUpdate = true
+				console.log("wireframe changed")
+			}
+			
+			// ------------------------------------------------------------------
+			function initPhysics(scene) 
+			{
+				var radius = boardWidth/8;//0.025;
+
+				var spacing = 0;//radius;//3.0 * radius;
+
+				var s = physicsScene.worldBounds;
+
+				var pos = new Float32Array(64);//3*numX * numY * numZ);
+				var vel = new Float32Array(64);//3*numX * numY * numZ);
+				vel.fill(0.0);
+
+				physicsScene.paused = false;
+			}
+
+			var timeFrames = 0;
+			var timeSum = 0;	
+						
+			// ------------------------------------------------------------------
+			function simulate() 
+			{
+				if (physicsScene.paused)
+					return;
+
+				var startTime = performance.now();					
+				//real code
+				var dt=0.1;
+				let t = clock.getElapsedTime();
+				let mm = 1.0;
+                for(let i = 0; i < pos.count; i++){
+					if(Math.random()<0.00002){
+						mm = 10.0;
+					}
+                    vUv.fromBufferAttribute(uv, i).multiplyScalar(vacuumEnergy);
+                    let y = getValue(mm) * simplex3D(vUv.x, vUv.y + t, t * dt);
+					mm -=1;
+					if(mm<1)mm=1.0;
+                    pos.setY(i, y);
+                }
+
+                // for(var idx=0;idx<peaks.length;idx++){
+                //     var peak=peaks[idx];
+				// 	peak.update();
+				// 	peak.scale += peak.updown*peak.step;
+				// 	if(peak.scale > 1.0 || peak.scale < 0)peak.updown = -peak.updown;  
+                //     for(var i=0;i<peak.indices.length;i++){
+                //         pos.setY(Math.floor(peak.indices[i]), pos.getY(Math.floor(peak.indices[i]))+peak.scale * peak.energies[i]);
+				// 	}
+                // }
+                pos.needsUpdate = true;
+				threeScene.needsUpdate=true;
+
+				var endTime = performance.now();
+				timeSum += endTime - startTime; 
+				timeFrames++;
+
+				if (timeFrames > 10) {
+					timeSum /= timeFrames;
+					//document.getElementById("ms").innerHTML = timeSum.toFixed(3);		
+					timeFrames = 0;
+					timeSum = 0;
+				}
+			}
+						
+			function getValue(m){
+				switch(m){
+					case 1:
+					case 10:
+						return 1;
+						break;
+					case 2:
+					case 9:
+						return 2;
+						break;
+					case 3:
+					case 8:
+						return 4;
+						break;
+					case 4:
+					case 7:
+						return 8;
+						break;
+					case 5:
+					case 6:
+						return 14;
+						break;
+				}
+			}
+			// ------------------------------------------
+					
+			function initThreeScene() 
+			{
+				threeScene = new THREE.Scene();
+				//threeScene.background = new THREE.Color( 0x000000);
+				// Lights
+				
+				threeScene.add( new THREE.AmbientLight( {color:0xffffff, intensity:10} ) );	
+				// threeScene.fog = new THREE.Fog( 0x999999, 0, 15 );	//15			
+
+				// var spotLight = new THREE.SpotLight( 0xffffff );
+				// spotLight.angle = Math.PI / 2;
+				// spotLight.penumbra = 0.2;
+				// spotLight.position.set( 2 * boardWidth / 2, 3 * boardWidth / 2, 3 * boardWidth / 2 );
+				// spotLight.castShadow = true;
+				// spotLight.shadow.camera.near = 3;
+				// spotLight.shadow.camera.far = 10;
+				// spotLight.shadow.mapSize.width = 1024;
+				// spotLight.shadow.mapSize.height = 1024;
+				// spotLight.intensity = 10;
+				// threeScene.add( spotLight );
+
+				// var dirLight = new THREE.DirectionalLight( 0x55505a, 1 );
+				// dirLight.position.set( 0, 3*boardWidth/2, 0 );
+				// dirLight.castShadow = true;
+				// dirLight.shadow.camera.near = 1;
+				// dirLight.shadow.camera.far = 10;
+
+				// dirLight.shadow.camera.right = 1;
+				// dirLight.shadow.camera.left = - 1;
+				// dirLight.shadow.camera.top	= 1;
+				// dirLight.shadow.camera.bottom = - 1;
+
+				// dirLight.shadow.mapSize.width = 1024;
+				// dirLight.shadow.mapSize.height = 1024;
+				// dirLight.intensity = 10;
+				// threeScene.add( dirLight );
+				
+				// Geometry
+				// var ground = new THREE.Mesh(
+				// 	new THREE.PlaneBufferGeometry( boardWidth, boardWidth, 1, 1 ),
+				// 	new THREE.MeshPhongMaterial( { color: 0xa0adaf, opacity: 1 } )
+				// );	
+				// ground.material.opacity = 0.1;			
+
+				// ground.rotation.x = - Math.PI / 2; // rotates X/Y to X/Z
+				// ground.receiveShadow = true;
+				// threeScene.add( ground );
+				
+				//grids
+				if(bDrawGrid){
+					gridXY = new THREE.GridHelper( boardWidth, 10 , 0xffffff, 0x202020 );
+					gridXY.material.opacity = 1;
+					gridXY.material.transparent = true;
+					gridXY.position.set(0, 0, 0);
+					gridXY.rotation.x = Math.PI / 2;
+					threeScene.add( gridXY );
+					gridXZ = new THREE.GridHelper( boardWidth, 10 , 0xffffff, 0x202020 );
+					gridXZ.material.opacity = 1;
+					gridXZ.material.transparent = true;
+					gridXZ.position.set(0, 0, 0);
+					gridXZ.rotation.x = 0;
+					threeScene.add( gridXZ );
+					gridYZ = new THREE.GridHelper( boardWidth, 10 , 0xffffff, 0x202020 );
+					gridYZ.material.opacity = 1;
+					gridYZ.material.transparent = true;
+					gridYZ.position.set(0, 0, 0);
+					gridYZ.rotation.x = Math.PI/2;
+					gridYZ.rotation.z = Math.PI/2;
+					threeScene.add( gridYZ );		
+				}
+				//axes
+				if(bDrawAxes){
+					const axisMaterial = new THREE.LineBasicMaterial({color: 0xff0000});
+					axisMaterial.opacity = 1.0;
+					var points=[];
+					const axisYgeometry = new THREE.CylinderGeometry(0.01,0.01,boardWidth,32);//new THREE.BufferGeometry().setFromPoints(points);
+					axisY = new THREE.Mesh(axisYgeometry, axisMaterial);
+					axisY.position.set(0, 0, 0);
+					axisY.rotation.x = 0;
+
+					threeScene.add( axisY );
+					axisZ = new THREE.Mesh(axisYgeometry, axisMaterial);
+					axisZ.position.set(0, 0, 0);
+					axisZ.rotation.x = Math.PI/2;
+					threeScene.add( axisZ );
+
+					axisX = new THREE.Mesh(axisYgeometry, axisMaterial);
+					axisX.position.set(0, 0, 0);
+					axisX.rotation.z = Math.PI/2;
+					threeScene.add( axisX );
+				}
+                //tank
+                if(boxShow){
+                    tankMaterial = new THREE.MeshPhongMaterial({color: 0x909090});
+                    tankMaterial.transparent = true;
+                    tankMaterial.opacity=0.1;
+                    tankMaterial.visible=true;
+                    //left-right
+                    var boxGeometry = new THREE.BoxGeometry(0.01, boardWidth, boardWidth);
+                    box1 = new THREE.Mesh(boxGeometry, tankMaterial);
+                    box1.position.set(-boardWidth/2, 0, 0.0);
+                    threeScene.add(box1);
+                    box2 = new THREE.Mesh(boxGeometry, tankMaterial);
+                    box2.position.set(boardWidth/2, 0, 0.0);
+                    threeScene.add(box2);
+                    //front-back
+                    var boxGeometry = new THREE.BoxGeometry(boardWidth, boardWidth, 0.01);
+                    box3 = new THREE.Mesh(boxGeometry, tankMaterial);
+                    box3.position.set(0, 0, boardWidth/2);
+                    threeScene.add(box3);
+                    box4 = new THREE.Mesh(boxGeometry, tankMaterial);
+                    box4.position.set(0, 0, -boardWidth/2);
+                    threeScene.add(box4);
+                    //top-bottom
+                    var boxGeometry = new THREE.BoxGeometry(boardWidth, 0.01, boardWidth);
+                    box5 = new THREE.Mesh(boxGeometry, tankMaterial);
+                    box5.position.set(0, boardWidth/2, 0.0);
+                    threeScene.add(box5);
+                    box6 = new THREE.Mesh(boxGeometry, tankMaterial);
+                    box6.position.set(0.0, -boardWidth/2, 0.0);
+                    threeScene.add(box6);
+                    tileSize=boardWidth/8;
+                    var tileMaterial1 = new THREE.MeshPhongMaterial({color: 0xeeeeee});
+                    tileMaterial1.transparent = true;
+                    var tileMaterial2 = new THREE.MeshPhongMaterial({color: 0x404040});
+                    tileMaterial2.transparent = true;
+                    var yPos = 0.0 + 0.02;
+                    for(var i=0;i<8;i++){
+                    	for(var j=0;j<8;j++){
+                    		var boxGeometry = new THREE.BoxGeometry(tileSize, 0.02, tileSize);
+                    		var tileMaterial = tileMaterial1;
+                    		if((i+(j %2 )) % 2 == 0)
+                    			board[i,j] = new THREE.Mesh(boxGeometry, tileMaterial1);
+                    		else
+                    			board[i,j] = new THREE.Mesh(boxGeometry, tileMaterial2);
+                    		board[i,j].position.set((i-4)*tileSize+tileSize/2,yPos,(j-4)*tileSize+tileSize/2);
+                    		threeScene.add(board[i,j]);
+                    	}
+                    }
+                }
+				
+				// Renderer
+				renderer = new THREE.WebGLRenderer();
+				renderer.shadowMap.enabled = true;
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				window.addEventListener( 'resize', onWindowResize, false );
+				container.appendChild( renderer.domElement );
+				
+				// Camera	
+				camera = new THREE.PerspectiveCamera( 60, innerWidth / innerHeight, 1, 100);
+			    camera.position.set(0, 2.5, 10);//2.5*boardWidth);
+				camera.updateMatrixWorld();	
+
+				threeScene.add( camera );
+
+				cameraControl = new THREE.OrbitControls(camera, renderer.domElement);
+    			cameraControl.zoomSpeed = 2.0;
+    			cameraControl.panSpeed = 0.4;
+
+                createGround();
+                clock = new THREE.Clock();
+			}
+
+            function createGround(){
+                groundGeo = new THREE.PlaneGeometry(numHor-1, numVer-1, 2*(numHor-1), 2*(numVer-1));//new THREE.PlaneGeometry(boardWidth/10, boardWidth/10, groundWidth/10, groundHeight/10);
+                groundGeo.rotateX(Math.PI * -0.5);
+                pos = groundGeo.attributes.position;
+                uv = groundGeo.attributes.uv;
+                console.log(pos.count);
+                const groundMat = new THREE.MeshStandardMaterial({
+					//vertexColors: THREE.FaceColors,
+                    color: 0x888888,
+                    wireframe: true,
+                });
+
+                groundMesh = new THREE.Mesh(groundGeo, groundMat);
+                threeScene.add(groundMesh);
+				
+                peaks = [];
+				
+				var num = parseInt(numOfPeaksElem.value);
+				for(var i=0;i<num;i++){
+					var centerIdx = Math.floor(getRand(1, 16*numHor*numVer));
+					var radiusX= 1;//Math.floor(getRand(1,20));
+					var radiusZ =Math.floor(getRand(1,20));
+					var energy=getRand(2,8);
+					var velX = Math.random()/10+0.05;
+					var velZ = Math.random()/10+0.05;
+					var peak = new ParticlePeak(2*numHor, 2*numVer, centerIdx, radiusX, radiusZ, energy, velX, velZ);
+					peaks.push(peak);
+					threeScene.add(peak.line);
+				}
+                // console.log(peaks.length);
+
+
+            }
+
+
+			function getRand(min, max) {
+				return Math.random() * (max - min) + min;
+			}
+
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			function StartStop(){
+				physicsScene.paused = !physicsScene.paused
+				if(physicsScene.paused){
+					btnStartStop.innerText = "Run";
+					btnStartStop.style.backgroundColor = "#606060";
+				}else{
+					btnStartStop.innerText = "Stop";
+					btnStartStop.style.backgroundColor = "#6060cc";
+				}
+			}
+
+			function StartMove(){
+				StartStop();
+				btnStartStop.innerText = "Run";
+				btnStartStop.style.backgroundColor = "#606060";
+				var num = parseInt(numOfPeaksElem.value);
+				threeScene.remove(groundMesh);
+				createGround();
+				StartStop();
+			}
+
+			function run() {
+				var button = document.getElementById('StartStop');
+				if (physicsScene.paused)
+					button.innerHTML = "Stop";
+				else
+					button.innerHTML = "Run";
+				physicsScene.paused = !physicsScene.paused;
+			}
+
+			function reset() {
+				//location.reload();
+				
+			}
+
+			function changeVacuum(){
+				vacuumEnergy = document.getElementById("vacuumEnergy").value;
+				document.getElementById("vacuumEnergyLbl").innerHTML = "Vacuum Energy: <b>"+vacuumEnergy+"</b>";
+			}
+			
+			// make browser to call us repeatedly -----------------------------------
+
+			function update() {
+				simulate();
+				renderer.render(threeScene, camera);
+				cameraControl.update();				
+				if(capturer!=undefined && savingAnim){
+					capturer.capture(renderer.domElement);
+					animCounter += rotation;
+					if(animCounter > Math.PI){
+						savingAnim = false;
+						capturer.stop();
+						console.log("Animation saved.");
+						cancelAnimationFrame(renderId);
+						capturer.save();
+					}
+				}
+				renderId = requestAnimationFrame(update);
+			}
+
+			function saveAnimation(){
+				capturer = new CCapture(
+					{
+						format: 'webm', //do not use 'gif'
+						workerdPath: './', 
+						framerate:60, 
+						verbose:false, 
+						name:'terrain',
+						//timeLimit: 4,
+						//frameLimit: 0,
+						autoSaveTime: 0,
+						display: true,
+					}
+				);
+				savingAnim = true;
+				capturer.start();
+			}
+			
+			initThreeScene();
+			onWindowResize();
+			initPhysics(threeScene);
+			update();
+			
+		</script>
+	</body>
+</html>
