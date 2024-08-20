@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Double-Slit Experiment</title>
+<!-- https://exploratoria.github.io/exhibits/mechanics/elastic-collisions-in-3d/ -->
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name=author content="Cooknas">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="style.css">
+<script src="double-slit.js"></script>
+<script src="beam.js"></script>
+
+</head>
+<body>
+    <div class="controlContainer">
+        <div style="display:inline-block;margin:0px;position:relative;top:-20px;">
+            <span id="timer">0:00:00</span>
+            <button id="startstop">Start</button>
+            <button id="restart">Restart</button>
+            <button id="clearSensor">Clear Sensor</button>
+            <span id="beams">0</span>
+        </div>
+        <div style="width:fit-content;display:inline-block;">
+            <table>
+                <tr>
+                    <td>
+                        <label for="slitDistance">Slit Distance</label>
+                    </td>
+                    <td>
+                        <span id="slitDistanceValue">50</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="range" id="slitDistance" min="10" max="200" value="50" onchange="slitDistanceChanged()">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="width:fit-content;display:inline-block;">
+            <table>
+                <tr>
+                    <td>
+                        <label for="frequency">Frequency</label>
+                    </td>
+                    <td>
+                        <span id="frequencyValue">50</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="range" id="frequency" min="10" max="100" value="30" onchange="frequencyChanged()">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+    <canvas id="mainCanvas"></canvas>
+    <canvas id="bottomCanvas"></canvas>
+    <canvas id="sensorCanvas"></canvas>
+</body>
+</html>
