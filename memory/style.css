@@ -1,0 +1,328 @@
+/* Import Google Font - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: DodgerBlue;/*#6563FF;*/
+}
+
+/**************************************/
+/******** cards wrapper ***************/
+.wrapper{
+    padding: 25px;
+    border-radius: 10px;
+    background: #F8F8F8;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.cards, .card, .view{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cards{
+    height: 400px;
+    width: 400px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.cards .card{
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    position: relative;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    height: calc(100% / 4 - 10px);
+    width: calc(100% / 4 - 10px);
+}
+.card.shake{
+    animation: shake 0.35s ease-in-out;
+}
+@keyframes shake {
+  0%, 100%{
+      transform: translateX(0);
+  }
+  20%{
+      transform: translateX(-13px);
+  }
+  40%{
+      transform: translateX(13px);
+  }
+  60%{
+      transform: translateX(-8px);
+  }
+  80%{
+      transform: translateX(8px);
+  }
+}
+.card .view{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 7px;
+    background: #fff;
+    pointer-events: none;
+    backface-visibility: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: transform 0.25s linear;
+}
+.card .front-view img{
+    width: 65px;
+}
+.card .back-view img{
+    max-width: 85px;
+}
+.card .back-view{
+    transform: rotateY(-180deg);
+}
+.card.flip .back-view{
+    transform: rotateY(0);
+}
+.card.flip .front-view{
+    transform: rotateY(180deg);
+}
+
+@media screen and (max-width: 700px) {
+  .cards{
+      height: 350px;
+      width: 350px;
+  }
+  .card .front-view img{
+      width: 17px;
+  }
+  .card .back-view img{
+      max-width: 40px;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .cards{
+      height: 300px;
+      width: 300px;
+  }
+  .card .front-view img{
+      width: 15px;
+  }
+  .card .back-view img{
+      max-width: 35px;
+  }
+}
+/*********** end of cards wrapper ************/
+
+/*********************************************/
+/********* Left side panel *******************/
+.panel{
+    position:absolute;
+    top:75px;
+    left: 0px;
+    width:160px;
+    height:550px;
+    background-color: orange;
+    border-radius: 0px 8px 8px 0px;
+}
+
+.center-span{
+    display:block;
+    width:100%;
+    position:relative;
+    font-weight: bold;
+    margin: auto;
+    text-align: center;
+}
+
+/***************************************/
+/********* Custom Radio Button *********/
+/* Customize the label (the container) */
+.container {
+    display: block;
+    position: relative;
+    width:100%;
+    left: 50%;
+    translate: -50% 0px;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    margin-left:25px;
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: bold;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+  
+/* Hide the browser's default radio button */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+  
+/* Create a custom radio button */
+.checkmark {
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+  
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+  
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+  
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+  
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+  
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+/********** end of Radio button *****************/
+
+/************************************************/
+/********** select-options elements *************/
+/* The container must be positioned relative:   */
+.custom-select {
+    position: relative;
+    margin:auto;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.custom-select select {
+    display: none; /*hide original SELECT element: */
+}
+
+.select-selected {
+    background-color: DodgerBlue;
+    border-radius:8px;
+}
+
+/* Style the arrow inside the select element: */
+.select-selected:after {
+    position: absolute;
+    content: "";
+    top: 18px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: #fff transparent transparent transparent;
+}
+
+/* Point the arrow upwards when the select box is open (active): */
+.select-selected.select-arrow-active:after {
+    border-color: transparent transparent #fff transparent;
+    top: 7px;
+}
+
+/* style the items (options), including the selected item: */
+.select-items div,.select-selected {
+    color: #ffffff;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+}
+
+/* Style items (options): */
+.select-items {
+    position: absolute;
+    background-color: DodgerBlue;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+}
+
+/* Hide the items when the select box is closed: */
+.select-hide {
+    display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+/*********** end of select-options elements *********/
+
+/****************************************************/
+/********** other elements styles *******************/
+.timeDiv{
+    text-align:center;
+}
+
+#time{
+    font-size:38px;
+    font-weight: bold;
+    margin:auto;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+.label{
+  text-align:center;
+  margin: 2px;
+  padding: 2px;
+}
+br{
+  margin: 0px;
+  padding: 0px;
+}
+
+#score{
+  font-size:42px;
+  color:crimson;
+  font-weight: bold;
+  margin:auto;
+}
+
+.button{
+    padding:8px;
+    margin:auto;
+    margin-top:15px;
+    border-radius:8px;
+    min-width:130px;
+    background-color: rgb(198, 107, 38);
+    color:black;
+}
+.button:hover{
+    background-color: DodgerBlue;
+    color:white;
+}
+
+#clicks{
+  font-size: 18px;
+  font-weight: 600;
+}

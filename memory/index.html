@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">  
+    <title>Memory Card Game in JavaScript | CodingNepal</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div class="panel">
+        <span class="center-span" style="margin-bottom:10px;font-size:18px;color:dodgerblue">Memory Game</span>
+        <label class="container">4 x 4
+            <input type="radio" checked="checked" name="radio" id="fourfour" onchange="rowsChanged()">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">4 x 5
+            <input type="radio" name="radio" id="fourfive" onchange="rowsChanged()">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">5 x 6
+          <input type="radio" name="radio" id="fivesix" onchange="rowsChanged()">
+          <span class="checkmark"></span>
+      </label>
+        <label class="container">6 x 6
+            <input type="radio" name="radio" id="sixsix" onchange="rowsChanged()">
+            <span class="checkmark"></span>
+        </label>
+        <div class="timeDiv">
+          <span style="font-size:14px;">Select cards type</span>
+        </div>
+        <div class="custom-select" style="width:130px;">
+          <select>
+            <option value="images">Jems</option>
+            <option value="animals">Animals</option>
+            <option value="fruits">Fruits</option>
+            <option value="dinos">Dynosaurs</option>
+            <option value="cards">Cards</option>
+          </select>
+        </div>
+        <div class="timeDiv">
+            <span class="label">Time:</span><br>
+            <span id="time">2:00</span>
+        </div>
+        <div class="timeDiv" style="margin-bottom:10px;">Clicks: <span id="clicks">0</span></div>
+        <div class="timeDiv">
+          <span class="label">Score</span><br>
+          <span id="score">0</span>
+        </div>
+                
+        <div class="timeDiv">
+            <button class="button" onclick="setupBoard()">Run again</button>
+        </div>
+        
+    </div>
+    <div class="wrapper">
+      <ul class="cards">
+        <!--<li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-1.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-6.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-3.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-2.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-1.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-5.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-2.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-6.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-3.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-4.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-5.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-4.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-4.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-4.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-4.png" alt="card-img">
+          </div>
+        </li>
+        <li class="card">
+          <div class="view front-view">
+            <img src="images/que_icon.svg" alt="icon">
+          </div>
+          <div class="view back-view">
+            <img src="images/img-4.png" alt="card-img">
+          </div>
+        </li>-->
+      </ul>
+    </div>
+
+    <script src="script.js"></script>
+
+  </body>
+</html>
