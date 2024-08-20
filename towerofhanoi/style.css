@@ -1,0 +1,233 @@
+body{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: center;
+    align-content: center;
+}
+
+table{
+    display:block;
+    position:absolute;
+    margin:auto;
+    left:50%;
+    top:50%;
+    translate:-50% -50%;
+}
+
+#container { 
+    /*position:absolute; */
+    text-align:center;
+    align-content: center;
+    /*bottom:0px; left:20px;
+    border:1px solid black; */
+    height:281px; 
+    width:740px; 
+}
+#controlContainer{
+    align-items: center;
+    text-align:center;
+    align-content: center;
+    width:740px; 
+    background-color: orange;
+    border-radius:12px;
+}
+
+#bar0 { 
+    display:block;
+    position:absolute; 
+    top:120px; 
+    left:130px; 
+    height:200px; 
+    width:30px;
+    /* background: rgb(63, 63, 63); */
+    -moz-box-sizing:border-box; 
+    box-sizing:border-box; 
+    border-radius:6px 6px 0px 0px;
+    /* border:1px solid black;  */
+    cursor:pointer;
+    background-image: url("Bar.png");
+    background-size: cover;
+    /* background-repeat: cover; */
+}
+
+#bar1 { 
+    display:block;
+    position:absolute; 
+    top:120px; 
+    left:360px; 
+    height:200px; 
+    width:30px; 
+    /* background-color: rgb(63, 63, 63); */
+    -moz-box-sizing:border-box; 
+    box-sizing:border-box; 
+    border-radius:6px 6px 0px 0px;
+    /* border:1px solid black;  */
+    cursor:pointer;
+    background-image: url("Bar.png");
+    background-size: cover;
+    /* background-repeat: cover; */
+}
+
+#bar2 { 
+    display:block;
+    position:absolute; 
+    top:120px; 
+    left:600px; 
+    height:200px; 
+    width:30px; 
+    /* background-color: rgb(63, 63, 63); */
+    -moz-box-sizing:border-box; 
+    box-sizing:border-box; 
+    border-radius:6px 6px 0px 0px;
+    /* border:1px solid black; */
+    cursor:pointer;
+    background-image: url("Bar.png");
+    background-size: cover;
+    /* background-repeat: cover; */
+}
+
+.bar-selected{
+    border:4px solid rgb(220, 50, 50); 
+}
+
+.disk { 
+    padding:0; 
+    margin:0; 
+    position:absolute; 
+    /*border:1px solid gray; */
+    height:26px; 
+    -moz-box-sizing:border-box; 
+    box-sizing:border-box; 
+    border-radius:8px;
+    /*border:1px solid black; */
+}
+
+.select{
+    border:4px solid rgb(220, 50, 50); 
+}
+
+/* left of disk0 at 35px; left = 130 (bar0 left) -w/2 + 15 (bar width/2)  */
+#disk0  { 
+    top:294px; 
+    left:35px;
+    background:#DDEEFE; 
+    width:220px; 
+    background-image: url("disk.png");
+    background-size: cover; 
+    background-position:center;
+} 
+#disk1 { 
+    top:268px; 
+    left:55px;
+    background:#CEEDDF; 
+    width:180px; 
+    background-image: url("disk.png");
+    background-size: cover; 
+    background-position:center;
+}
+#disk2 { 
+    top:242px; 
+    left:75px;
+    background:#FEEEEF; 
+    width:140px; 
+    background-image: url("disk.png");
+    background-size:cover; 
+    background-position:center;
+}  
+#disk3 { 
+    top:216px; 
+    left:95px;
+    background:#EEFEFF; 
+    width:100px;
+    background-image: url("disk.png");
+    background-size: cover; 
+    background-position:center;
+}
+#disk4 { 
+    top:190px; 
+    left:115px;
+    background:#EEFECC; 
+    width:60px; 
+    background-image: url("disk.png");
+    background-size: cover; 
+    background-position:center; 
+}
+
+#bottombar { 
+    position:absolute; 
+    top:320px; 
+    left:10px;
+    background:#222; 
+    border-radius:8px 8px 0px 0px;
+    /*border:1px solid black; */
+    height:30px; 
+    width:740px; 
+    background-image: url("bottom.png");
+    background-size: cover;
+}
+
+label { 
+    float:right; 
+    width:100px; 
+    margin:4px 10px;
+    font-size:14px;
+    font-weight: normal;
+}
+
+select{
+    min-width:80px;
+    font-weight: bold;
+    padding:2px;
+    border-radius:4px;
+}
+
+option{
+    font-weight: normal;
+}
+
+button { 
+    float:right; 
+    margin:10px 10px;
+    /*margin-right:16px; */
+    padding:2px 8px; 
+    height:32px;
+    min-width:60px;
+    border-radius:6px;
+    cursor: pointer;
+}
+button:hover{
+    background-color: darkslategray;
+    color: white;
+}
+
+h3{
+    float:left;
+    margin:14px 10px;
+    padding:2px 8px; 
+}
+
+img { 
+    height:200px; 
+    width:30px; 
+    padding:0; 
+    margin:0; 
+} /* for towers (bars) */
+
+.insideImg { 
+    z-index:-1; 
+    position:absolute; 
+    border:0;
+    top:-1px; 
+    height:14px; 
+    width:30px; 
+}
+
+#moveCount{
+    margin:14px 10px;
+    padding:12px 8px; 
+}
+
+span{
+    display:flexbox;
+    margin:14px 10px;
+    padding:2px 8px; 
+}

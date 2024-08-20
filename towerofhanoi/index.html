@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>  
+    <meta charset="UTF-8">  
+    <title>Tower of Hanoi</title>  
+    <link rel="stylesheet"type="text/css" href="style.css">
+    <script type="text/javascript" src="hanoi.js"></script>
+</head>
+<body>
+
+<table>
+    <tr><td style="align-items: center;align-items: center;">
+        <div id="controlContainer">
+            <h3>Towers of Hanoi</h3>
+            <button onclick="executeHanoi()">Solve</button>
+            <label>Speed 
+                <select id="speedSelectList" >
+                    <option  value="5" selected>fast</option>
+                    <option  value="10">medium</option>
+                    <option  value="20">slow</option>
+                </select>
+            </label>
+            <label>No. of Disks
+                <select id="diskSelectList" >
+                    <option  value="5" selected>5 disks</option>
+                    <option  value="4">4 disks</option>
+                    <option  value="3">3 disks</option>
+                </select>
+            </label>
+            <button onclick="resetHanoi()">Reset Towers</button>
+            <div style="float:right;text-align: center;align-items: center;margin:auto;">
+                <span style="font-size:12px;margin:auto;">Moves</span><br>
+                <span id="moveCount">0</span>
+            </div>
+        </div>
+    </td></tr>
+    <tr><td>
+        <div id="container">
+            <div id="bar0"> <!-- <img src="Bar.png" />--></div> 
+            <div id="bar1"> <!--<img src="Bar.png" />--></div>
+            <div id="bar2"> <!--<img src="Bar.png" />--></div>
+            <div id="bottombar"></div>
+            <div class="disk" id="disk0"><!-- <img class="insideImg"  style="left:94px;"  src="Bar2.png" />--></div>  
+            <div class="disk" id="disk1"><!--<img class="insideImg"  style="left:74px;"  src="Bar2.png" />--></div> 
+            <div class="disk" id="disk2"><!--<img class="insideImg"  style="left:54px;"  src="Bar2.png" />--></div> 
+            <div class="disk" id="disk3"><!--<img class="insideImg"  style="left:34px;"  src="Bar2.png" />--></div> 
+            <div class="disk" id="disk4"><!--<img class="insideImg"  style="left:14px;"  src="Bar2.png" />--></div> 
+            
+        </div> 
+    </td></tr>
+</table>
+</body>
+</html>
