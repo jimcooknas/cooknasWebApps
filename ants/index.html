@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ant Colony Simulator</title>
+    <script defer src="./js/victor.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div>
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="panel">
+        <h3 class="center">Ants</h3>
+        <div>
+            <label for="nest-food" class="center">Gathered food</label>
+            <span id="nest-food" class="center label">0</span> 
+        </div>
+        <h4 class="center">Setup</h4>
+        <div>
+            <label for="noOfAnts" class="center">Number of Ants</label>
+            <input type="text" id="noOfAnts" value="100">
+        </div>
+        <div>
+            <label for="noOfFoodValue" class="center">Food spots<span class="input-value" id="noOfFoodValue">8</span></label>
+            <input type="range" id="noOfFood" min="0" max="20" value="8" oninput="foodNoChanged()">
+        </div>
+        <div>
+            <button id="setup" onclick="setupSimulation()">Setup</button>
+        </div>   
+
+        <h4 class="center">Setttings</h4>
+        <input type="checkbox" id="showFero" onchange="ferormoneCahnged()">Ferormones</input>
+        <div>
+            <label for="antSizeValue" class="center">Ant Size<span class="input-value" id="antSizeValue">10</span></label>
+            <input type="range" id="antSize" min="5" max="20" value="10" oninput="antSizeChanged()">
+        </div>
+        <div>
+            <button id="startstop" style="display:block;position:absolute;bottom:5px;width:85%" onclick="startStop()">Start</button>
+        </div>   
+    </div>
+    
+    
+    <script defer src="./ferormone.js"></script>
+    <script defer src="./ant.js"></script>
+    <script defer src="./script.js"></script>
+</body>
+
+</html>
