@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BattleShip</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="tile.js"></script>
+        <script src="battleship.js"></script>
+        <script src="setup.js"></script>
+        <script src="images.js"></script>
+        <script src="particles.js"></script>
+    </head>
+    <body onkeydown="showHint(event)">
+        <h2>Battle Ship</h2>
+        <div id="container">
+            <table style="margin:auto;border-spacing:6px;border-collapse:separate;">
+                <tr>
+                    <td>
+                        <div id="player" class="board">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div id="enemy" class="board">
+
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="panel">
+                            <div class="design">
+                                <h4>Setup board</h4>
+                                <div style="text-align:center;margin:auto;width:fit-content;">
+                                <table>
+                                    <tr>
+                                        <td style="text-align:left;padding:5px;">
+                                            <p class="shipLeft" id="carriers-left">Carriers set: <span>0 / 1</span></p>
+                                            <p class="shipLeft" id="destroyers-left">Destroyers set: <span>0 / 2</span></p>
+                                        </td>
+                                        <td style="text-align:left;padding:5px;">
+                                            <p class="shipLeft" id="miners-left">Miners set: <span>0 / 3</span></p>
+                                            <p class="shipLeft" id="submarines-left">Submarines set: <span>0 / 4</span></p>
+                                        </td>
+                                        <td rowspan="2"><button id="setShip" style="min-width:40px;">Rotate</button></td>
+                                    </tr>
+                                </table>
+                                </div>
+                            </div>
+                            <div class="play">
+                                <h4>Play Battle</h4>
+                                <div style="text-align:center;margin:auto;width:fit-content;">
+                                    <span id="spanIsPlaying">Is Playing: </span><span id="playingNow">Player</span>
+                                    <span id="roundHits">(5/5)</span>
+                                    <div>
+                                        <span id="spanPlayerHits">Player's Hits: </span><span id="playerHits">0</span>
+                                        <span id="spanEnemyHits">Enemy's Hits: </span><span id="enemyHits">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="buttonPanel">
+                                <button id="newGame">Start Random Game</button>
+                                <button id="setupGame">Setup a Game</button>
+                                <button id="quitGame" disabled>Resign the Game</button>
+                                <span id="time">0:00:00</span>
+                            </div>
+                        </div>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
