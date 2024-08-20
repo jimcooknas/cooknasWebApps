@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <main>
+        <div id="panel">
+            <div id="title"><span >Particles System</span></div>
+            <div id="particles">
+                <table>
+                    <tr>
+                        <td><label for="particlesNum">Particles Num</label></td>
+                        <td><span id="particlesNumValue">50</label></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="range" id="particlesNum" min="20" max="100" value="50" oninput="particlesNumChanged()"></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td><label for="lifeDecrease">Life Decrease</label></td>
+                        <td><span id="lifeDecreaseValue">3</label></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="range" id="lifeDecrease" min="1" max="5" value="3" oninput="lifeDecreaseChanged()"></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td><label for="particleRadius">Particle Radius</label></td>
+                        <td><span id="particleRadiusValue">2</label></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="range" id="particleRadius" min="1" max="5" value="2" oninput="particleRadiusChanged()"></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr><td><button id="btnRandomMove" onclick="followRandomMove()">Random Move</button></td></tr>
+                </table>
+                <table>
+                    <tr>
+                        <td><span>Total particles</span></td>
+                        <td style="min-width:80px;"><span id="totalParticles">0</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="canvasDiv"></div>
+    </main>
+    <script src="sketch.js"></script>
+    <script src="particle.js"></script>
+    <script src="system.js"></script>
+  </body>
+</html>

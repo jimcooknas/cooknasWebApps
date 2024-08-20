@@ -1,0 +1,264 @@
+body{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: rgb(0, 0, 0);
+}
+
+/* css for SlidingPanel */
+#menu__toggle {
+    opacity: 0;
+}
+#menu__toggle:checked + .menu__btn > span {
+    transform: translate(180px, 0px) rotate(45deg);
+}
+#menu__toggle:checked + .menu__btn > span::before {
+    top: 0;
+    transform: rotate(0deg);
+}
+#menu__toggle:checked + .menu__btn > span::after {
+    top: 0;
+    transform: rotate(90deg);
+}
+#menu__toggle:checked ~ .menu__box {
+    left: 0 !important;
+}
+.menu__btn {
+    position: fixed;
+    top: 28px;
+    left: 20px;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    z-index: 1;
+}
+.menu__btn > span,
+.menu__btn > span::before,
+.menu__btn > span::after {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background-color: #bbbbbb;/*#616161;*/
+    transition-duration: .35s;
+}
+.menu__btn > span:hover,
+.menu__btn > span:hover::before,
+.menu__btn > span:hover::after {
+    background-color: #ffffff;/*#616161;*/
+    transition-duration: .35s;
+}
+.menu__btn > span::before {
+    content: '';
+    top: -8px;
+    }
+.menu__btn > span::after {
+    content: '';
+    top: 8px;
+}
+.menu__box {
+    display: block;
+    position: fixed;
+    top: 10px;
+    left: -100%;
+    width: 240px;
+    height: 85%;
+    margin: 0;
+    padding: 40px 0;
+    border-radius: 0px 8px 8px 0px;
+    list-style: none;
+    background-color: #f7b61eee;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, .4);
+    transition-duration: .25s;
+}
+.menu__item {
+    display: block;
+    padding: 4px 4px;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 100;
+    text-decoration: none;
+    transition-duration: .25s;
+}
+.menu__item:hover {
+    background-color: #CFD8DC;
+    color:black;
+}
+/* end of css for SlidingPanel */
+/* elements inside SlidingPanel */
+.menu__center{
+    overflow: hidden;
+    margin:4px auto;
+    padding: 4px 4px;
+}
+.menu__center__center{
+    padding: 8px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align : center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+}
+.menu__title{
+    font-size:18px;
+    font-weight: bold;
+    background-color: #9898aC;
+    color:black;
+    float:center;
+}
+.menu__unhover:hover{
+    background-color: transparent;
+    color:white;
+}
+.menu__button{
+        font-size:14px;
+        font-weight:bold;
+        border-radius: 6px;
+        background-color: #333377;
+        color:white;
+        margin:auto;
+        padding:8px;
+}
+.menu__button:hover{
+        background-color: #f0ae11;
+        color:black;
+}
+.menu__button:disabled,
+.menu__button[disabled]{
+        border: 1px solid #999999;
+        background-color: #cccccc;
+        color: #666666;
+}
+input[type='text']{
+    max-width:60%;
+    padding:4px;
+}
+input[type='range']{
+    max-width:80%;
+    /*padding:4px;*/
+    overflow: hidden;
+}
+.menu__label{
+        max-width:80%;
+        float: left;
+        padding: 4px 4px;
+        color:black;
+}
+.menu__text{
+        max-width:40%;
+        float: right;
+        padding: 0px 4px;
+}
+.menu__block{
+        display:block;
+}
+
+/* other elements */
+.drop-number{
+    display:flex;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:26px;
+    font-weight: bold;
+    position:absolute;
+    padding: 4px;
+    right:10px;
+    top:20px;
+    color:white;
+    background-color: #999999aa;
+    z-index: 2;
+}
+.drop-number.far{
+    top: 320px;
+}
+.drop-collected{
+    display:flex;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:26px;
+    font-weight: bold;
+    position:absolute;
+    padding: 4px;
+    right:10px;
+    top:60px;
+    color:yellow;
+    background-color: #999999aa;
+    z-index: 2;
+}
+.drop-collected.far{
+    top: 360px;
+}
+/* end of elements inside SlidingPanel */
+/* tr{
+    width:100%;
+} */
+
+table {
+    width: 100%;
+    border: 1px 0px solid #000;
+    table-layout: fixed;
+}
+
+td{
+    margin:2px;
+    padding:0px;
+}
+
+td.left{
+    width: 60%;
+    text-align:left;
+}
+
+td.right{
+    width: 40%;
+    text-align:center;
+}
+
+.slider {
+    appearance: none; /* removes browser-specific styling */
+    /*width: 30px;*/ /* width of slider */
+    height: 4px; /* height of slider */
+    background: #333333 ; /* orange background */
+    outline: none; /* remove outline */
+    border-radius: 3px; /* round corners */
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none; /* removes browser-specific styling */
+    width: 6px; /* handle width */
+    height: 6px; /* handle height */
+    border-radius: 50%; /* make it circular */
+    border-color: red;
+    background: #FFFFFF; /* white color */
+    cursor: pointer; /* cursor on hover */
+    /*  slider progress trick  */
+    box-shadow: -407px 0 0 400px #f50;
+}
+
+.slider-fat {
+    appearance: none; /* removes browser-specific styling */
+    /*width: 30px;*/ /* width of slider */
+    height: 10px; /* height of slider */
+    background: #333333 ; /* orange background */
+    outline: none; /* remove outline */
+    border-radius: 5px; /* round corners */
+}
+
+.slider-fat::-webkit-slider-thumb {
+    appearance: none; /* removes browser-specific styling */
+    width: 14px; /* handle width */
+    height: 14px; /* handle height */
+    border-radius: 50%; /* make it circular */
+    border-color: red;
+    background: #FFFFFF; /* white color */
+    cursor: pointer; /* cursor on hover */
+    /*  slider progress trick  */
+    box-shadow: -407px 0 0 400px #f50;
+}

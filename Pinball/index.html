@@ -1,0 +1,49 @@
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/poly-decomp@0.2.1/build/decomp.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/matter-js@0.18.0/build/matter.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/matter-attractors@0.1.6/build/matter-attractors.min.js"></script>
+    
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="modal.css">
+  <!-- uncomment lines below to include extra p5 libraries -->
+  <!---->
+  <script language="javascript" type="text/javascript" src="sketch.js"></script>
+  <!-- this line removes any default padding and style. you might only need one of these values set. -->
+  <!-- <style> body {padding: 0; margin: 0;} </style> -->
+</head>
+
+<body>
+    <div class="container">
+      <div class="score current-score">
+        score<br><span id="cur_score"></span>
+      </div>
+      <div class="score high-score">
+        high score<br><span id="hi_score"></span>
+      </div>
+      <button class="trigger left-trigger">tap</button>
+      <button class="trigger right-trigger">tap</button>
+    
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="spanclose" onclick="this.parentElement.parentElement.style.display='none';window.location.reload();">&times;</span>
+            <h2>Game Over</h2>
+          </div>
+          <div class="modal-body">
+            <p>      The Game is Over dude!!!</p>
+            <p><small>Click anywhere on pinball to try again</small></p>
+          </div>
+          <div class="modal-footer">
+            <h3>cooknas Pinball</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

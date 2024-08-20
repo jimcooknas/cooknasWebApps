@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<!--The time evolution of a quantum particle in one dimension is animated. 
+	The state of this particle is described by a complex wave function that obeys the Schrödinger equation. 
+	This partial differential equation is solved numerically by a finite difference method. 
+	The code is written in JavaScript and can be viewed on github page: https://github.com/CodingPhysics/Schr...
+-->
+<html> 
+	<head>
+		<title>Schroedinger Equation Help</title>
+		<meta charset="utf-8">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+        <!-- KaTeX requires the use of the HTML5 doctype. Without it, KaTeX may not render properly -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+  
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+        <!-- Load mhchem (for chemistry symbols) after katex and before defer-->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/mhchem.min.js" integrity="sha384-RTN08a0AXIioPBcVosEqPUfKK+rPp+h1x/izR7xMkdMyuwkcZCWdxO+RSwIFtJXN"  crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"
+          onload="renderMathInElement(document.body);"></script>
+        <style>
+            body {
+                font-family: Trirong, Verdana, Tahoma, sans-serif;
+                font-size: 20px;
+                display: block;
+                width: 80%;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .katex { 
+                font-family: Trirong, Verdana, Tahoma, sans-serif; 
+                font-style:normal ;
+                text-align: center;
+            }
+            p {
+                text-align:center;
+            }
+        </style>
+	</head>
+	<body>
+        <h2><p>Schroedinger Simulation by Coding Physics <a style="font-size: 12px;" href="https://github.com/CodingPhysics">(https://github.com/CodingPhysics)</a></small></p></h2>
+		The time evolution of a quantum particle in one dimension is animated.<br> 
+        The state of this particle is described by a complex wave function that obeys the Schrödinger equation.<br>
+        This partial differential equation is solved numerically by a finite difference method. 
+        <h3><p>Physical Model</p></h3>
+        <span>We cosider the motion of a single quantum particle in one dimension for a given potential V(x).
+            The state to this particle is discribed by a complex wave function Ψ(x,t) (probability amplitude).
+            The <b>motion</b> of the particle is determined by the time development operator U(Δt):
+        </span>
+        <p>
+            <strong class="katex" style="color:rgb(51, 50, 50);font-size:20px;">\(Ψ(x, t+Δt) = U(Δt) Ψ(x,t)\)</strong>,<br>
+            <strong class="katex" style="color:rgb(51, 50, 50);font-size:20px;">\(U(Δt) = {e^{-iHΔt}}\)</strong>
+        </p>
+            where H is the Hamilton operator of the system:
+        <br>
+        <p style="color:rgb(51, 50, 50);font-size:20px;"><strong>\(H = -\frac{1}{2} \frac{d^2}{dx^2} + V(x)\)</strong></p>
+        </span>
+        For a small time step Δt the time development can be approximated by:
+        <p><strong style="color:rgb(51, 50, 50);font-size:20px;">
+	    \((1 + i H \frac {Δt}{2} Ψ(x,t + Δt) ≈ (1 - i H \frac {Δt}{2}) Ψ(x,t)\)</strong> (*)
+        </p>
+
+        <h3><p>Algorithm</p></h3>
+        The continuous wave function is represented by an array of length N:
+        <p style="color:rgb(51, 50, 50);font-size:20px;">
+	        \({Ψ[j] = Ψ(j Δx)}\),	j = 0, ..., N - 1
+        </p>
+        with <strong>\({Ψ[0] = Ψ[N-1] = 0}\)</strong> for fixed boundary conditions.
+        <span>The spatial derivative in the Hamilton operator is approximated by:</span>
+
+         <p style="color:rgb(51, 50, 50);font-size:24px;"><strong>\(\frac {d^2Ψ(x)}{dx^2}\) ≈ \(\frac {Ψ[j - 1] - 2 Ψ[j] + Ψ[j]}{Δx^2}\)</strong></p>
+
+        <span>Therefore, equation (*) can be rewritten as a matrix equation for the vectors Ψ' = Ψ(t + Δt) and Ψ = Ψ(t):</span>
+
+            <p><strong style="color:rgb(51, 50, 50);font-size:20px;">\(T Ψ' = - T* Ψ\)</strong><sup>     (**)</sup></p>
+
+        where T is an tridiagonal matrix with:
+
+            <p style="color:rgb(51, 50, 50);font-size:18px;">\(T[j][j-1] = T[j][j-1] = 1\)</p>
+            <p style="color:rgb(51, 50, 50);font-size:18px;">\(T[j][j]   = 4 i \frac {Δx^2}{Δt} - 2 Δx^2 V(j Δx) - 2\)</p>
+            <p style="color:rgb(51, 50, 50);font-size:18px;">\(T[j][k]   = 0\) elsewhere</p>
+
+        The matrix equation <sup>(**)</sup> is solved directly by:
+
+            <p style="color:rgb(51, 50, 50);font-size:18px;">\(a[j] = - \frac {1}{(T[j][j] + a[j-1])}\) with \(a[0] = 0\)</p>
+            <p style="color:rgb(51, 50, 50);font-size:18px;">\(b[j]  = (-T* Ψ)[j] + a[j-1] b[j-1]\) with \(b[0] = 0\)</p>
+            <p style="color:rgb(51, 50, 50);font-size:18px;">\(Ψ'[j] = a[j] (Ψ'[j+1] + b[j])\) with \(Ψ'[N-1] = 0\)</p>
+  </body>
+</html>

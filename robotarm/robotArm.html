@@ -1,0 +1,971 @@
+<!--
+Copyright 2022 Cooknas - Robot Arm
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+	<head>
+		<title>RobotArm Box</title>
+		<!--Bootstrap 4.1 styles links-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+			body {
+				font-family: verdana; 
+				font-size: 15px;
+			}			
+			.button {
+				background-color: #606060;
+				border: none;
+				border-radius: 15px;
+				color: white;
+				padding: 10px 22px;
+				font-size: 16px;
+				margin: 4px 2px;
+				cursor: pointer;
+				display: float;
+			}
+
+			/* solution1 */
+			.has-search .form-control {
+				padding-left: 2.375rem;
+			}
+
+			.has-search .form-control-feedback {
+				position: absolute;
+				z-index: 2;
+				display: block;
+				width: 2.375rem;
+				height: 2.375rem;
+				line-height: 2.375rem;
+				text-align: center;
+				pointer-events: none;
+				color: #aaa;
+			}
+
+			/* solution 2
+			.search-box,.close-icon,.search-wrapper {
+				position: relative;
+				padding: 10px;
+			}
+			.search-wrapper {
+				width: 140px;
+				margin: 4px 2px;
+				margin-top: 5px;
+			}
+			.search-box {
+				width: 60%;
+				border: 1px solid #ccc;
+				outline: 0;
+				border-radius: 15px;
+				font-weight: bold;
+				text-align: center;
+			}
+			.search-box:focus {
+				box-shadow: 0 0 15px 5px #b0b0dd;
+				border: 2px solid #bebede;
+			}
+			.close-icon {
+				border:1px solid transparent;
+				background-color: transparent;
+				display: inline-block;
+				vertical-align: middle;
+				outline: 0;
+				cursor: pointer;
+			}
+			.close-icon:after {
+				content: "X";
+				display: block;
+				width: 15px;
+				height: 15px;
+				position: absolute;
+				background-color: #FA9595;
+				z-index:1;
+				right: 35px;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+				padding: 2px;
+				border-radius: 50%;
+				text-align: center;
+				color: white;
+				font-weight: normal;
+				font-size: 12px;
+				box-shadow: 0 0 2px #E50F0F;
+				cursor: pointer;
+			}
+			.search-box:not(:valid) ~ .close-icon {
+				display: none;
+			}
+		*/
+		</style>
+
+	</head>
+	
+	<body>
+
+        <h1>Robot Arm Chess</h1> 
+		<table>
+			<tr>
+				<td>
+					<!--<button id = "buttonRun" onclick="run()" class="button">Run</button> -->
+					<button onclick="reset()" class="button">Reset</button>
+					<input type = "checkbox" id="chkShowWalls" onclick = "onShowWall()" checked="false">Show walls</input>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<span>Motor 0:</span>&nbsp;
+								<span id="lblRot0" style="color:blue;font-weight: bold;">0.00</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type = "range" id="slider0" min = "-90" max = "90" step = "0.5" value="0.00" class = "slider" oninput="sliderValue()"> 
+							</td>	
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<span>Motor 1:</span>&nbsp;
+								<span id="lblRot1" style="color:blue;font-weight: bold;">0.00</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type = "range" id="slider1" min = "-90" max = "90" step = "0.5" value="0.00" class = "slider" oninput="sliderValue()"> 
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<span>Motor 2:</span>&nbsp;
+								<span id="lblRot2" style="color:blue;font-weight: bold;">0.00</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type = "range" id="slider2" min = "-90" max = "90" step = "0.5" value="0.00" class = "slider" oninput="sliderValue()"> 
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<span>Motor 3:</span>&nbsp;
+								<span id="lblRot3" style="color:blue;font-weight: bold;">0.00</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type = "range" id="slider3" min = "-90" max = "90" step = "0.5" value="0.00" class = "slider" oninput="sliderValue()"> 
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<!-- solution 1 -->
+					<div class="input-group" style="width:144px;margin-left:20px;">
+						<input type="text" class="form-control" name="focus" id="moveString" placeholder="e.g. b2b6">
+						<div class="input-group-append">
+						  <button class="btn btn-secondary" type="button" onclick="MoveTo()">
+							<i class="fa fa-arrow-down"></i>
+						  </button>
+						</div>
+					  </div>
+					<!-- solution 2
+					<div class="search-wrapper">
+						<input type="text" id="moveString" name="focus" required class="search-box" placeholder="enter move" />
+						<button class="close-icon" type="reset"></button>
+					</div>
+				<td>
+					<button id = "buttonMove" onclick="MoveTo()" class="button">Move</button>
+				</td>
+				</td>-->
+			</tr>
+		</table>
+		<br>	
+        <div id="container"></div>
+        <!-- script links -->
+        <script src="https://unpkg.com/three@0.139.2/build/three.min.js"></script>
+        <script src="https://unpkg.com/three@0.139.2/examples/js/controls/OrbitControls.js"></script>
+		<script>
+			var lblRot0 = document.getElementById("lblRot0");
+			var lblRot1 = document.getElementById("lblRot1");
+			var moveText = document.getElementById("moveString");
+			var letters = "abcdefgh";
+			//scene
+			var threeScene;
+			var renderer;
+			var camera;
+			var cameraControl;	
+			//walls
+			var tankMaterial
+            var box1;
+            var box2;
+            var box3;
+            var box4;
+            var box5;
+            var box6;
+			//chess-board
+			var board=[,];
+			var motors = [];
+			var offsetX = 0.3;
+			var offsetY = 0.4;
+			var boardWidth = 4;
+			var tileSize = boardWidth/8;
+			//Motors
+			var rot0 = 0.0;
+			var prev0 = 0.0;
+			var rot1 = 0.0;
+			var prev1 = 0.0;
+			var rot2 = 0.0;
+			var prev2 = 0.0;
+			var rot3 = 0.0;
+			var prev3 = 0.0;
+			var rodSize = boardWidth*Math.sqrt(5)/4;
+			//pawns
+			var pawns = [];
+			var pawnHeight = tileSize;
+			//var row;
+			//var col;
+			var whiteMaterial;
+			var blackMaterial;
+			//angles
+			const angles = {
+				"a1":[23.5,77.0,-72.5,-8.0],
+				"a2":[17.0,66.0,-51.0,-22.0],
+				"a3":[10.5,62.0,-43.5,-24.0],
+				"a4":[3.5,60.0,-39.5,-27.0],
+				"a5":[-3.5,60.0,-39.5,-27.0],
+				"a6":[-10.5,62.0,-43.5,-24.0],
+				"a7":[-17.0,66.0,-51.0,-22.0],
+				"a8":[-23.5,77.0,-72.5,-8.0],
+				"b1":[26.0,57.0,-33.5,-29.0],
+				"b2":[19.5,52.5,-24.5,-33.5],
+				"b3":[12.0,48.5,-18.0,-34.5],
+				"b4":[4.0,17.0,-15.0,-38.5],
+				"b5":[-4.0,17.0,-15.0,-38.5],
+				"b6":[-12.0,48.5,-18.0,-34.5],
+				"b7":[-19.5,52.5,-24.5,-33.5],
+				"b8":[-26.0,57.0,-33.5,-29.0],
+				"c1":[30.0,46.5,-13.5,-38.5],
+				"c2":[22.5,41.5,-5.0,-41.0],
+				"c3":[14.0,38.5,0.5,-42.0],
+				"c4":[4.5,37.0,3.5,-45.0],
+				"c5":[-4.5,37.0,3.5,-45.0],
+				"c6":[-14.0,38.5,0.5,-42.0],
+				"c7":[-22.5,41.5,-5.0,-41.0],
+				"c8":[-30.0,46.5,-13.5,-38.5],
+				"d1":[34.5,37.5,2.5,-44.0],
+				"d2":[26.0,33.0,10.5,-44.0],
+				"d3":[16.5,29.5,16.5,-46.0],
+				"d4":[5.5,27.5,19.5,-49.0],
+				"d5":[-5.5,27.5,19.5,-49.0],
+				"d6":[-16.5,29.5,16.5,-46.0],
+				"d7":[-26.0,33.0,10.5,-44.0],
+				"d8":[-34.5,37.5,2.5,-44.0],
+				"e1":[40.5,30.0,15.5,-48.0],
+				"e2":[31.5,25.0,24.0,-50.0],
+				"e3":[20.0,21.0,31.0,-54.0],
+				"e4":[7.0,18.5,34.5,-55.0],
+				"e5":[-7.0,18.5,34.5,-55.0],
+				"e6":[-20.0,21.0,31.0,-54.0],
+				"e7":[-31.5,25.0,24.0,-50.0],
+				"e8":[-40.5,30.0,15.5,-48.0],
+				"f1":[48.5,23.5,26.0,-49.0],
+				"f2":[39.0,17.0,36.5,-56.5],
+				"f3":[25.0,11.5,44.0,-56.5],
+				"f4":[9.5,9.0,47.5,-55.0],
+				"f5":[-9.5,9.0,47.5,-55.0],
+				"f6":[-25.0,11.5,44.0,-56.5],
+				"f7":[-39.0,17.0,36.5,-56.5],
+				"f8":[-48.5,23.5,26.0,-49.0],
+				"g1":[59.0,18.0,35.0,-56.0],
+				"g2":[50.0,10.0,46.0,-57.0],
+				"g3":[35.5,2.0,55.5,-57.0],
+				"g4":[13.5,-2.5,60.5,-55.0],
+				"g5":[-13.5,-2.5,60.5,-55.0],
+				"g6":[-35.5,2.0,55.5,-57.0],
+				"g7":[-50.0,10.0,46.0,-57.0],
+				"g8":[-59.0,18.0,35.0,-56.0],
+				"h1":[72.5,14.0,41.0,-57.5],
+				"h2":[66.5,4.0,53.5,-57.5],
+				"h3":[54.0,-7.5,64.5,-57.5],
+				"h4":[25.5,-20,71.5,-46.0],
+				"h5":[-25.5,-20,71.5,-46.0],
+				"h6":[-54.0,-7.5,64.5,-57.5],
+				"h7":[-66.5,4.0,53.5,-57.5],
+				"h8":[-72.5,14.0,41.0,-57.5]
+			};
+
+			const restAngles = [90.0, 0.0, 75.0, -75.0, false];
+			const angleStep = 0.5;
+			var anglesToMove;
+			var curGrab = false;
+			var prevGrab = false;
+			
+
+			//each slider change callback function
+			function sliderValue(){
+				if(physicsScene.paused){
+					//get rods' angles
+					rot0 = document.getElementById("slider0").value;
+					document.getElementById('lblRot0').textContent=Number(rot0).toFixed(2);
+					rot1 = document.getElementById("slider1").value;
+					document.getElementById('lblRot1').textContent=Number(rot1).toFixed(2);
+					rot2 = document.getElementById("slider2").value;
+					document.getElementById('lblRot2').textContent=Number(rot2).toFixed(2);
+					rot3 = document.getElementById("slider3").value;
+					document.getElementById('lblRot3').textContent=Number(rot3).toFixed(2);
+					//move rods
+					moveRods([prev0, prev1, prev2, prev3],[rot0, rot1, rot2, rot3]);
+				}
+			}
+
+			//move the rods (arm) to the new position dictated by the rot0, rot1, rot2 and rot3 angles
+			function moveRods(){
+				//set to previous positions
+				physicsScene.motors[3].rotateZ(-prev3*Math.PI/180);
+				physicsScene.motors[2].rotateZ(-prev2*Math.PI/180);
+				physicsScene.motors[1].rotateZ(-prev1*Math.PI/180);
+				physicsScene.motors[0].rotateY(-prev0*Math.PI/180);
+				//set to new positions
+				physicsScene.motors[3].rotateZ(rot3*Math.PI/180);
+				physicsScene.motors[2].rotateZ(rot2*Math.PI/180);
+				physicsScene.motors[1].rotateZ(rot1*Math.PI/180);
+				physicsScene.motors[0].rotateY(rot0*Math.PI/180);
+				//set previous angles
+				prev0 = rot0;
+				prev1 = rot1;
+				prev2 = rot2;
+				prev3 = rot3;
+			}
+
+			//ungroups an object from it's group, but keeps it on the scene 
+			function unGroupObject(scene, obj, groupObj){
+				var objId = obj.id;
+				var objUngroup = scene.getObjectById(objId);
+				//console.log(objId+" "+obj);
+				var pos = new THREE.Vector3();
+				objUngroup.getWorldPosition(pos);
+				var rot = new THREE.Quaternion();
+				objUngroup.getWorldQuaternion(rot);
+				scene.remove(scene.getObjectById(objId));
+				scene.add(objUngroup);
+				objUngroup.position.copy(pos);
+				objUngroup.quaternion.copy(rot);
+			}
+
+			function groupObject(scene, obj, groupObj){
+				//attach add the obj to groupObj without changing its world position-rotation
+				groupObj.attach(obj);;
+			}
+
+			function calcAngles(row, col){
+				prev0 = rot0;
+				prev1 = rot1;
+				prev2 = rot2;
+				prev3 = rot3;
+				var x = (4-col) * tileSize + tileSize / 2;
+				var y = offsetX + (row) * tileSize + tileSize / 2;
+				var dist = Math.sqrt(x * x + y * y);
+				rot0 = Math.asin(x / dist) * 180 / Math.PI;
+				var f1 = Math.atan((0.1 * rodSize + pawnHeight - offsetY) / dist);
+				var AC = dist/Math.cos(f1);
+				var f2 = Math.acos((rodSize * rodSize + AC * AC - rodSize * rodSize) / (2 * rodSize * AC));
+				rot1 = (f1 + f2) * 180 / Math.PI;
+				var f23 = Math.acos((rodSize * rodSize + rodSize * rodSize - AC * AC)/(2 * rodSize * rodSize));
+				rot2 = (f23 - Math.PI / 2) * 180 / Math.PI;
+				rot3 = 360 - rot1 - rot2 - 90;
+				//document.getElementById("slider0").value = rot0;
+				//document.getElementById("slider1").value = rot1;
+				//document.getElementById("slider2").value = rot2;
+				//document.getElementById("slider3").value = rot3;
+				console.log("calc: "+rot0.toFixed(2)+" "+rot1.toFixed(2)+" "+rot2.toFixed(2)+" "+rot3.toFixed(2));
+			}
+
+			function MoveTo(){[]
+				var txt = moveText.value;
+				console.log(txt);
+				if(txt.length == 2){
+					calcAngles(letters.indexOf(txt[0])+1, txt[1].toString());
+					rot0=angles[txt][0];
+					rot1=angles[txt][1];
+					rot2=angles[txt][2];
+					rot3=angles[txt][3];
+					console.log("angl: "+rot0.toFixed(2)+" "+rot1.toFixed(2)+" "+rot2.toFixed(2)+" "+rot3.toFixed(2));
+					// document.getElementById("slider0").value = rot0;
+					// document.getElementById("slider1").value = rot1;
+					// document.getElementById("slider2").value = rot2;
+					// document.getElementById("slider3").value = rot3;
+					// sliderValue();
+				}else if(txt.length==4){
+					var orig = txt.slice(0, 2);
+					var targ = txt.slice(2, 4);
+					var origin = angles[orig];
+					var target = angles[targ];
+					//console.log("Origin ("+orig+"):"+origin+"\r\nTarget ("+targ+"):"+target);
+					anglesToMove = [];
+					anglesToMove = calcStepsForGrabDrop(origin, target);
+					prevGrab = false;
+					totalAnglesSteps = 0;
+					//console.log("Move steps (" + txt + ") = "+anglesToMove.length);
+					document.getElementById("slider0").disabled = true;
+					document.getElementById("slider1").disabled = true;
+					document.getElementById("slider2").disabled = true;
+					document.getElementById("slider3").disabled = true;
+					physicsScene.paused = false;
+				}
+			}
+
+			function calcStepsForGrabDrop(fromPos, toPos){
+				var ret = [];
+				var allAngles = [
+					[restAngles[0],restAngles[1],restAngles[2],restAngles[3], false],
+					[restAngles[0], 0, 0, 0, false],
+					[fromPos[0], 0, 0, 0, false],
+					[fromPos[0],fromPos[1],fromPos[2],fromPos[3], true],
+					[fromPos[0], 0, 0, 0, true],
+					[toPos[0], 0, 0, 0, true],
+					[toPos[0],toPos[1],toPos[2],toPos[3], false],
+					[toPos[0], 0, 0, 0, false],
+					[restAngles[0], 0, 0, 0, false],
+					[restAngles[0], restAngles[1], restAngles[2], restAngles[3], false]
+				];
+				for(var a=0;a<allAngles.length-1;a++){
+					var from = allAngles[a];
+					var to = allAngles[a+1];
+					var ang = from;
+					var reached = [false, false, false, false];
+					while(!reached[0] || !reached[1] || !reached[2] || !reached[3]){
+						for(var i=0;i<4;i++){
+							if(!reached[i]){
+								ang[i] += Math.sign(to[i] - from[i])*angleStep;
+								if(ang[i]==to[i])reached[i]=true;
+							}
+						}
+						ret.push([ang[0], ang[1], ang[2], ang[3], from[4]]);
+					}
+				}
+				return ret;
+			}
+			
+			// ----- math on vector arrays -------------------------------------------------------------
+
+			function vecScale(a,anr, scale) {
+				anr *= 3;
+				a[anr++] *= scale;
+				a[anr++] *= scale;
+				a[anr]   *= scale;
+			}
+
+			function vecCopy(a,anr, b,bnr) {
+				anr *= 3; bnr *= 3;
+				a[anr++] = b[bnr++]; 
+				a[anr++] = b[bnr++]; 
+				a[anr]   = b[bnr];
+			}
+			
+			function vecAdd(a,anr, b,bnr, scale = 1.0) {
+				anr *= 3; bnr *= 3;
+				a[anr++] += b[bnr++] * scale; 
+				a[anr++] += b[bnr++] * scale; 
+				a[anr]   += b[bnr] * scale;
+			}
+
+			function vecSetDiff(dst,dnr, a,anr, b,bnr, scale = 1.0) {
+				dnr *= 3; anr *= 3; bnr *= 3;
+				dst[dnr++] = (a[anr++] - b[bnr++]) * scale;
+				dst[dnr++] = (a[anr++] - b[bnr++]) * scale;
+				dst[dnr]   = (a[anr] - b[bnr]) * scale;
+			}
+
+			function vecLengthSquared(a,anr) {
+				anr *= 3;
+				let a0 = a[anr], a1 = a[anr + 1], a2 = a[anr + 2];
+				return a0 * a0 + a1 * a1 + a2 * a2;
+			}
+
+			function vecDistSquared(a,anr, b,bnr) {
+				anr *= 3; bnr *= 3;
+				let a0 = a[anr] - b[bnr], a1 = a[anr + 1] - b[bnr + 1], a2 = a[anr + 2] - b[bnr + 2];
+				return a0 * a0 + a1 * a1 + a2 * a2;
+			}	
+
+			function vecDot(a,anr, b,bnr) {
+				anr *= 3; bnr *= 3;
+				return a[anr] * b[bnr] + a[anr + 1] * b[bnr + 1] + a[anr + 2] * b[bnr + 2];
+			}	
+
+			// ------------------------------------------------------------------
+
+			var physicsScene = 
+			{
+				gravity : [0.0, -9.81, 0.0],/*0.0, 0.0, 0.0*/
+				dt : 1.0 / 60.0,
+				worldBounds :  [-boardWidth/2, 0.0, -boardWidth/2, boardWidth/2, boardWidth, boardWidth/2],
+				paused: true,
+				motors: [],
+				base: null,
+			};
+
+			// function onShowColl() {
+			// 	if (physicsScene.motors)
+			// 		physicsScene.motors.showCollisions = !physicsScene.motors.showCollisions;
+			// }		
+			
+			function onShowWall(){
+				tankMaterial.visible = document.getElementById("chkShowWalls").checked;
+			}
+				
+			class Pawn{
+				constructor(color, r, c){
+					this.material = color == 'white' ? whiteMaterial : blackMaterial;
+					this.row = 8-r;
+					this.col = c-1;
+					this.pawn = new THREE.Object3D();
+
+					var pawnBaseGeometry = new THREE.CylinderGeometry(tileSize/3, tileSize/3, pawnHeight/5, 32);
+					var pawnBase = new THREE.Mesh(pawnBaseGeometry, this.material);
+					var pawnBodyGeometry = new THREE.CylinderGeometry(tileSize / 8, tileSize / 4, 4 * pawnHeight / 5, 32);
+					var pawnBody = new THREE.Mesh(pawnBodyGeometry, this.material);
+					pawnBase.position.set(0, pawnHeight / 10 + 0.02, 0);
+					pawnBody.position.set(0, 4 * pawnHeight / 10 + pawnHeight / 10 + 0.02, 0);
+					this.pawn.add(pawnBase);
+					this.pawn.add(pawnBody);
+					this.pawn.position.set((this.col - 4) * tileSize + tileSize / 2, 0, (this.row - 4) * tileSize + tileSize / 2);
+
+					return this.pawn;
+				}
+			}//end of class Pawn
+
+			// ------------------------------------------------------------------
+			//radius = double, the radius of the rod
+			//length = double, the length of the rod
+			//pos = [] the x,y,z position of the rod, relative to pivot
+			//pivot = [] the rotation point (pivot in x,y,z) of the rod
+			//rotation = [] the rotaion angles (x,y,z) of the pivot (in radians)
+			//armNo = the number id of the rod
+			//scene = the scene the rod is attatched to
+			class Motors {
+				constructor(radius, length, pos, pivot, rotation, motorNo, scene)
+				{
+					// physics data 
+                    this.radius = radius;
+					this.length=length;
+                    this.pos = pos;
+					this.prevPos = pos;
+					this.pivot = new THREE.Object3D();
+					this.pivot.position.set(pivot[0],pivot[1],pivot[2]);
+					this.rotation = rotation;
+					this.matrix = new THREE.Matrix4();
+					this.motorNo = motorNo;
+
+					this.normal = new Float32Array(3);
+
+					// visual mesh
+
+                    var geometry = new THREE.CapsuleGeometry(radius,length);//SphereGeometry( radius, 8, 8 );
+                    var material = new THREE.MeshPhongMaterial({color: 0xFF0000});
+					this.visMesh = new THREE.Mesh(geometry, material);
+					var geomPivot= new THREE.SphereGeometry(radius+0.04,32,16);//SphereGeometry( radius, 8, 8 );
+                    var matPivot = new THREE.MeshPhongMaterial({color: 0xFFFF00});
+					var sphere = new THREE.Mesh(geomPivot,matPivot);
+
+					this.visMesh.position.set(pos[0],pos[1],pos[2]);
+					sphere.position.set(0,0,0);
+					this.pivot.add(sphere);
+                    this.pivot.add(this.visMesh);
+					this.pivot.rotateX(this.rotation[0]);
+					this.pivot.rotateY(this.rotation[1]);
+					this.pivot.rotateZ(this.rotation[2]);
+					scene.add(this.pivot);
+					this.updateMesh();
+					return this.pivot;
+				}
+
+				updateMesh()
+				{
+					// for (var i = 0; i < this.numBalls; i++) {
+					// 	this.matrix.makeTranslation(this.pos[3 * i], this.pos[3 * i + 1], this.pos[3 * i + 2]);
+					// 	this.visMesh.setMatrixAt(i, this.matrix);
+					// }
+					// this.visMesh.instanceMatrix.needsUpdate = true;
+					// this.visMesh.instanceColor.needsUpdate = true;
+				}
+			
+				simulate(dt, gravity, worldBounds)
+				{
+					//var minDist = 2.0 * this.radius;
+
+					// integrate
+
+					// for (var i = 0; i < this.nummotors; i++) {
+					// 	vecAdd(this.vel, i, gravity, 0, dt);
+					// 	vecCopy(this.prevPos, i, this.pos, i);
+					// 	vecAdd(this.pos, i, this.vel, i, dt);
+					// }
+
+					this.updateMesh();
+				}
+			}//end of class Balls
+
+			class Letter{
+				constructor(wid, hei, letter){
+					const canvas = document.createElement("CANVAS");
+					
+					if(letter == "ab"){
+						canvas.width = 512;
+						canvas.height = 64;
+						const context = canvas.getContext('2d');
+						//console.log("letters");
+						context.clearRect(0, 0, canvas.width, canvas.height);
+						context.font = "28px Arial";
+						context.fillStyle = "blue";
+						for(var i=0;i<8;i++){
+							var si = context.measureText(letters[i].toString());
+							context.fillText(letters[i].toString(), i * canvas.width / 8 + canvas.width / 16 - si.width / 2, canvas.height-10);
+						}
+					}else{
+						//console.log("numbers");	
+						canvas.width = 64;
+						canvas.height = 512;
+						const context = canvas.getContext('2d');
+						context.clearRect(0, 0, canvas.width, canvas.height);
+						context.font = "28px Arial";
+						context.fillStyle = "blue";
+						for(var i=0;i<8;i++){
+							var si = context.measureText((8-i).toString());
+							context.fillText((8-i).toString(), 10, i * canvas.height / 8 + canvas.width / 2 + 10 );
+						}	
+					}
+					var tile = new THREE.Mesh(
+						new THREE.BoxGeometry(wid, 0.01, hei), 
+						[
+							new THREE.MeshBasicMaterial( {color: 'lightgray'}),
+							new THREE.MeshBasicMaterial( {color: 'lightgray'}),
+							//new THREE.MeshLambertMaterial( {color: 'lightgray'}),
+							new THREE.MeshBasicMaterial( {map: new THREE.CanvasTexture(canvas), transparent: true, side: THREE.DoubleSide} ),
+							new THREE.MeshBasicMaterial( {color: 'lightgray'}),
+							new THREE.MeshBasicMaterial( {color: 'lightgray'}),
+							new THREE.MeshBasicMaterial( {color: 'lightgray'}),
+						]
+					);
+					return tile;
+				}
+			}
+			// ------------------------------------------------------------------
+			function initPhysics(scene) 
+			{
+				var radius = boardWidth/8;//0.025;
+
+				var spacing = 0;//radius;//3.0 * radius;
+
+				var s = physicsScene.worldBounds;
+
+				var pos = new Float32Array(64);//3*numX * numY * numZ);
+				var vel = new Float32Array(64);//3*numX * numY * numZ);
+				vel.fill(0.0);
+				
+				var baseMaterial = new THREE.MeshPhongMaterial({color: 0x202020});
+                baseMaterial.transparent = true;
+                baseMaterial.opacity = 1;
+				var baseGeometry = new THREE.BoxGeometry(offsetX, offsetY, offsetX);
+				var baseBox = new THREE.Mesh(baseGeometry, baseMaterial);
+				baseBox.position.set(boardWidth/2 + offsetX, offsetY/2, 0.0);
+                scene.add(baseBox);
+				physicsScene.base = baseBox;
+				motors=[];
+				//motor for rotating the total arm in Y axis
+				motors.push(new Motors(0.1, 0, [0, 0.1/2 , 0], [boardWidth/2 + offsetX, offsetY, 0], [0, 0, 0], 0, threeScene));
+				//motor for rotating rod in Z axis
+				var rodLength=rodSize;
+				motors.push(new Motors(0.1, rodLength, [0, rodLength/2 , 0], [0 , 0, 0], [0, 0, 0], 0, threeScene));
+				motors[0].add(motors[1]);
+
+				rodLength=rodSize;
+				motors.push(new Motors(0.08, rodLength, [0, rodLength/2, 0], [0, rodLength, 0],[0, 0, Math.PI/2],  1, threeScene));
+				motors[1].add(motors[2]);
+
+				rodLength=0.1*rodSize;
+				motors.push(new Motors(0.06, rodLength, [0, rodLength/2, 0],[0, rodSize, 0],[0, 0, Math.PI/2], 2, threeScene));
+				motors[2].add(motors[3]);
+
+				physicsScene.motors = motors;
+				rot0=restAngles[0];
+				rot1=restAngles[1];
+				rot2=restAngles[2];
+				rot3=restAngles[3];
+				document.getElementById("slider0").value = rot0;
+				document.getElementById('lblRot0').textContent=Number(rot0).toFixed(2);
+				document.getElementById("slider1").value = rot1;
+				document.getElementById('lblRot1').textContent=Number(rot1).toFixed(2);
+				document.getElementById("slider2").value = rot2;
+				document.getElementById('lblRot2').textContent=Number(rot2).toFixed(2);
+				document.getElementById("slider3").value = rot3;
+				document.getElementById('lblRot3').textContent=Number(rot3).toFixed(2);
+				moveRods();
+			}
+
+			var timeFrames = 0;
+			var timeSum = 0;	
+						
+			// ------------------------------------------------------------------
+			function simulate() 
+			{
+				if (physicsScene.paused)
+					return;
+
+				var startTime = performance.now();					
+
+				//physicsScene.motors[0].simulate(physicsScene.dt, physicsScene.gravity, physicsScene.worldBounds);
+				var ang = anglesToMove[totalAnglesSteps];
+				rot0 = ang[0];
+				rot1 = ang[1];
+				rot2 = ang[2];
+				rot3 = ang[3];
+				curGrab = ang[4];
+
+				if(curGrab == true && prevGrab == false){
+					groupObject(threeScene, pawns[0], motors[3]);
+				}else if(curGrab == false && prevGrab == true){
+					unGroupObject(threeScene, pawns[0], motors[3]);
+				}
+
+				moveRods();
+				//sliderValue();
+				prevGrab = curGrab;
+
+				totalAnglesSteps++;
+				if(totalAnglesSteps == anglesToMove.length){
+					physicsScene.paused = true;
+					document.getElementById("slider0").disabled = false;
+					document.getElementById("slider1").disabled = false;
+					document.getElementById("slider2").disabled = false;
+					document.getElementById("slider3").disabled = false;
+				}
+
+				var endTime = performance.now();
+				timeSum += endTime - startTime; 
+				timeFrames++;
+
+				if (timeFrames > 10) {
+					timeSum /= timeFrames;
+					//document.getElementById("ms").innerHTML = timeSum.toFixed(3);		
+					timeFrames = 0;
+					timeSum = 0;
+				}
+			}
+						
+			// ------------------------------------------
+					
+			function initThreeScene() 
+			{
+				threeScene = new THREE.Scene();
+				
+				// Lights
+				
+				threeScene.add( new THREE.AmbientLight( 0x505050 ) );	
+				threeScene.fog = new THREE.Fog( 0x000000, 0, 15 );				
+
+				var spotLight = new THREE.SpotLight( 0xffffff );
+				spotLight.angle = Math.PI / 5;
+				spotLight.penumbra = 0.2;
+				spotLight.position.set( 2 * boardWidth / 2, 3 * boardWidth / 2, 3 * boardWidth / 2 );
+				spotLight.castShadow = true;
+				spotLight.shadow.camera.near = 3;
+				spotLight.shadow.camera.far = 10;
+				spotLight.shadow.mapSize.width = 1024;
+				spotLight.shadow.mapSize.height = 1024;
+				threeScene.add( spotLight );
+
+				var dirLight = new THREE.DirectionalLight( 0x55505a, 1 );
+				dirLight.position.set( 0, 3*boardWidth/2, 0 );
+				dirLight.castShadow = true;
+				dirLight.shadow.camera.near = 1;
+				dirLight.shadow.camera.far = 10;
+
+				dirLight.shadow.camera.right = 1;
+				dirLight.shadow.camera.left = - 1;
+				dirLight.shadow.camera.top	= 1;
+				dirLight.shadow.camera.bottom = - 1;
+
+				dirLight.shadow.mapSize.width = 1024;
+				dirLight.shadow.mapSize.height = 1024;
+				threeScene.add( dirLight );
+				
+				// Geometry
+
+				var ground = new THREE.Mesh(
+					new THREE.PlaneBufferGeometry( 20, 20, 1, 1 ),
+					new THREE.MeshPhongMaterial( { color: 0xa0adaf, shininess: 150 } )
+				);				
+
+				ground.rotation.x = - Math.PI / 2; // rotates X/Y to X/Z
+				ground.receiveShadow = true;
+				threeScene.add( ground );
+				
+				var helper = new THREE.GridHelper( 20, 20 );
+				helper.material.opacity = 1.0;
+				helper.material.transparent = true;
+				helper.position.set(0, 0.002, 0);
+				threeScene.add( helper );	
+                
+                //tank
+                tankMaterial = new THREE.MeshPhongMaterial({color: 0x909090});
+                tankMaterial.transparent = true;
+                tankMaterial.opacity=0.3;
+				tankMaterial.visible=false;
+				var boxGeometry = new THREE.BoxGeometry(0.02, boardWidth, boardWidth);
+				box1 = new THREE.Mesh(boxGeometry, tankMaterial);
+				box1.position.set(-boardWidth/2, boardWidth/2, 0.0);
+                threeScene.add(box1);
+                box2 = new THREE.Mesh(boxGeometry, tankMaterial);
+				box2.position.set(boardWidth/2, boardWidth/2, 0.0);
+                threeScene.add(box2);
+				var boxGeometry = new THREE.BoxGeometry(boardWidth, boardWidth, 0.02);
+				box3 = new THREE.Mesh(boxGeometry, tankMaterial);
+				box3.position.set(0, boardWidth/2, boardWidth/2);
+                threeScene.add(box3);
+                var boxGeometry = new THREE.BoxGeometry(boardWidth, boardWidth, 0.02);
+				box4 = new THREE.Mesh(boxGeometry, tankMaterial);
+				box4.position.set(0, boardWidth/2, -boardWidth/2);
+                threeScene.add(box4);
+                var boxGeometry = new THREE.BoxGeometry(boardWidth, 0.02, boardWidth);
+				box5 = new THREE.Mesh(boxGeometry, tankMaterial);
+				box5.position.set(0, boardWidth, 0.0);
+                threeScene.add(box5);
+                var boxGeometry = new THREE.BoxGeometry(boardWidth, 0.02, boardWidth);
+				box6 = new THREE.Mesh(boxGeometry, tankMaterial);
+				box6.position.set(0.0, 0.0, 0.0);
+                threeScene.add(box6);
+				tileSize=boardWidth/8;
+				var tileMaterial1 = new THREE.MeshPhongMaterial({color: 0xeeeeee});
+                tileMaterial1.transparent = true;
+				var tileMaterial2 = new THREE.MeshPhongMaterial({color: 0x404040});
+                tileMaterial2.transparent = true;
+				var yPos = 0.0 + 0.02;
+				for(var i=0;i<8;i++){
+					for(var j=0;j<8;j++){
+						var boxGeometry = new THREE.BoxGeometry(tileSize, 0.02, tileSize);
+						var tileMaterial = tileMaterial1;
+						if((i+(j %2 )) % 2 == 0)
+							board[i,j] = new THREE.Mesh(boxGeometry, tileMaterial1);
+						else
+							board[i,j] = new THREE.Mesh(boxGeometry, tileMaterial2);
+						board[i,j].position.set((i-4)*tileSize+tileSize/2,yPos,(j-4)*tileSize+tileSize/2);
+						threeScene.add(board[i,j]);
+					}
+				}
+				var legend1 = new Letter(boardWidth, boardWidth/8, "ab");
+				legend1.position.set(0, 0.02, -boardWidth/2 - boardWidth / 16);//boardWidth + boardWidth / 16));
+				threeScene.add(legend1);
+				var legend2 = new Letter(boardWidth/8, boardWidth, "12");
+				legend2.position.set(-boardWidth/2, 0.02, 0);//boardWidth + boardWidth / 16));
+				threeScene.add(legend2);
+				// Renderer
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.shadowMap.enabled = true;
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( 0.8 * window.innerWidth, 0.8 * window.innerHeight );
+				window.addEventListener( 'resize', onWindowResize, false );
+				container.appendChild( renderer.domElement );
+				
+				// Camera
+						
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 100);
+			    camera.position.set(0, boardWidth/3, boardWidth);
+				camera.updateMatrixWorld();	
+
+				threeScene.add( camera );
+
+				cameraControl = new THREE.OrbitControls(camera, renderer.domElement);
+    			cameraControl.zoomSpeed = 2.0;
+    			cameraControl.panSpeed = 0.4;
+
+				//pawns material
+				whiteMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
+				blackMaterial = new THREE.MeshPhongMaterial({color: 0x000000});
+                whiteMaterial.transparent = true;
+                whiteMaterial.opacity = 0.9;
+				blackMaterial.transparent = true;
+                blackMaterial.opacity = 0.9;
+				//pawns position
+				var stringPos = "b2";
+				var col = letters.indexOf(stringPos[0].toString())+1;
+				var row = parseInt(stringPos[1].toString());
+				var counter=0;
+				var color1="white";
+				pawns.push(new Pawn(color1, col, row));
+				threeScene.add(pawns[counter++]);
+				// for(var r=0;r<8;r++){
+				// 	for(var c=0;c<8;c++){
+				// 		stringPos = letters[c].toString()+(r+1).toString();
+				// 		col = letters.indexOf(stringPos[0].toString())+1;
+				// 		row = parseInt(stringPos[1].toString());
+				// 		color1 = counter % 2 == 0 ? "white" : "black";
+				// 		pawns.push(new Pawn(color1, col, row));
+				// 		threeScene.add(pawns[counter++]);
+				// 	}
+				// }
+				
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			// function run() {
+			// 	var button = document.getElementById('buttonRun');
+			// 	if (physicsScene.paused)
+			// 		button.innerHTML = "Stop";
+			// 	else
+			// 		button.innerHTML = "Run";
+			// 	physicsScene.paused = !physicsScene.paused;
+			// }
+
+			function reset() {
+				//location.reload();
+				rot0=restAngles[0];
+				rot1=restAngles[1];
+				rot2=restAngles[2];
+				rot3=restAngles[3];
+				moveRods();
+			}
+			
+			// make browser to call us repeatedly -----------------------------------
+
+			function update() {
+				simulate();
+				renderer.render(threeScene, camera);
+				cameraControl.update();				
+				
+				requestAnimationFrame(update);
+			}
+			
+			initThreeScene();
+			onWindowResize();
+			initPhysics(threeScene);
+			update();
+			
+		</script>
+	</body>
+</html>

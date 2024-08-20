@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Hind');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: relative;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0;
+  color: #dee2e6;
+  background-color: #212529;
+  font-family: 'Hind', sans-serif;
+  /*text-transform: uppercase;*/
+}
+
+.container {
+  position: relative;
+  line-height: 0;
+}
+
+canvas {
+  display: inline;
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.75);
+}
+
+/* responsive scaling, because pinball tables are tall */
+@media (min-height: 0px) {
+  .container { transform: scale(0.25); }
+}
+@media (min-height: 400px) {
+  .container { transform: scale(0.5); }
+}
+@media (min-height: 600px) {
+  .container { transform: scale(0.75); }
+}
+@media (min-height: 800px) {
+  .container { transform: scale(1); }
+}

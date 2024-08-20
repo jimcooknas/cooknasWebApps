@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Primordial Particle System (v5.2)</title>
+<meta name="description" content="Based on the YouTube video, 'How life emerges from a simple particle motion law: Introducing the Primordial Particle System'" />
+<meta name="author" content="Joe Haythornthwaite (nagualdesign)" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#000" />
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400|Material+Icons" rel="stylesheet" />
+<link rel="stylesheet" media="all" type="text/css" href="style.css">
+
+</head>
+<body onLoad="initialize();" onResize="popOut();">
+  <!--<h1 id="title"><span onclick="window.location.href=window.location.href.split('?')[0];">Primordial Particle System</span></h1>-->
+  <table style="width:100%;height:100%;">
+    <tr style="width:100%;height:100%;">
+        <td style="width:80%;height:100%;vertical-align:top;">
+            <div id="simulation" onclick="playPause();">
+                <canvas id="canvas"></canvas>
+                <div id="overlay" class="visible"></div>
+                <div id="mediacontrols" class="visible"><!--
+                --><button class="material-icons" onclick="back();">skip_previous</button><!--
+                --><button class="material-icons" >play_arrow</button><!--
+                --><button class="material-icons" onclick="next();">skip_next</button><!--
+                --><button class="material-icons right" onclick="toggleFullScreen();">fullscreen</button>
+                </div>
+            </div>
+        </td>
+        <td style="width:20%;height:100%;"><!--overflow-y: scroll;-->
+            <div id="settings">
+                <div id="margins">
+                    <!--<table style="width:100%;">
+                        <tr><td>
+                            
+                        </td></tr>
+                        <tr><td>-->
+                            <div id="controls">
+                                <div id="footer3">
+                                    <a href="./analysis.pdf" target="_blank">How it works</a><a><sub style="color:white;"> (by nagualdesign)</sub></a> 
+                                </div>
+                                <!--<p>Based on the Primordial Particle System originally created by Thomas Schmickl and Martin Stefanec at the University of Graz in Austria.</p>
+                                <p><a href="https://www.youtube.com/watch?v=makaJpLvbow" target="youtube">Click here to watch the original YouTube video</a></p>-->
+                                <div id="speciesparameters"></div>
+                                <div id="experimentalsetup"></div>
+                                <div id="graphicssettings"></div>
+                                <div id="presets"></div><!--class="collapsible collapsed"-->
+                                <div id="footer">
+                                    <a href="https://github.com/nagualdesign/Primordial-Particle-System" target="github">Initial source by nagualdesign</a>
+                                </div>    
+                                <div id="footer2">
+                                    <a href="http://www.cooknas.com" target="_blank">Re-arranged by Cooknas</a>
+                                </div>
+                            </div>
+                        <!--</td></tr>
+                    </table>-->
+                </div>
+                <!---->
+            </div>
+        </td>
+    </tr>
+  </table>
+  <script type="text/javascript" src="index.js"></script>
+</body>
+</html>

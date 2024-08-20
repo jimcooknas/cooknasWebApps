@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Elastic Collisions in 3D</title>
+<!-- https://exploratoria.github.io/exhibits/mechanics/elastic-collisions-in-3d/ -->
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name=author content="Paul Masson">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r100/examples/js/controls/OrbitControls.js"></script>
+<script src="CCapture.all.min.js"></script>
+<style>
+	body { 
+		margin: 0px; 
+		overflow: hidden;
+		font-family: verdana; 
+	}
+	.panel{
+		width:12vw;
+		height: 90%;
+		min-width: 142px;
+		position: absolute;
+		border-radius: 0px 8px 8px 0px;
+		background-color: #ffffff;
+		padding:10px;
+		left: 0px;
+		top: 5%;
+		transition: transform 0.5s;
+	}
+	.panelHandle{
+		width:30px;
+		height: 30px;
+		position: absolute;
+		border-radius: 0px 4px 4px 0px;
+		background-color: #ffffff;
+		left: 99%;
+		top: 5px;
+		cursor: pointer;
+	}
+
+	.label{
+		padding-top: 10px;
+		padding-bottom: 2px;
+		font-size: 12px;
+	}
+	.label-val{
+		padding-top: 5px;
+		padding-bottom: 2px;
+		font-size: 14px;
+		font-weight: bold;
+	}
+
+	.btn{
+		border-radius: 6px;
+		min-width: 60px;
+		cursor: pointer;
+	}
+	.btn:hover{
+		background-color: #055a5f;
+		color: yellow;
+		font-weight: bold;
+	}
+
+	.slider{
+		width: 100%;
+		cursor:pointer;
+	}
+
+	/********** Range Input Styles **********/
+	/*Range Reset*/
+	input[type="range"] {
+		-webkit-appearance: none;
+		appearance: none;
+		background: transparent;
+		cursor: pointer;
+		/*width: 15rem;*/
+	}
+	/* Removes default focus */
+	input[type="range"]:focus {
+		outline: none;
+	}
+	/***** Chrome, Safari, Opera and Edge Chromium styles *****/
+	/* slider track */
+	input[type="range"]::-webkit-slider-runnable-track {
+		background-color: #055a5f;
+		border-radius: 0.5rem;
+		height: 0.5rem;  
+	}
+	/* slider thumb */
+	input[type="range"]::-webkit-slider-thumb {
+		-webkit-appearance: none; /* Override default look */
+		appearance: none;
+		margin-top: -4px; /* Centers thumb on the track */
+		border-radius: 4px;
+		/*custom styles*/
+		background-color: #5ca59b;
+		height: 1rem;
+		width: 0.8rem;
+	}
+	input[type="range"]:focus::-webkit-slider-thumb {   
+		border: 1px solid #053a5f;
+		outline: 3px solid #053a5f;
+		outline-offset: 0.125rem; 
+	}
+	/******** Firefox styles ********/
+	/* slider track */
+	input[type="range"]::-moz-range-track {
+		background-color: #055a5f;
+		border-radius: 0.5rem;
+		height: 0.5rem;
+	}
+	/* slider thumb */
+	input[type="range"]::-moz-range-thumb {
+		border: none; /*Removes extra border that FF applies*/
+		border-radius: 4px; /*Removes default border-radius that FF applies*/
+		/*custom styles*/
+		background-color: #5ca59b;
+		height: 1rem;
+		width: 0.8rem;
+	}
+	input[type="range"]:focus::-moz-range-thumb {
+		border: 1px solid #053a5f;
+		outline: 3px solid #053a5f;
+		outline-offset: 0.125rem; 
+	}
+
+	/* CheckBox */
+	/* Customize the label (the container) */
+	.container {
+		display: block;
+		position: relative;
+		padding-left: 25px;
+		margin-bottom: 12px;
+		cursor: pointer;
+		font-size: 13px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+
+	/* Hide the browser's default checkbox */
+	.container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+
+	/* Create a custom checkbox */
+	.checkmark {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 20px;
+		width: 20px;
+		background-color: #eee;
+	}
+
+	/* On mouse-over, add a grey background color */
+	.container:hover input ~ .checkmark {
+		background-color: #ccc;
+	}
+
+	/* When the checkbox is checked, add a blue background */
+	.container input:checked ~ .checkmark {
+		background-color: #2196F3;
+	}
+
+	/* Create the checkmark/indicator (hidden when not checked) */
+	.checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	/* Show the checkmark when checked */
+	.container input:checked ~ .checkmark:after {
+		display: block;
+	}
+
+	/* Style the checkmark/indicator */
+	.container .checkmark:after {
+		left: 7px;
+		top: 2px;
+		width: 5px;
+		height: 10px;
+		border: solid white;
+		border-width: 0 3px 3px 0;
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		transform: rotate(45deg);
+	}
+	/* */
+	.toggleButton{
+		position: absolute;
+		left: 10px;
+		right: 10px;
+		bottom: 10px;
+		border-radius: 6px;
+		min-width: 60px;
+		cursor: pointer;
+	}
+	.toggleButton:hover{
+		background-color: #055a5f;
+		color: white;
+		font-weight: bold;
+	}
+
+</style>
+</head>
+
+<body>
+	<canvas id="rendererCanvas" style="width:100%;height:100%;background-color: gray;"></canvas>
+	<div id="panel" class="panel">
+		<div id="particlesPanel" style="width:100%;">
+			<p style="font-size:18px;font-weight: bold;text-align: center;">Patricles</p>
+			<label class="label">Number of balls</label><br>
+			<div style="width:100%;display:table;right:0px;vertical-align: middle;">
+				<input type="text" id="numOfBalls" style="display: table-cell;width:60px;font-size:14px;font-weight:bold;text-align:center;border-radius:6px;" value="100">
+				<input type="button" id="btnSet" class="btn" style="font-size:14px;display:table-cell;float:right;margin-left:10px;" value="Set" onclick="resetBalls()">
+			</div>
+			<div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;">Balls Min Radius</label>
+				<label id="minRadiusLabel" class="label-val" style="display: table-cell;text-align: right;">0.1</label>
+			</div>
+			<input type="range" id="minRadiusSlider" min="1" max="10" value="1" class="slider" onchange="radiusSlider()">
+			<br>
+			<div style="width:100%;display:table;clear:both;">
+			<label class="label" style="display: table-cell;">Balls Max Radius</label>
+			<label id="maxRadiusLabel" class="label-val" style="display: table-cell;text-align: right;">0.5</label>
+			</div>
+			<input type="range" id="maxRadiusSlider" min="1" max="10" value="5" class="slider" onchange="radiusSlider()"> 
+			<br>
+			<br>
+			<label class="container">One Color Balls
+				<input type="checkbox" id="oneColor" checked="checked" onchange="oneColor()">
+				<span class="checkmark"></span>
+			</label>
+			<div id="ballColorContainer" style="width:100%;display:table;height:fit-content;">
+				<label for="ballColor" style="font-size:13px;display: table-cell;vertical-align: middle;">Ball Color</label>
+				<input type="color" id="ballColor" style="display: table-cell;float:right;vertical-align: middle;" name="ballColor" value="#ff9000">
+			</div>
+			<br><br>
+			<label class="container">Check Collisions
+				<input type="checkbox" id="checkCollisions" checked="checked" onchange="checkForCollisions()">
+				<span class="checkmark"></span>
+			</label>
+			<div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;">Collision Loss (%)</label>
+				<label id="collisionLossValue" class="label-val" style="display: table-cell;text-align: right;">0.0</label>
+			</div>
+			<input type="range" id="collisionLoss" min="0" max="50" value="0" class="slider" onchange="collisionLossSlider()">
+			<br><br>
+			<div style="width:100%;left:10px;right:10px">
+				<input type="button" id="btnStartStop" class="btn" style="width:100%;height:35px;" value="Stop" onclick="startStop()">
+			</div>
+			<br>
+			<div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;padding-top:4px;">Tot.Energy:</label>
+				<label id="totalEnergy" class="label-val" style="display: table-cell;text-align: right;padding-top:2px;">0.0</label>
+			</div>
+			<br>
+			<div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;padding-top:4px;">Energy Loss:</label>
+				<label id="energyLoss" class="label-val" style="display: table-cell;text-align: right;padding-top:2px;">0.0</label>
+			</div>
+			<br>
+			<div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;padding-top:4px;">Collisions:</label>
+				<label id="numOfCollisions" class="label-val" style="display: table-cell;text-align: right;padding-top:2px;">0</label>
+			</div>
+			<!--<div style="width:100%;left:10px;right:10px">
+				<input type="button" id="btnSave" class="btn" style="width:100%;height:35px;" value="Save Animation" onclick="saveAnimation()">
+			</div>-->
+		</div>
+		<div id="dnaPanel" style="width:100%;display:none;">
+			<p style="font-size:18px;font-weight: bold;text-align: center;">Double Helix</p>
+			<div style="width:100%;display:table;clear:both;">
+				<label class="label" style="display: table-cell;">Helix Radius</label>
+				<label id="helixRadiusLabel" class="label-val" style="display: table-cell;text-align: right;">2.0</label>
+			</div>
+			<input type="range" id="helixRadiusSlider" min="5" max="40" value="20" class="slider" onchange="helixRadiusSlider()">
+			<br>
+		</div>
+		<div style="width:100%;padding:10px;left:0px;">
+			<input type="button" id="btnTogglePanel" class="toggleButton" style="width:90%;height:35px;" value="Go to Double Helix" onclick="toggleParticlesDNA()">
+		</div>
+		<div id="panelHandle" class="panelHandle" onclick="showHidePanel()">
+			<i id="eyeSymbol" class="fa fa-eye-slash" style="width:100%;text-align: center;margin-top: 5px;"></i>
+		</div>
+	</div>
+
+
+<script>
+	//html elements
+	var canvas = document.getElementById("rendererCanvas");
+	var panel = document.getElementById("panel");
+	var particlesPanel = document.getElementById("particlesPanel");
+	var dnaPanel = document.getElementById("dnaPanel");
+	var btnTogglePanel = document.getElementById("btnTogglePanel");
+	var panelHandle = document.getElementById("panelHandle");
+	var panelHidden = false;
+	var txtNumOfBalls = document.getElementById("numOfBalls");
+	var radiusMinSlider = document.getElementById("minRadiusSlider");
+	var radiusMaxSlider = document.getElementById("maxRadiusSlider");
+	var radiusMinLabel = document.getElementById("minRadiusLabel");
+	var radiusMaxLabel = document.getElementById("maxRadiusLabel");
+	var checkCollisions = document.getElementById("checkCollisions");
+	var bCheckCollisions = true;
+	var ballColorEl = document.getElementById("ballColor");
+	var oneColorEl = document.getElementById("oneColor");
+	var collisionLossLabel = document.getElementById("collisionLossValue");
+	var collisionLoss = document.getElementById("collisionLoss");
+	var totalEnergy = document.getElementById("totalEnergy");
+	var energyLoss = document.getElementById("energyLoss");
+	var numOfCollisions = document.getElementById("numOfCollisions");
+	//balls variables
+	var ballCount = 100; // integer
+	var radius = .25; // size of balls, default value 0.25
+	var ballRadius = []; // a list of all ball sizes
+	var ballMass = [];
+	var minRadius = 0.1; //minimum radius of balls
+	var maxRadius = 0.5; //maximum radius of balls
+	var density = 1; //to calculate mass from radius
+	var range = 5;  // size of enclosing box
+	var balls = []; //the ball objects on scene
+	var cylinders = [];
+	var group;
+	var ballGroup;
+	var boxHelper;
+	var ballColor;
+	var collLoss = 0.0;
+	var speed = .1;//the maximum ball's speed
+	var rotation = 0.005;
+	var helixRadius = 2.0;
+
+	// declare once and modify
+	var plus = new THREE.Vector3();
+	var minus = new THREE.Vector3();
+	var separation = new THREE.Vector3();
+	var normal = new THREE.Vector3();
+	var relativeVelocity = new THREE.Vector3();
+
+	//scene, renderer, camera and lights
+	var scene;
+	var renderer;
+	var camera;
+	var controls;
+	var light;
+	var ambient;
+	var winResizeListener;
+	var isRunning = true;
+	var renderId;
+	var isParticlesShown = true;
+	var log = false;
+	//energies
+	var totInitialEnergy=0.0;
+	var totEnergy=0.0;
+	var energyScale = 1000.0;
+	var collisions=0;
+	//capturing the animaion
+	var capturer = null;
+	var animCounter = 0;
+	var savingAnim = false;
+
+	function toggleParticlesDNA(){
+		if(particlesPanel.style.display === 'none'){
+			particlesPanel.style.display = 'block';
+			dnaPanel.style.display = 'none';
+			btnTogglePanel.value = 'Go to Double Helix';
+			isParticlesShown = true;
+			resetBalls();
+			//render();
+		}else{
+			particlesPanel.style.display = 'none';
+			dnaPanel.style.display = 'block';
+			btnTogglePanel.value = 'Go to Particles';
+			isParticlesShown = false;
+			resetDNA();
+			//render();
+		}
+	}
+
+	function generateScene(){
+		//create scene object
+		scene = new THREE.Scene();
+		//create the renderer
+		renderer = new THREE.WebGLRenderer( { antialias: true, canvas: rendererCanvas } );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setClearColor( 0x000000, 1 );
+		document.body.appendChild( renderer.domElement );
+		//create the camera
+		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 100 );
+		camera.up.set( 0, 0, 1 );
+		camera.position.set( 3.5*range, 0.0, 0.0 );//2, 1.5, 2.5
+		//create the controls
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls.zoomSpeed = 2.0;
+    	controls.panSpeed = 0.4;
+		window.removeEventListener( 'resize', winResizeListener);
+		window.addEventListener( 'resize', winResizeListener);
+		//create box
+		var box = new THREE.Geometry();
+		box.vertices.push( new THREE.Vector3( -range, -range, -range ) );
+		box.vertices.push( new THREE.Vector3( range, range, range ) );
+		var boxMesh = new THREE.Line( box );
+		boxHelper = new THREE.BoxHelper( boxMesh, 'white' );
+		//scene.add( boxHelper );
+		//create lights
+		light = new THREE.DirectionalLight( 0xffffff, .8 );
+		light.position.set( -range, range, 0 );
+		camera.add( light );
+		scene.add( camera );
+		ambient = new THREE.AmbientLight( 0x555555 );
+		scene.add( ambient );
+	}
+
+	function generateBalls(){
+		ballColor = ballColorEl.value;
+		balls=[];
+		totInitialEnergy=0.0;
+		totEnergy=0.0;
+		group = undefined;
+		ballGroup = new THREE.Group();
+		if(boxHelper)ballGroup.add(boxHelper);
+		for ( var i = 0 ; i < ballCount ; i++ ) {
+			ballRadius.push(minRadius + (maxRadius - minRadius) * Math.random());
+			radius = ballRadius[ballRadius.length-1];
+			ballMass.push(radius*radius*radius*density);
+			var geometry = new THREE.SphereGeometry( radius, 20, 20 );
+			var material = new THREE.MeshPhongMaterial();
+			if(oneColorEl.checked)
+				material.color = new THREE.Color(ballColor);
+			else 
+				material.color = new THREE.Color().setHSL( Math.random(), 1, .5 );
+			var ball = new THREE.Mesh( geometry, material );
+			// random position
+			ball.position.set(( range - radius ) * ( 2 * Math.random() - 1 ),
+							  ( range - radius ) * ( 2 * Math.random() - 1 ),
+							  ( range - radius ) * ( 2 * Math.random() - 1 ));
+			// random velocity
+			ball.v = new THREE.Vector3( speed * ( 2 * Math.random() - 1 ),
+										speed * ( 2 * Math.random() - 1 ),
+										speed * ( 2 * Math.random() - 1 ) );
+			balls.push( ball );
+			ballGroup.add(ball);
+			//scene.add( ball );
+			totInitialEnergy += 0.5 * energyScale * radius * getLengthSq(ball.v);
+		}
+		scene.add(ballGroup);
+		totEnergy = totInitialEnergy;
+		totalEnergy.textContent = totEnergy.toFixed(1);
+		numOfCollisions.textContent = 0;
+		collisions = 0;
+		energyLoss.textContent = (totInitialEnergy - totEnergy).toFixed(1);
+		if(log)console.log("Tot. Init. Energy="+totInitialEnergy.toFixed(1)+" Energy="+totEnergy+" Loss="+(totInitialEnergy - totEnergy).toFixed(1));
+	}
+
+	function generateDNA(){
+		ballColor = ballColorEl.value;
+		balls=[];
+		group = new THREE.Group();
+		cylinders = [];
+		for ( var L = -range ; L <= range ; L += 0.1 ) {
+			radius = helixRadius/20;//0.1;
+			var P1 = new THREE.Vector3(helixRadius*Math.sin(L), helixRadius*Math.cos(L), L);
+			var P2 = new THREE.Vector3(helixRadius*Math.sin(L-Math.PI), helixRadius*Math.cos(L-Math.PI), L);
+			var geometry = new THREE.SphereGeometry( radius, 20, 20 );
+			var material = new THREE.MeshPhongMaterial();
+			if(oneColorEl.checked)
+				material.color = new THREE.Color(ballColor);
+			else 
+				material.color = new THREE.Color().setHSL( Math.random(), 1, .5 );
+			var ball1 = new THREE.Mesh( geometry, material );
+			var ball2 = new THREE.Mesh( geometry, material );
+			var cylinder = createCylinder(radius, P1, P2);
+			// helix position
+			ball1.position.set(P1.x,P1.y,P1.z);
+			ball2.position.set(P2.x,P2.y,P2.z);
+			// zero velocity for now
+			ball1.v = new THREE.Vector3( 0, 0, 0 );
+			ball2.v = new THREE.Vector3( 0, 0, 0 );
+			balls.push( ball1 );
+			group.add( ball1 );
+			balls.push( ball2 );
+			group.add( ball2 );
+			cylinders.push(cylinder);
+			group.add(cylinder);
+		}
+		scene.add(group);
+		ballCount = balls.length;
+	}
+
+	function createCylinder(radius, pointX, pointY){
+		// edge from X to Y
+		var direction = new THREE.Vector3().subVectors(pointY, pointX);
+		const material = new THREE.MeshBasicMaterial({ color: 0x5B5B5B });
+		// Make the geometry (of "direction" length)
+		var geometry = new THREE.CylinderGeometry(radius/4, radius/4, direction.length(), 6, 4, true);
+		// shift it so one end rests on the origin
+		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, direction.length() / 2, 0));
+		// rotate it the right way for lookAt to work
+		geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
+		// Make a mesh with the geometry
+		var mesh = new THREE.Mesh(geometry, material);
+		// Position it where we want
+		mesh.position.copy(pointX);
+		// And make it point to where we want
+		mesh.lookAt(pointY);
+		return mesh;
+	}
+
+	function render() {
+		if(isRunning){
+			if(isParticlesShown){
+				renderId = requestAnimationFrame(render);
+				//if(savingAnim)console.log(animCounter);
+				totEnergy=0.0;
+				for ( var i = 0 ; i < ballCount ; i++ ) {
+					var b1 = balls[i];
+					plus.copy( b1.position ).addScalar( ballRadius[i] ).add( b1.v );
+					minus.copy( b1.position ).subScalar( ballRadius[i] ).add( b1.v );
+					// reverse velocity components at walls
+					if ( plus.x > range || minus.x < -range ) b1.v.x = -b1.v.x;
+					if ( plus.y > range || minus.y < -range ) b1.v.y = -b1.v.y;
+					if ( plus.z > range || minus.z < -range ) b1.v.z = -b1.v.z;
+					if(bCheckCollisions){
+						for ( var j = i + 1 ; j < ballCount ; j++ ) {
+							var b2 = balls[j];
+							separation.copy( b1.position ).add( b1.v ).sub( b2.position ).sub( b2.v );
+							// exchange normal velocities for collision, leave tangential alone
+							if ( separation.length() <= ballRadius[i] + ballRadius[j] ) {
+								//from https://www.youtube.com/watch?v=dJNFPv9Mj-Y&t=20s
+								//var massSum = ballMass[i]+ballMass[j];
+								//normal.copy( b1.position ).sub( b2.position ).normalize();
+								//var impactVector = new THREE.Vector3();
+								//impactVector.copy(normal);
+								//var d = b1.position.distanceTo(b2.position);
+								//var overlap = d - (ballRadius[i]+ballRadius[j]);
+								//var dir = impactVector.setLength(overlap * 0.5);
+								//b1.position.add(dir);
+								//b2.position.sub(dir);
+								//var dist = ballRadius[i]+ballRadius[j];
+
+								normal.copy(b1.position).sub(b2.position).normalize();
+								relativeVelocity.copy(b1.v).sub(b2.v);
+								var dot = relativeVelocity.dot(normal);
+								normal = normal.multiplyScalar(dot);
+								b1.v.sub(normal);//.multiplyScalar(2*ballMass[j]/(massSum*dist*dist)));
+								b2.v.add(normal);//.multiplyScalar(2*ballMass[i]/(massSum*dist*dist)));
+								b1.v = b1.v.multiplyScalar(1.0-collLoss/100.0);
+								b2.v = b2.v.multiplyScalar(1.0-collLoss/100.0);
+								collisions++;
+							}
+						}
+					}
+					b1.position.add( b1.v );
+					totEnergy += 0.5 * energyScale * ballRadius[i] * getLengthSq(b1.v);
+				}
+				numOfCollisions.textContent = collisions;
+				totalEnergy.textContent = totEnergy.toFixed(1);
+				energyLoss.textContent = (totInitialEnergy - totEnergy).toFixed(1);
+				rotateAroundObjectAxis(ballGroup, new THREE.Vector3(0, 0, 1), rotation);
+				renderer.render( scene, camera );
+				controls.update();	
+				
+				if(capturer!=undefined && savingAnim){
+				
+					capturer.capture(renderer.domElement);
+					animCounter += rotation;
+					if(animCounter>2*Math.PI){
+						savingAnim = false;
+						capturer.stop();
+						console.log("Animation saved.");
+						cancelAnimationFrame(renderId);
+						capturer.save();
+					}
+				}
+			}else{
+				if(rotation >= 2*Math.PI)rotation = 0;
+				rotateAroundObjectAxis(group, new THREE.Vector3(0, 0, 1), rotation);
+				renderer.render( scene, camera );
+				controls.update();	
+				renderId = requestAnimationFrame(render);
+			}			
+		}else{
+			renderer.render( scene, camera );
+			controls.update();
+			renderId = requestAnimationFrame(render);
+		}
+	}
+
+	function saveAnimation(){
+		capturer = new CCapture({
+			format: 'webm', //do not use 'gif'
+			workerdPath: './', 
+			framerate:60, 
+			verbose:false, 
+			name:'particles',
+			//timeLimit: 4,
+			//frameLimit: 0,
+			autoSaveTime: 0,
+			display: true,});
+		savingAnim = true;
+		capturer.start();
+	}
+
+	function rotateAroundObjectAxis(object, axis, radians) {
+        rotObjectMatrix = new THREE.Matrix4();
+        rotObjectMatrix.makeRotationAxis(axis.normalize(), radians);
+        // old code for Three.JS pre r54:
+        // object.matrix.multiplySelf(rotObjectMatrix);      // post-multiply
+        // new code for Three.JS r55+:
+        object.matrix.multiply(rotObjectMatrix);
+        // old code for Three.js pre r49:
+        // object.rotation.getRotationFromMatrix(object.matrix, object.scale);
+        // old code for Three.js r50-r58:
+        // object.rotation.setEulerFromRotationMatrix(object.matrix);
+        // new code for Three.js r59+:
+        object.rotation.setFromRotationMatrix(object.matrix);
+    }
+
+	function getLengthSq(v){
+		return v.x*v.x+v.y*v.y+v.z*v.z;
+	}
+
+	function windowResize(){
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+	}
+
+	function showHidePanel(){
+		if(panelHidden){
+			panel.style.transform = "translateX(0)";
+			document.getElementById("eyeSymbol").classList.remove("fa-eye");
+			document.getElementById("eyeSymbol").classList.add("fa-eye-slash");
+		}else{
+			panel.style.transform = "translateX(-100%)";
+			document.getElementById("eyeSymbol").classList.remove("fa-eye-slash");
+			document.getElementById("eyeSymbol").classList.add("fa-eye");
+		}
+		panelHidden = !panelHidden;
+	}
+
+	function resetBalls(){
+		isRunning = false;
+		cancelAnimationFrame(renderId);
+		
+		for(var i = balls.length-1; i >= 0; i--){
+			ballGroup.remove(balls[i]);
+		}
+		scene.remove(ballGroup);
+		if(group!=undefined)scene.remove(group);
+		ball=[];
+		cylinders = [];
+		ballCount = parseInt(txtNumOfBalls.value);
+		generateBalls();
+		isRunning = true;
+		startStop();
+		//document.getElementById("btnStartStop").value="Stop";
+		isRunning=false;
+		startStop();
+		render();
+		//do not render() here. The render() is already running continously by the initial call
+	}
+
+	function resetDNA(){
+		isRunning = false;
+		cancelAnimationFrame(renderId);
+		for(var i = balls.length-1; i >= 0; i--){
+			ballGroup.remove(balls[i]);
+		}
+		scene.remove(ballGroup);
+		if(group!=undefined)scene.remove(group);
+		ball=[];
+		cylinders = [];
+		generateDNA();
+		isRunning = true;
+		document.getElementById("btnStartStop").value="Stop";
+		render();
+		//do not render() here. The render() is already running continously by the initial call
+	}
+
+	function helixRadiusSlider(){
+		helixRadius = document.getElementById("helixRadiusSlider").value/10;
+		document.getElementById("helixRadiusLabel").textContent = helixRadius.toFixed(1);
+		resetDNA();
+	}
+
+	function radiusSlider(){
+		minRadius = radiusMinSlider.value/10;
+		maxRadius = radiusMaxSlider.value/10;
+		radiusMinLabel.textContent = minRadius.toFixed(1);
+		radiusMaxLabel.textContent = maxRadius.toFixed(1);
+	}
+
+	function checkForCollisions(){
+		bCheckCollisions = checkCollisions.checked;
+	}
+
+	function oneColor(){
+		document.getElementById("ballColorContainer").disabled = !oneColorEl.checked;
+		ballColorEl.disabled = !oneColorEl.checked;
+	}
+
+	function startStop(){
+		isRunning = !isRunning;
+		if(isRunning){
+			document.getElementById("btnStartStop").value="Stop";
+			//render();
+			//do not render here. render is already running
+		}else{
+			document.getElementById("btnStartStop").value="Start";
+		}
+	}
+
+	function collisionLossSlider(){
+		collLoss = collisionLoss.value/10;
+		collisionLossLabel.textContent = collLoss.toFixed(1);
+	}
+
+
+	//document.getElementById("btnStartStop").style.width = "90%";
+	generateScene();
+	generateBalls();
+	render();
+
+</script>
+
+</body>
+</html>
