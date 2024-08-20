@@ -1,0 +1,465 @@
+/* Copyright 101Computing.net */
+
+body {
+    text-align: center;
+    background-color: #333333;
+    padding: 10px;
+  }
+
+#insideEnigmaTab{
+    position: absolute;
+    top:10px;
+    left: 50%;
+    margin-left:-420px;
+    text-align:left;
+    width: 840px;
+    height: 760px;
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.9);
+    font-family: Tahoma;
+    z-index:20;
+    display:none;
+    /* to hide the vertical scroll-bar */
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    overflow-y: scroll; 
+}
+
+#insideEnigmaTab::-webkit-scrollbar {
+    /* to hide the vertical scroll-bar */
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+#insideEnigmaTab.standalone{
+    top:10px;
+    left:180px;
+    height:680px;
+    z-index:10;
+}
+  
+.heading1 {
+  font-family: 'Allerta Stencil', sans-serif;
+  color: white;
+  font-size: 20pt;
+  font-weight: normal;
+}
+  
+#footer {
+    border-top: 1px white dashed;
+    background-color: #333333; 
+    color:white;
+    padding: 4px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-family: courier new;
+}
+  
+#footer A {
+    color: white;
+}
+DIV  {
+    box-sizing: border-box;
+}
+
+.paperSettings {
+    display: none;
+    position: absolute;
+    top:200px;
+    left: 50%;
+    margin-left:-260px;
+    width: 520px;
+    height: 760px;
+    color: white;
+    text-align: center;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.8);
+    z-index:0;
+}
+  
+.paperSettings.standalone{
+    top:40px;
+    left:380px;
+    font-family: times new roman;
+    z-index: 10;
+}
+  
+#enigmaWrapper {
+    background: url("./images/wood-board-h.jpg");
+    text-align: center;
+    width:720px;
+    height: 790px;
+    margin: 10px auto 20px auto;  
+    padding: 12px;
+    margin-top: 0px;
+    border-radius: 8px;
+    -webkit-user-select: none; /* Safari 3.1+ */
+    -moz-user-select: none; /* Firefox 2+ */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+}
+  
+#enigma {
+    background-color: black;
+    background-size: 100%;
+    background-image: url("./images/metallic-texture.jpg");
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+  
+.line {
+    width: 100%;
+    margin: 0px auto;
+    height: 4px;
+    background-color:#333333;
+    opacity: 0.5;
+    -webkit-box-shadow: 0px 0px 5px 4px rgba(51,51,51,0.75);
+    -moz-box-shadow: 0px 0px 5px 4px rgba(51,51,51,0.75);
+    box-shadow: 0px 0px 5px 4px rgba(51,51,51,0.75);
+}
+  
+.letter {
+    font-family: Tahoma;
+    color: #222222;
+    font-size: 12pt;
+    padding-top: 11px;
+    padding-bottom: 11px;    
+    text-shadow: 0px 1px #AAAAAA;
+}
+  
+#rotors {
+    padding: 20px;
+    margin: 0px auto;
+    width: 230px;
+    cursor: pointer;
+}
+.rotor {
+    float: left;
+    margin:0px 20px;
+    width:23px;
+    height:130px;
+    border: 4px solid black;
+   
+    background: rgb(0,0,0);
+    background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(42,42,42,1) 2%, rgba(245,245,245,1) 28%, rgba(52,52,52,1) 30%, rgba(216,216,216,1) 31%, rgba(255,255,255,1) 50%, rgba(212,212,212,1) 67%, rgba(45,45,45,1) 69%, rgba(226,226,226,1) 70%, rgba(42,42,42,1) 98%, rgba(0,0,0,1) 100%);
+}
+
+.rotornumber{
+    font-size:14;
+    color:white;
+    text-align: center;
+    width:auto;
+}
+  
+#lampboard {
+   clear:both;
+   margin: 0px auto;
+    padding:20px;
+   width: 660px; 
+    height: 180px;
+}
+  
+.light, .lightOn {
+   font-size: 16pt;
+    font-family: Tahoma;
+    color: #D0D0D0;
+    float: left;
+    border: 3px #040404 solid;
+    width: 40px;
+    height: 40px;
+    margin: 4px 14px;
+    padding: 3px;
+    border-radius: 50%;
+}
+
+.light {
+    background: #000000;
+    background: -moz-linear-gradient(-45deg, #000000 0%, #0a0a0a 11%, #0a0a0a 21%, #4e4e4e 33%, #383838 37%, #383838 37%, #1b1b1b 43%, #1b1b1b 43%, #000000 100%);
+    background: -webkit-linear-gradient(-45deg, #000000 0%,#0a0a0a 11%,#0a0a0a 21%,#4e4e4e 33%,#383838 37%,#383838 37%,#1b1b1b 43%,#1b1b1b 43%,#000000 100%);
+    background: linear-gradient(135deg, #000000 0%,#0a0a0a 11%,#0a0a0a 21%,#4e4e4e 33%,#383838 37%,#383838 37%,#1b1b1b 43%,#1b1b1b 43%,#000000 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#000000',GradientType=1 );
+}
+  
+.lightOn {
+    color: #333333;
+    background: #fceabb;
+    background: -moz-linear-gradient(-45deg, #fceabb 0%, #f8b500 40%, #f8b500 41%, #fccd4d 43%, #fbdf93 100%);
+    background: -webkit-linear-gradient(-45deg, #fceabb 0%,#f8b500 40%,#f8b500 41%,#fccd4d 43%,#fbdf93 100%);
+    background: linear-gradient(135deg, #fceabb 0%,#f8b500 40%,#f8b500 41%,#fccd4d 43%,#fbdf93 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fceabb', endColorstr='#fbdf93',GradientType=1 );
+  }
+  
+#keyboard {
+    clear:both;
+    margin: 0px auto;
+    padding:25px 20px;
+    width: 660px; 
+    height: 200px;
+}
+  
+.key, .keyOn {
+    cursor: pointer;
+    font-size: 16pt;
+    font-family: Tahoma;
+    color: #D0D0D0;
+    float: left;
+    border: 3px #AAAAAA solid;
+    width: 40px;
+    height: 40px;
+    margin: 4px 14px;
+    padding: 3px;
+    border-radius: 50%;
+    background: #4c4c4c;
+    background: -moz-linear-gradient(-45deg, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%);
+    background: -webkit-linear-gradient(-45deg, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%);
+    background: linear-gradient(135deg, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=1 );
+    -webkit-box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.75);
+}
+  
+.key:active, .keyOn {
+    border: 4px #AAAAAA solid;
+}
+  
+.key:hover {
+    color: white;
+    border-color: white;
+}
+  
+.plug:hover {
+    border-color: white;
+    text-shadow: 0px -30px #FFFFFF, -2px -30px #000000;
+}
+  
+#plugboard {
+    clear:both;
+    margin: 5px auto;
+    padding:30px 40px;
+    width: 680px; 
+    height: 180px;
+}
+  
+.plug {
+    cursor: pointer;
+    font-size: 12pt;
+    font-family: Tahoma;
+    color: rgba(0,0,0,0);
+    float: left;
+    border: 3px #AAAAAA solid;
+    width: 26px;
+    height: 26px;
+    margin: 18px 20px;
+    border-radius: 50%;
+    background: #000000;
+    text-shadow: 0px -30px #AAAAAA, -2px -30px #000000;
+    background: #000000;
+    background: -moz-radial-gradient(center, ellipse cover, #000000 16%, #636363 81%, #161616 98%);
+    background: -webkit-radial-gradient(center, ellipse cover, #000000 16%,#636363 81%,#161616 98%);
+    background: radial-gradient(ellipse at top right, #000000 16%,#636363 81%,#161616 98%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#161616',GradientType=1 );
+}
+  
+#enigma-book {
+    background-color: black;
+    background-size: 100%;
+    width:700px;
+    height: 545px;/*475*/
+    margin: 10px auto; 
+    margin-bottom:1px; 
+    margin-top:0px; 
+    padding: 10px 100px;
+
+    /*margin: 10px auto 20px auto;  
+    padding: 12px;
+    margin-top: 0px;*/
+
+    border-radius: 8px;
+    color: #000000;
+    top:0px;
+}
+
+td {
+    /*border: 1px solid red;*/
+    vertical-align: top;
+}
+   
+#enigma-book  A{
+   color: #000000;
+}
+.page1 {
+    background-image: url("./images/enigma-book.png");
+}
+.page2 {
+    background-image: url("./images/enigma-book2.png");
+}
+  
+#plaintext, #ciphertext {
+    width: 220px;
+    padding:10px 2px;
+    text-align: left;
+    float: left;
+    font-family: courier new;
+    font-size: 13pt;  
+    height: 460px;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+#ciphertext {
+    margin-left:60px;
+}
+  
+#plaintext H1, #ciphertext H1{
+    font-size: 14pt;  
+    text-decoration: underline;
+    font-weight: bold;  
+    font-family: courier new;
+    color: #000000;
+}
+  
+#codebook  H1 {
+    font-size: 16pt; 
+    font-weight: bold;  
+    font-family: times new roman;
+    color: #000000;
+    text-align: center;
+}
+  
+#enigma-book A {
+    /*display: inline-block;*/
+    padding: 2px 10px;
+    float: right;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+}
+  
+#codebook {
+    background-size: 100%;
+    background-image: url("./images/enigma-paper.png");
+    font-family: times new roman;
+    width:700px;
+    height: 1009px;
+    margin: 30px auto;  
+    padding: 30px 30px;
+    color: black;
+}
+  
+#codebook H1 {
+    margin: 10px auto;
+}
+  
+  
+#rotorSettings {
+    display: none;
+    position: absolute;
+    top:200px;
+    left: 50%;
+    margin-left:-320px;
+    width: 640px;
+    height: 260px;
+    color: white;
+    text-align: center;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.8);
+}
+  
+#rotorSettings.standalone{
+    top:40px;
+    left:380px;
+    z-index:10;
+}
+  
+#rotorSettings SELECT { padding: 5px; cursor: pointer;}
+#rotorSettings BUTTON { margin: 20px; padding: 10px; cursor: pointer; border-radius: 6px;font-weight: bold;background-color: #777777; color:#000;}
+#rotorSettings BUTTON:hover{ background-color: #1c1c1c; color:white;}
+
+.zoom {
+    margin: 10px 10px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+      
+.nextLetter:hover {
+    background-color: rgba(0,0,0,0.6);
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgba(0,0,0,0.6)', endColorstr='rgba(0,0,0,0)',GradientType=0 );
+}	
+  
+.previousLetter:hover {
+    background-color: rgba(0,0,0,0.6);
+    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.6) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.6) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgba(0,0,0,0.6)', endColorstr='rgba(0,0,0,0)',GradientType=0 );
+}
+  
+.currentLetter:hover {
+    background-color: rgba(0,0,0,0.3);
+    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 50%,rgba(0,0,0,0) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 50%,rgba(0,0,0,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgba(0,0,0,0.6)', endColorstr='rgba(0,0,0,0)',GradientType=0 );
+}
+  
+#log{
+    display: none;
+    width: 700px;
+    color: white;
+    height:235px;
+    overflow:auto;
+    text-align: left;
+    border: 1px solid white;
+    padding: 10px;
+    margin: 0px auto;
+    margin-top:1px;
+    font-family: courier new;
+}
+  
+#log H1 {
+    margin-top: 0px;
+    font-size:20px;
+}
+
+.links{
+    position:absolute;
+    top:2px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size:9px;
+    font-style: normal;
+    text-decoration: none;
+    color:rgb(179, 178, 178);
+    cursor:pointer;
+}
+
+.alinks{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size:12pt;
+    font-style: normal;
+    text-decoration: underline;
+    color:rgb(206, 206, 255);
+    cursor:pointer;
+}
+
+.closeX{
+    position:absolute;
+    right:20px;
+    font-size:28px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    cursor:pointer;
+}
+
+.logo{
+    text-align:center;
+    margin:auto;
+    scale:0.8;
+}

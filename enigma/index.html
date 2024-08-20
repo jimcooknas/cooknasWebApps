@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta http-equiv="content-type" content="text/html; chalinksrset=utf-8">
+    <title>Enigma Machine by cooknas.com</title>
+    <style>@import url('https://fonts.googleapis.com/css?family=Allerta+Stencil');</style>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style2.css">
+</head>
+<body>
+<a href="https://www.101computing.net/enigma/" target=”_blank” class="links" style="left:20px">Coded by 101computing.net</a>
+<a href="http://www.cooknas.com" target=”_blank” class="links" style="left:200px;">Re-arranged by Cooknas</a>
+<span class="links" style="right:20px;font-size:10px;font-weight: bold;" id="insideEnigma">Inside Enigma</span>
+<div id="enigmaZoom">
+    <div id="insideEnigmaTab"> 
+        <span class="closeX" onclick="closeInsideEnigma()">X</span>
+        <H2>Inside the Enigma</H2>
+        The enigma machine is a fairly complex encryption machine which consists of four main sections:
+        <img src="./images/enigma-how-to.png" style="display: block;margin-left: auto;margin-right: auto;text-align:center;">
+        
+        <H3>The Keyboard</H3>
+        <p>The keyboard is used to retrieve the user input. The Enigma machine is a symmetric encryption machine. Which means that it can be used to both encrypt or decrypt a message using the same settings. The keyboard is hence used to either enter the plaintext that needs to be encrypted or the ciphertext that needs to be decrypted.</p>
+        <p>They keyboard consists of 26 keys for each letter of the alphabet. This means that encrypted messages will be joined up without any spaces or punctuation signs.</p>
+        <p>Notice how the keyboard starts with the letters QWERTZ instead of QWERTY. This is due to the fact that in the German language, the letter Z is more often used than the letter.</p> 
+        
+        <H3>The plugboard</H3>
+        <p>Once a key is pressed on the keyboard, it goes through the plugboard which provides the first stage of the encryption process. It is based on the principles of a substitution cipher, a form of transposition encryption.</p>
+        <p>To setup the keyboards, short wires are used to connect pairs of letters that will be permuted. For instance on the picture below the letter W will be replaced with a D and the letter D with a W as a (red) wire is used to connect these two letters/plugs. Similarly, letter V will become letter Z and Z will become V.</p> 
+        <img src="./images/plugboard.png" style="display: block;margin-left: auto;margin-right: auto;text-align:center;">
+        <p>In a code book the plugboard settings would be recorded as follows: DW VZ</p>
+        
+        <H3>The Rotors</H3>
+        <p>After the plugboard, the letter goes through the three rotors in order (from right to left), each of them changing it differently using a combination of transposition cipher and Caesar cipher! On the engima M3 there are three rotor slots and five rotors to choose from. Each rotor is identified using a Roman numeral from I to V. This provides a few settings of the Enigma machine: which rotors to use, and in which order to position them. In a code book this seeting would be recorded as IV II III (Left, Middle and Right rotors).</P>
+        <p>Each of the five rotors encrypt the letter differently using a transposition/permutation cipher and can be connected in the Enigma machine with a different <strong>Ring setting</strong>. Another setting is the initial position of the rotors: Which letters are you going to set each rotor to begin with (e.g. A/B/C../Z sometimes recorded in a codebook using numbers (01 for A, 02 for B up to 26 for Z). This creates a Caesar Shift (Caesar Cipher). On an Enigma machine, you can change the position of the rotors by turning the three wheels.</p>
+        <p>Different versions of Enigma (e.g. M4) included four rotors which made the encryption process and the number of possible settings even bigger.
+        <p>On this Enigma M3 emulator, you can click on the rotors to access the Enigma rotors settings:</p>
+        <img src="./images/enigma-Rotors.png" style="display: block;margin-left: auto;margin-right: auto;text-align:center;"><br>
+        <img src="./images/enigma-RotorsSettings.png" style="display: block;margin-left: auto;margin-right: auto;text-align:center;">
+        <p>With 'Month Settings' the user can choose the settings of a specific day of the current month in year 1940.</p>
+        <p>What makes the Enigma code particularly difficult to crack is that every time a key is pressed, the rotor on the right turns by 1 letter. Which means that the encryption settings constantly changes for each letter of a message. It also means that a single plaintext letter would be encrypted differently depending on its position in the message.</p>
+        <p>The rotors are also connected to each other so that when the rotor positioned on the right reach a specific letter, it triggers the rotor in the middle to rotate by one letter. Similarly when the rotor in the middle reaches a specific letter it triggers the rotor on the left to turn by one letter.</p>
+        <p>You will find more information on how the rotors operate on the <a href="https://en.wikipedia.org/wiki/Enigma_rotor_details" target="_blank" class="alinks">following wikipedia page</a>.</p>
+
+        <H3>The Reflector</H3>
+        <p>The reflector is another type of rotor inside the machine. Once the letter has gone through the three rotors from right to left, the reflector will reflect the electrical current back through the rotors, sending the encrypted letter through the rotors from left to right for another 3 stages of encryption and then through the plugboard again for a final substitution cipher. When going through the reflector, a permutation cipher is also applied to the letter.</p>
+        <p>Different versions of reflectors were used on different versions of Enigma machines. Each reflector would apply a different permutation cipher. Enigma M3 machines were equipped with either a UKW-B or UKW-C reflector. You can apply these two reflectors in the rotor settings window of our emulator (see screenshot above).</p>
+        <p>The diagram below shows the journey of a letter through the encryption process of an Enigma M3.</p>
+        <img src="./images/enigma-journey-of-a-letter.png" style="display: block;margin-left: auto;margin-right: auto;text-align:center;">
+        
+        <H3>The lampboard</H3>
+        <p>The lampboard is the  final stage of the encryption process and is used to show the output (encrypted letter). It consists of 26 light bulbs, one for each letter of the alphabet.</p>
+    </div>
+<table>
+    <tr>
+        <td>
+            <div id=enigmaWrapper>
+                <div id=enigma>
+                    <div id="rotorSettings" class="standalone">
+                        <table cellpadding=4 cellspacing=0 width=100%>
+                            <tr>
+                                <td>Reflector:&nbsp;<select id="reflector"><option>UKW-B</option><option>UKW-C</option></select></td>
+                                <td>1<sup>st</sup> Rotor:</td>
+                                <td>2<sup>nd</sup> Rotor:</td>
+                                <td>3<sup>rd</sup> Rotor:</td>
+                            </tr>
+                            <tr>
+                                <td>Rotor</td><td><select id="rotor1Select"><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option></select></td>
+                                <td><select id="rotor2Select"><option>I</option><option selected>II</option><option>III</option><option>IV</option><option>V</option></select></td>
+                                <td><select id="rotor3Select"><option>I</option><option>II</option><option selected>III</option><option>IV</option><option>V</option></select></td></tr>
+                            <tr>
+                                <td>Ring Setting</td><td><select id="rotor1Setting"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option><option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option><option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option></select></td>
+                                <td><select id="rotor2Setting"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option><option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option><option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option></select></td><td><select id="rotor3Setting"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option><option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option><option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option></select></td></tr>
+                                <tr><td>Initial Position</td><td><select id="rotor1Position"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option><option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option><option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option></select></td>
+                                <td><select id="rotor2Position"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option><option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option><option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option></select></td><td><select id="rotor3Position"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option><option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option><option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option></select></td>
+                            </tr>    
+                        </table>  
+                        <button onclick="cancelSettings();">Cancel</button>
+                        <button onclick="applySettings();">Apply Settings</button>
+                        <button onclick="getFileSettings();">Month Settings</button>
+                    </div>
+                    <div class="paperSettings standalone" id="monthSettings" >
+                        <img src="./images/EnigmaSettings2.png" id="pic" style="cursor:pointer;">
+                        <span id="month" style="position:absolute;right:88px;top:27px;font-size:17px;font-weight: 600;font-family:times new roman;cursor:pointer;color:rgb(35, 34, 34);">February</span>
+                        <span style="position:absolute;right:10px;top:4px;font-size:16px;font-weight: 600;font-family:monospace;cursor:pointer;" onclick="closeMonthSettings()">X</span>
+                    </div>
+                    <div id=rotors onClick="displayRotorSettings();">
+                        <div class=rotor id=rotor1>
+                            <div class="letter nextLetter" id=rotor1Next onClick="previousRotor(1);">B</div>
+                            <div class="letter currentLetter" id=rotor1Current>A</div>
+                            <div class="letter previousLetter" id=rotor1Previous onClick="nextRotor(1);">Z</div>
+                            <div class="rotornumber" id="rotorName1">I</div>
+                        </div>
+                        <div class=rotor id=rotor2>
+                            <div class="letter nextLetter" id=rotor2Next onClick="previousRotor(2);">B</div>
+                            <div class="letter currentLetter" id=rotor2Current>A</div>
+                            <div class="letter previousLetter" id=rotor2Previous onClick="nextRotor(2);">Z</div>
+                            <div class="rotornumber" id="rotorName2">II</div>
+                        </div>
+                        <div class=rotor id=rotor3>
+                            <div class="letter nextLetter" id=rotor3Next onClick="previousRotor(3);">B</div>
+                            <div class="letter currentLetter" id=rotor3Current>A</div>
+                            <div class="letter previousLetter" id=rotor3Previous onClick="nextRotor(3);">Z</div>
+                            <div class="rotornumber" id="rotorName3">III</div>
+                        </div> 
+                    </div>
+                    <!--round switch: https://alvarotrigo.com/blog/css-round-button/-->
+                    <div class="switch-container">
+                        <span class="switch-label">Power</span>
+                        <div class=round>
+                            <input type=checkbox id=onoff name=onoff />
+                            <div class=back>
+                                <label class=but for=onoff>
+                                    <span class=on>I</span>
+                                    <span class=off>0</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="lampboard">
+                        <div class=light id="lightQ">Q</div>
+                        <div class=light id="lightW">W</div>
+                        <div class=light id="lightE">E</div>
+                        <div class=light id="lightR">R</div>
+                        <div class=light id="lightT">T</div>
+                        <div class=light id="lightZ">Z</div>
+                        <div class=light id="lightU">U</div>
+                        <div class=light id="lightI">I</div>
+                        <div class=light id="lightO">O</div>
+                        <div class=light id="lightA" style="clear: left; margin-left:48px;">A</div>
+                        <div class=light id="lightS">S</div>
+                        <div class=light id="lightD">D</div>
+                        <div class=light id="lightF"> F</div>
+                        <div class=light id="lightG">G</div>
+                        <div class=light id="lightH">H</div>
+                        <div class=light id="lightJ">J</div>
+                        <div class=light id="lightK">K</div>
+                        <div class=light id="lightP" style="clear: left;">P</div>
+                        <div class=light id="lightY">Y</div>
+                        <div class=light id="lightX">X</div>
+                        <div class=light id="lightC">C</div>
+                        <div class=light id="lightV">V</div>
+                        <div class=light id="lightB">B</div>
+                        <div class=light id="lightN">N</div>
+                        <div class=light id="lightM">M</div>
+                        <div class=light id="lightL">L</div>
+                    </div> 
+                    <div class=line></div>
+                        
+                    <div id="keyboard">
+                        <div class=key onClick="pressKey(this);" id="keyQ">Q</div>
+                        <div class=key onClick="pressKey(this);" id="keyW">W</div>
+                        <div class=key onClick="pressKey(this);" id="keyE">E</div>
+                        <div class=key onClick="pressKey(this);" id="keyR">R</div>
+                        <div class=key onClick="pressKey(this);" id="keyT">T</div>
+                        <div class=key onClick="pressKey(this);" id="keyZ">Z</div>
+                        <div class=key onClick="pressKey(this);" id="keyU">U</div>
+                        <div class=key onClick="pressKey(this);" id="keyI">I</div>
+                        <div class=key onClick="pressKey(this);" id="keyO">O</div>
+                        <div class=key onClick="pressKey(this);" id="keyA" style="clear: left; margin-left:48px;">A</div>
+                        <div class=key onClick="pressKey(this);" id="keyS">S</div>
+                        <div class=key onClick="pressKey(this);" id="keyD">D</div>
+                        <div class=key onClick="pressKey(this);" id="keyF">F</div>
+                        <div class=key onClick="pressKey(this);" id="keyG">G</div>
+                        <div class=key onClick="pressKey(this);" id="keyH">H</div>
+                        <div class=key onClick="pressKey(this);" id="keyJ">J</div>
+                        <div class=key onClick="pressKey(this);" id="keyK">K</div>
+                        <div class=key onClick="pressKey(this);" id="keyP" style="clear: left;">P</div>
+                        <div class=key onClick="pressKey(this);" id="keyY">Y</div>
+                        <div class=key onClick="pressKey(this);" id="keyX">X</div>
+                        <div class=key onClick="pressKey(this);" id="keyC">C</div>
+                        <div class=key onClick="pressKey(this);" id="keyV">V</div>
+                        <div class=key onClick="pressKey(this);" id="keyB">B</div>
+                        <div class=key onClick="pressKey(this);" id="keyN">N</div>
+                        <div class=key onClick="pressKey(this);" id="keyM">M</div>
+                        <div class=key onClick="pressKey(this);" id="keyL">L</div>
+                    </div> 
+                    <div class=line></div>
+                        
+                    <div id=plugboard>
+                        <div class=plug onClick="plug(this);">Q</div>
+                        <div class=plug onClick="plug(this);">W</div>
+                        <div class=plug onClick="plug(this);">E</div>
+                        <div class=plug onClick="plug(this);">R</div>
+                        <div class=plug onClick="plug(this);">T</div>
+                        <div class=plug onClick="plug(this);">Z</div>
+                        <div class=plug onClick="plug(this);">U</div>
+                        <div class=plug onClick="plug(this);">I</div>
+                        <div class=plug onClick="plug(this);">O</div>
+                        <div class=plug style="clear: left; margin-left:48px;" onClick="plug(this);">A</div>
+                        <div class=plug onClick="plug(this);">S</div>
+                        <div class=plug onClick="plug(this);">D</div>
+                        <div class=plug onClick="plug(this);">F</div>
+                        <div class=plug onClick="plug(this);">G</div>
+                        <div class=plug onClick="plug(this);">H</div>
+                        <div class=plug onClick="plug(this);">J</div>
+                        <div class=plug onClick="plug(this);">K</div>
+                        <div class=plug style="clear: left;" onClick="plug(this);">P</div>
+                        <div class=plug onClick="plug(this);">Y</div>
+                        <div class=plug onClick="plug(this);">X</div>
+                        <div class=plug onClick="plug(this);">C</div>
+                        <div class=plug onClick="plug(this);">V</div>
+                        <div class=plug onClick="plug(this);">B</div>
+                        <div class=plug onClick="plug(this);">N</div>
+                        <div class=plug onClick="plug(this);">M</div>
+                        <div class=plug onClick="plug(this);">L</div>
+                    </div>
+                </div><!--enigma-->
+            </div><!--enigmaWrapper-->
+        </td>
+        <td>
+            <table>
+            <tr><td>
+                <div id="enigma-book" class="page1">
+                    <div id="plaintext"><h1>Plaintext:</h1></div>
+                    <div id="ciphertext"><h1>Ciphertext:</h1></div>
+                    <div id="options">
+                        <a onclick="decrypt();">Decrypt</a>
+                        <a onclick="encrypt();">Encrypt</a>
+                        <a onclick="clearText();">Clear</a>
+                        <a onclick="showLog();" style="margin-right:100px;">Show Encryption Steps</a>
+                    </div>
+                </div>
+            </tr> 
+            </td>
+            <tr><td>
+                <img src="./images/enigma-logo.png" class="logo">
+                <div id="log" style="display: none;"><H1>Encryption Steps:</H1> Input Plug Whl3 Whl2 Whl1 Refl Whl1 Whl2 whl3 Plug&nbsp;&nbsp;Out<br/></div>
+            </td></tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</div>
+<script  src="./wz_jsgraphics.js"></script>
+<script  src="./index.js"></script>
+<script>applySettings();</script>
+</body>
+</html>
