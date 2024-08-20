@@ -1,0 +1,209 @@
+body{
+    display:flex;
+    background-color: black;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#panel{
+    width:250px;
+    border-radius: 10px;
+    background-color: orange;
+}
+
+.dataTable{
+    display:block;
+    width:100%;
+    margin: auto;
+    margin-left:20px;
+    padding: 4px;
+}
+
+th{
+  font-size:12px;
+}
+
+td.label{
+    width:90px;
+    height: 25px;
+    font-size:16px;
+}
+td.value{
+    padding:2px 8px;
+    width:85px;
+    height: 25px;
+    font-size:20px;
+    font-weight: 600;
+    text-align: right;
+    background-color: rgb(214, 140, 2);
+}
+td.value-center{
+  padding:2px 8px;
+  width:60px;
+  height: 25px;
+  font-size:16px;
+  font-weight: 600;
+  text-align: center;
+  background-color: rgb(214, 140, 2);
+}
+
+button{
+    width: 200px;
+    padding: 6px;
+    margin: 4px 24px;
+    font-weight: bold;
+    border-radius: 8px;
+    border-color: beige;
+    border-width: 4px;
+    background-color: chocolate;
+    cursor: pointer;
+}
+button:hover{
+    background-color: rgb(95, 47, 27);
+    color:rgb(252, 125, 34);
+}
+
+.title{
+    font-size:18px;
+    font-weight: bold;
+    display:block;
+    margin: 10px 24px 4px 24px;
+}
+
+label{
+    margin: 4px 24px;
+    font-size: 12px;
+    text-wrap: nowrap;
+    padding-top:2px;
+}
+
+/* Customize the label (the container) */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+  
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+  
+  /* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+  
+  /* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+  
+  /* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+  
+  /* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* for Popup*/
+.overlay {
+    position:absolute;
+    display:none;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    background:rgba(0, 0, 0, 0.2);
+    z-index:9999;
+}
+.close {
+    position:absolute;
+    top:0px;
+    right:10px;
+    z-index:99;
+    width:25px;
+    height:25px;
+    font-size:32px;
+    font-weight: 900;
+    cursor:pointer;
+    color: #fff;
+    display: inline-block;
+}
+.close:hover{
+  color:#000;
+}
+.popup {
+    position:absolute;
+    width:80%;
+    height:80%;
+    top:10%;
+    left:10%;
+    text-align:center;
+    border-radius: 10px;
+    background:#ffffff;
+    box-shadow: 0px 0px 10px 0px black;
+}
+.popup h2 {
+    font-size:15px;
+    height:50px;
+    line-height:50px;
+    margin-top:0px;
+    color:#fff;
+    background:rgb(24, 108, 209);
+    border-radius:10px 10px 0px 0px;
+}
+
+.popup.chartCanvas{
+    height:90%;
+    width:45vh;
+}
+
+.settings-div{
+    height:90%;
+    width:95%;
+    background-color: #fb6f6f;
+    text-align:left;
+}
+
+span{
+    text-align:left;
+}

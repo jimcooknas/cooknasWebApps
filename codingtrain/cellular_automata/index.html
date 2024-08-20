@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.sound.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--<script src="https://unpkg.com/wolfram-notebook-embedder@0.3/dist/wolfram-notebook-embedder.min.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="styleRange.css">
+    <meta charset="utf-8" />
+
+</head>
+
+<body>
+    <div id="wolfram" class="shown">
+        <div>
+            <iframe src="WolframAutomata.pdf" style="width:900px;height:600px;"></iframe>
+            <span onclick="closeInstructions()" style="font-size:20px;font-weight: bold;color:white;position:absolute;right:4px;top:18px;cursor:pointer">X</span>
+        </div>
+    </div>
+    <div id="container">
+        <table>
+            <tr>
+                <td rowspan="3">
+                    <div id="canvasCell" > 
+                        <!-- here we'll draw the canvas -->
+                    </div>
+                </td>
+                <td class="info" style="align-content:flex-start;width:250px;">
+                    <h3>Cellular automata</h3>
+                    
+                    <div>
+                        Cols x Rows:
+                        <span id="colsrows">20 x 20</span>
+                    </div>
+                    <div class="wrapper">
+                        <div class="range">
+                            <div class="range-slider">
+                                <label for="rangeWidth">Cell width (pixels)</label><br />
+                                <input type="range" oninput="getCellWidth()" min="1" max="10" value="5" id="rangeWidth" step="1"/>
+                                <div class="sliderticks">
+                                    <span>1</span>
+                                    <span>2</span>
+                                    <span>3</span>
+                                    <span>4</span>
+                                    <span>5</span>
+                                    <span>6</span>
+                                    <span>5</span>
+                                    <span>6</span>
+                                    <span>7</span>
+                                    <span>10</span>
+                                </div>
+                            </div>
+                            <div class="value" id="rangeWidthValue">10</div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="wrapper">
+                        <div class="range">
+                            <div class="range-slider">
+                                <label for="rangeRule">Rule Value (0-255)</label><br />
+                                <input type="range" oninput="getRuleValue()" min="0" max="255" value="90" id="rangeRule" step="1"/>
+                                <div class="sliderticks">
+                                    <span>0</span>
+                                    <span>64</span>
+                                    <span>128</span>
+                                    <span>192</span>
+                                    <span>255</span>
+                                </div>
+                            </div>
+                            <div class="value" id="rangeRuleValue">90</div>
+                        </div>
+                    </div>
+                    <div>
+                        Rule (binary):
+                        <span id="ruleBinValue">010101010</span>
+                    </div><br>
+                    <div class="wrapper">
+                        <div class="range">
+                            <div class="range-slider">
+                                <label for="rangeStartX">Start Position X</label><br />
+                                <input type="range" oninput="getStartPosX()" min="0" max="255" value="90" id="rangeStartX" step="1"/>
+                            </div>
+                            <div>
+                                <div class="value" id="rangeStartXValue">90</div>
+                                <button id="setMiddle" onclick="setToMiddle()" class="small">Center</button>
+                            </div>
+                        </div>
+                        
+                    </div><br>
+                    <label class="container-check" onchange="scrollClick()">Scroll Cells Generations
+                        <input type="checkbox" id="scrollCells">
+                        <span class="checkmark"></span>
+                    </label><br>
+                    <input type="button" id="runAutomata" value="Stop Automata" onclick="newAutomata()">
+                </td>
+            </tr>
+            <tr>
+                <td class="info">
+                    <div id="result">...</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="info">
+                    <span id="instructions" style="cursor:pointer;" onclick="showInstructions()">Instructions</span><br>
+                    <!--<a href="https://github.com/jimcooknas/minesweeper" target="_blank">The code in github</a>-->
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script src="sketch.js"></script>
+</body>
+
+</html>

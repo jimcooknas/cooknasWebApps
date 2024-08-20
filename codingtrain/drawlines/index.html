@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+
+    <div class="menu">
+      <ul class="menu-options">
+        <li class="menu-option">Delete Drag-point</li>
+        <li class="menu-option">Remove Drag-points but corners</li>
+        <li class="menu-option">Remove all Drag-points</li>
+      </ul>
+    </div>
+
+    <div class="canvasDiv">
+    </div>
+    <div class="hamburger-menu">
+      <input id="menu__toggle" type="checkbox" />
+        <label class="menu__btn" for="menu__toggle">
+            <span></span>
+        </label>
+      <ul class="menu__box" id="panelBox">
+        <div class="center">
+          <h3>Draw Lines</h3>
+        </div>
+        <!-- <div class="center menu-item">
+          <label for="springStrength">Elasticity</label>
+          <span id="springStrengthValue">0.8</span>
+          <input type="range" id="springStrength" min="5" max="18" value="10" oninput="springStrengthChanged()">
+        </div> -->
+        <!-- <div class="center menu-item">
+          <label for="chkShowKnots">Show Knots</label>
+          <input type="checkbox" id="chkShowKnots" onchange="chkShowKnotsChanged()">
+        </div> -->
+        <div class="center menu-item" id="drawing">NOT drawing</div>
+        <div class="center menu-item">
+          <button onclick="loadMyImage()">Load Image</button><br>
+          <button onclick="loadMyPoints()">Load Points</button>
+          <button onclick="saveMyPoints()">Save Points</button>
+          <button id="edit" onclick="editMyPoints()">Edit Points</button>
+          <br>
+          <button onclick="findShortest()">Find Shortest Path</button>
+        </div>
+        <!-- <div id="selectKnotDiv" class="center" style="background-color: transparent;">
+          <button id="selectKnot" onclick="selectKnot()">Select Knot to be Draggable</button><br>
+          <span id="xpos"></span><br>
+          <span id="ypos"></span>
+        </div>
+        <div class="center">
+          <button id="selectAllKnots" onclick="selectAllKnots()">Set all Knots as Draggable</button><br>
+        </div> -->
+      </div>
+    </ul>
+    
+    <script language="javascript" type="text/javascript" src="sketch.js"></script>
+	</body>
+</html>

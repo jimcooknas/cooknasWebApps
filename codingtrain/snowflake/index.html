@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <div class="panel">
+      <h2>Snowflake</h2>
+      <span>with Brownian Motion</span>
+      <br><br>
+      <div>
+        <label for="spreadRange">Snowflake Spread</label><span id="spreadRangeVal">3</span>
+        <input type="range" id="spreadRange" min="1" max="5" value="3" oninput="spreadRangeChanged()">
+      </div>
+      <div>
+        <label for="rotateRange">Rotate Angle</label><span id="rotateRangeVal">0.005</span>
+        <input type="range" id="rotateRange" min="0" max="20" value="5" oninput="rotateRangeChanged()">
+      </div>
+      <br>
+      <div>
+        <button id="restart" onclick="restart()">Restart</button>
+      </div>
+      <br>
+      <span id="particles">0</span><br>
+      <span id="result"></span>
+      <div class="bottomPanel">
+        <span>Initial code: </span>
+        <a href="https://www.youtube.com/watch?v=XUA8UREROYE&t=1s" target="blank">Coding Train</a>
+    </div>
+    </div>
+    <script src="sketch.js"></script>
+    <script src="particle.js"></script>
+  </body>
+</html>

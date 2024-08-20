@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="p5.min.js"></script>
+    <script src="p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="styleRange.css">
+    <script src="vehicle.js"></script>
+    <script src="predator.js"></script>
+    <script src="sketch.js"></script>
+</head>
+
+<body>
+    <div id="canvasDiv"></div>
+    <div id="panel">
+        <table class="dataTable">
+            <tr>
+                <td class="label">Time passed:</td>
+                <td class="value"><span id="ticksPassed">0</span></td>
+            </tr>
+            <tr>
+                <td class="label">Predators:</td>
+                <td class="value"><span id="predatorsNum">0</span></td>
+            </tr>
+            <tr>
+                <td class="label">Preys:</td>
+                <td class="value"><span id="preysNum">0</span></td>
+            </tr>
+        </table>
+        <button id="btnStartStop" onclick="runStop()">Stop running</button>
+        <div style="display:inline-block;width:210px;margin-left:24px;">
+            <button id="btnReset" onclick="reset()" style="width:85px;margin: 4px 0px;">Reset</button>
+            <button id="btnShowChart" onclick="showChart()" style="width:85px;margin: 4px 0px 4px 24px;">Chart</button>
+        </div>
+        <label class="container">Show Preys Perception
+            <input type="checkbox" id="showPerception">
+            <span class="checkmark"></span>
+        </label>
+        <table class="dataTable">
+            <tr>
+                <th style="font-size:18px;font-weight: bold;">Avg</th>
+                <th>Weight</th>
+                <th>Perception</th>
+            </tr>
+            <tr>
+                <td>Food</td>
+                <td class="value-center" id="foodWeight">0</td>
+                <td class="value-center" id="foodPerception">0</td>
+            </tr>
+            <tr>
+                <td>Prey</td>
+                <td class="value-center" id="preyWeight">0</td>
+                <td class="value-center" id="preyPerception">0</td>
+            </tr>
+        </table>
+        <span class="title">Preys settings</span>
+        <div class="wrapper">
+            <div class="range">
+                <div class="range-slider">
+                    <label for="rangePreyMutation" style="color:green">Mutation Rate</label><br />
+                    <input type="range" min="0" max="10" value="1" id="rangePreyMutation" step="1"/>
+                    <div class="sliderticks">
+                        <span>0%</span>
+                        <span>2%</span>
+                        <span>4%</span>
+                        <span>6%</span>
+                        <span>8%</span>
+                        <span>10%</span>
+                    </div>
+                </div>
+                <div class="value" id="preyMutationValue">1%</div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="range">
+                <div class="range-slider">
+                    <label for="rangePreyClone" style="color:green">Clone Factor</label><br />
+                    <input type="range" min="0" max="5" value="2" id="rangePreyClone" step="1"/>
+                    <div class="sliderticks">
+                        <span>0</span>
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                    </div>
+                </div>
+                <div class="value" id="preyCloneValue">2</div>
+            </div>
+        </div>
+        <span class="title">Predators settings</span>
+        <div class="wrapper">
+            <div class="range">
+                <div class="range-slider">
+                    <label for="rangePredatorsMutation" style="color:red">Mutation Rate</label><br />
+                    <input type="range" min="0" max="10" value="1" id="rangePredatorsMutation" step="1"/>
+                    <div class="sliderticks">
+                        <span>0%</span>
+                        <span>2%</span>
+                        <span>4%</span>
+                        <span>6%</span>
+                        <span>8%</span>
+                        <span>10%</span>
+                    </div>
+                </div>
+                <div class="value" id="predatorsMutationValue">1%</div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="range">
+                <div class="range-slider">
+                    <label for="rangePredatorsClone" style="color:red">Clone Factor</label><br />
+                    <input type="range" min="0" max="5" value="1" id="rangePredatorsClone" step="1"/>
+                    <div class="sliderticks">
+                        <span>0</span>
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                    </div>
+                </div>
+                <div class="value" id="predatorsCloneValue">1</div>
+            </div>
+        </div>
+
+    </div>
+    <div class='overlay'>
+        <div class='popup'>
+            <div class='close' onclick="closeChart()">&#10006;</div>
+            <h2>Predators-Preys chart</h2>
+            <div id="canvasChartDiv" class="chartCanvas">
+                <canvas id="myCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class='overlay'>
+        <div class='popup'>
+            <div class='close' onclick="closeSetup()">&#10006;</div>
+            <h2>Predators-Preys Settings</h2>
+            <table>
+                <tr><td style="align-items: start;">
+                    <!-- Preys Properties-->
+                    <span style="font-size:18px;font-weight:bold;color:rgb(24, 108, 209)">Preys Properties</span>
+                    <div id="settingsDiv">
+                        <span>Number of Preys:</span><input type="text" id="numPreys" style="width:30px;margin:0px 5px;text-align:center;" value="100"/><br>
+                        <span>Food Perception Range Properties</span>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangeFoodWeightMin">Min Food Weight</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="-2" max="2" value="-2" id="rangeFoodWeightMin" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangeFoodWeightMinValue">-2</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangeFoodWeightMax">Max Food Weight</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="-2" max="2" value="2" id="rangeFoodWeightMax" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangeFoodWeightMaxValue">2</div>
+                            </div>
+                        </div>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangeFoodPercMin">Min Perception</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="0" max="100" value="0" id="rangeFoodPercMin" step="10" class="small"/>
+                                </div>
+                                <div class="value small" id="rangeFoodPercMinValue">0</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangeFoodPercMax">Max Perception</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="0" max="100" value="100" id="rangeFoodPercMax" step="10" class="small"/>
+                                </div>
+                                <div class="value small" id="rangeFoodPercMaxValue">100</div>
+                            </div>
+                        </div>
+                        <span>Predators Perception Range Properties</span>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePredWeightMin">Min Predator Weight</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="-2" max="2" value="-2" id="rangePredWeightMin" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePredWeightMinValue">-2</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePredWeightMax">Max Predator Weight</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="-2" max="2" value="2" id="rangePredWeightMax" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePredWeightMaxValue">2</div>
+                            </div>
+                        </div>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePredPercMin">Min Perception</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="0" max="100" value="0" id="rangePredPercMin" step="10" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePredPercMinValue">0</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePredPercMax">Max Perception</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="0" max="100" value="100" id="rangePredPercMax" step="10" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePredPercMaxValue">100</div>
+                            </div>
+                        </div>
+                        <span>Speed Range</span>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangeSpeedMin">Min Speed</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="1" max="10" value="1" id="rangeSpeedMin" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangeSpeedMinValue">1</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangeSpeedMax">Max Speed</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="1" max="10" value="10" id="rangeSpeedMax" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangeSpeedMaxValue">10</div>
+                            </div>
+                        </div>
+                        <span>Mass Range</span>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangeMassMin">Min Mass</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="1" max="10" value="1" id="rangeMassMin" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangeMassMinValue">1</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangeMassMax">Max Mass</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="1" max="10" value="10" id="rangeMassMax" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangeMassMaxValue">10</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!--Predators properties-->
+                <td VALIGN=TOP>
+                    <span style="font-size:18px;font-weight:bold;color:rgb(24, 108, 209)">Predators Properties</span>
+                    <div id="settingsDivPred">
+                        <span>Number of Predators: </span><input type="text" id="numPredators" style="width:30px;margin:0px 5px;text-align:center;" value="10"/><br>
+                        <span>Food Perception Range Properties</span>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePreyWeightMin">Min Prey Weight</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="-2" max="2" value="-2" id="rangePreyWeightMin" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePreyWeightMinValue">-2</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePreyWeightMax">Max Prey Weight</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="-2" max="2" value="2" id="rangePreyWeightMax" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePreyWeightMaxValue">2</div>
+                            </div>
+                        </div>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePreyPercMin">Min Prey Perception</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="0" max="100" value="50" id="rangePreyPercMin" step="10" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePreyPercMinValue">50</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePreyPercMax">Max Prey Perception</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="0" max="100" value="100" id="rangePreyPercMax" step="10" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePreyPercMaxValue">100</div>
+                            </div>
+                        </div>
+                        
+                        <span>Speed Range</span>
+                        <div class="wrapper small">
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePredSpeedMin">Min Speed</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="1" max="6" value="1" id="rangePredSpeedMin" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePredSpeedMinValue">1</div>
+                            </div>
+                            <div class="range small">
+                                <div class="range-slider">
+                                    <label for="rangePredSpeedMax">Max Speed</label><br />
+                                    <input type="range" oninput="sliderClick(this)" min="1" max="6" value="6" id="rangePredSpeedMax" step="1" class="small"/>
+                                </div>
+                                <div class="value small" id="rangePredSpeedMaxValue">6</div>
+                            </div>
+                        </div>
+                        <div style="display:block; font-size:12px;padding:24px;text-align:justify;">
+                            Notes:<br>
+                            Every prey has the properties of 'Food Perception', 'Predators Perception', 'Speed' and 'Mass' that are defined with a random number between an upper and lower limit. These two limits are set by the left side sliders. The Perceptions, except their range they owe a weight property that is a multiplier of the steering behavior.<br>
+                            On the other hand, every predator has the properties of 'Food Perception' and 'Speed' that are defined with a random number between an upper and lower limit. These two limits are set by the right side sliders. The Perception, except its range it owes a weight property that is a multiplier of the steering behavior.  
+                        </div>
+                    </div>
+                </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

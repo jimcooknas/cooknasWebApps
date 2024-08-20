@@ -1,0 +1,249 @@
+/*Extended by Cooknas: http://www.cooknas.com/codingtrain/minesweeper/index.html*/
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width:100%;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.shown{
+    border-radius:10px;
+    border: 8px solid rgb(241, 171, 18); 
+    display:none;
+    position: absolute;
+    width:70%;
+    height:88%;
+    left:50%;
+    translate:-55% 5%;
+    z-index: 10;
+}
+
+canvas {
+    display: block;
+}
+
+a{
+    font-size:12px;
+    font-style: italic;
+    color:darkred;
+}
+
+table, th, td {
+    border: none solid black;
+    border-collapse: collapse;
+    min-width:240px;
+}
+
+table{
+    width:90%;
+    height:95%;
+}
+
+tr {
+    border-radius:0px 8px 8px 0px;
+}
+td.info {
+    background-color:antiquewhite;
+    text-align: center;
+    width:350px;
+    max-height:50%;
+}
+
+i {
+    font-family: 'FontAwesome';
+    font-size:18px;
+}
+
+#container{
+    display: flex;
+    position:absolute;
+    padding:8px;
+    top:0px;
+    left:50%;
+    translate:-50% 5px;
+    background-color: white;
+    border-radius: 6px;
+    border:1px solid black;
+    width:97%;
+    height:95%;
+}
+
+input[type="button"]{
+    margin: 4px 0px;
+    padding:8px;
+    border-radius:8px;
+    min-width:30px;
+    background-color: rgb(183, 194, 234);
+    cursor: pointer;
+}
+input[type="button"]:hover{
+    background-color: rgb(34, 47, 99);
+    color:white;
+}
+button{
+    font-family: 'FontAwesome';
+    content:"\f017";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    border-radius:8px;
+    min-width:30px;
+    margin:auto;
+    padding:8px;
+    position:relative;
+    background-color: rgb(183, 194, 234);
+    cursor: pointer;
+    right:-30px;
+    top:-12px;
+}
+
+button:hover{
+    background-color: rgb(34, 47, 99);
+    color:white;
+}
+
+button.small{
+    font-size: 6px;
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: inherit;
+    text-align: center;
+    border-radius:4px;
+    width:40px;
+    height:20px;
+    margin:2px;
+    padding:3px 2px;
+    display:flex;
+    position:relative;
+    background-color: rgb(183, 194, 234);
+    cursor: pointer;
+    right:-4px;
+    top:0px;
+}
+button.small:hover{
+    background-color: rgb(34, 47, 99);
+    color:white;
+}
+
+#colsrows, #bombsleft{
+    font-size:18px;
+    font-weight:600 ;
+}
+
+#result{
+    font-size:36px;
+    font-weight:600 ;
+}
+
+#winloose{
+    display: none;/*flex;*/
+    float: left;
+    position: absolute;
+    text-align: center;
+    padding:20px 0px;
+    background-color: rgb(255,0,0,0.6);
+    left: 0%;
+    top: 50%;
+    translate: 0% -50%;
+    z-index: 10;
+}
+#winloose-inner{
+    padding:30px 0px;
+    width:610px;
+    background-color: rgb(255,255,0,1);
+}
+
+#winloosePan{
+    font-size: 48px;
+    font-weight: 600;
+    width:610px;
+    text-align: center;
+}
+
+#timer{
+    font-size:58px;
+    font-weight: 600;
+    margin:2px;
+}
+
+svg{
+    display:"none";
+}
+
+svg.vis{
+    display:flex;
+    margin:auto;
+}
+
+#ruleBinValue{
+    font-weight: bold;
+}
+
+/* Customize the label (the container) */
+.container-check {
+    display: block;
+    position: relative;
+    padding-left:15px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default checkbox */
+.container-check input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: -2px;
+    left: 15px;
+    height: 25px;
+    width: 25px;
+    background-color: #737272;
+}
+  
+  /* On mouse-over, add a grey background color */
+.container-check:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+  
+  /* When the checkbox is checked, add a blue background */
+.container-check input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+  
+  /* Show the checkmark when checked */
+.container-check input:checked ~ .checkmark:after {
+    display: block;
+}
+  
+  /* Style the checkmark/indicator */
+.container-check .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

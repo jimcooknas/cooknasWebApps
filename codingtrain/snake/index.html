@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/ml5@0.4.1/dist/ml5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <div id="controlDiv">
+        <button id="newgame" onclick="newGame()">New Game</button>
+        <label class="container">Die on edges
+            <input id="checkbox" type="checkbox" checked="checked" onchange="onEdgeChanged()">
+            <span class="checkmark"></span>
+        </label>
+        <div class="slidecontainer">
+            <label for="myRange" id="rezLabel">Resolution <b>30</b></label>
+            <input type="range" min="20" max="50" value="30" step="5" class="slider" id="rezRange">
+        </div>
+        <span id="paused"></span>
+    </div>
+    <div id="canvasDiv">
+
+    </div>
+    <a href="https://www.youtube.com/watch?v=OMoVcohRgZA">based on: <b>Coding Challenge #115: Snake Game Redux</b></a>
+    <script src="snake.js"></script>
+    <script src="sketch.js"></script>
+  </body>
+</html>

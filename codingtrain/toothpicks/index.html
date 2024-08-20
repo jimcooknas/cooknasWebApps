@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <div class="panel">
+        <h3>Toothpicks</h3>
+        <div>
+            <label for="runContinoulsy">Run continuously</label>
+            <input type="checkbox" id="runContinoulsy" onchange="continousChanged()">
+        </div>
+        <br>
+        <div>
+            <label for="useHSL">Use HSL Colors</label>
+            <input type="checkbox" id="useHSL" onchange="useHSLChanged()">
+        </div>
+        <br>
+        <div>
+            <label for="maxSteps">Maximum Steps: </label>
+            <input type="text" id="maxSteps" style="width:35px;text-align: center;" oninput="maxStepsChanged()" value="200">
+        </div>
+        <br>
+        <div>
+            <span>Step: </span>
+            <span id="stepNo">0</span>
+        </div>
+        <div>
+            <span>Toothpicks: </span>
+            <span id="toothpicks">1</span>
+        </div>
+        <br>
+        <button id="nextStep" onclick="nextStepClicked()">Next step</button>
+        <button id="runAgain" onclick="runagain()">Run again</button>
+        <div class="bottomPanel">
+            <span>Initial code: </span>
+            <a href="https://www.youtube.com/watch?v=-OL_sw2MiYw" target="blank">Coding Train</a>
+        </div>
+    </div>
+    <div id="canvasDiv">
+
+    </div>
+    <script src="toothpick.js"></script>
+    <script src="sketch.js"></script>
+  </body>
+</html>

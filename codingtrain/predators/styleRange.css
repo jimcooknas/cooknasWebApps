@@ -1,0 +1,182 @@
+/*Extended by Cooknas: http://www.cooknas.com/codingtrain/minesweeper/index.html*/
+
+/*=============
+Adding tick marks
+=========================*/
+.range-slider {
+    flex: none;
+    margin-top:-12px;
+}
+.range-slider label{
+    margin-top:0px;
+}
+
+.sliderticks {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 5px 0px 10px;
+}
+
+.sliderticks span {
+    display: flex;
+    justify-content: center;
+    width: 1px;
+    height: 5px;
+    background: #d3d3d3;
+    line-height: 20px;
+    font-size: 8px; 
+}
+
+/*=============
+End tick marks
+=========================*/
+input[type="range"] {
+    /* removing default appearance */
+    -webkit-appearance: none;
+    appearance: none; 
+    /* creating a custom design */
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    border-radius: 15px;
+    /*  overflow: hidden;  remove this line*/
+    /* New additions */
+    height: 6px;
+    background: #ccc;
+}
+input[type="range"].small {
+    width: 100px;
+    height: 4px;
+    background: #ccc;
+}
+
+/* Thumb: webkit */
+input[type="range"]::-webkit-slider-thumb {
+    /* removing default appearance */
+    -webkit-appearance: none;
+    appearance: none; 
+    /* creating a custom design */
+    height: 15px;
+    width: 15px;
+    background-color: #f50;
+    border-radius: 50%;
+    border: none;
+    /* box-shadow: -407px 0 0 400px #f50; emove this line */
+    transition: .2s ease-in-out;
+}
+
+input[type="range"].small::-webkit-slider-thumb {
+    height: 12px;
+    width: 12px;
+}
+
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb {
+    height: 15px;
+    width: 15px;
+    background-color: #f50;
+    border-radius: 50%;
+    border: none;
+    /* box-shadow: -407px 0 0 400px #f50; emove this line */
+    transition: .2s ease-in-out;
+}
+input[type="range"].small::-moz-range-thumb {
+    height: 12px;
+    width: 12px;
+}
+
+/* Hover, active & focus Thumb: Webkit */
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+}
+input[type="range"]:active::-webkit-slider-thumb {
+    box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+input[type="range"]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+
+/* Hover, active & focus Thumb: Firfox */
+
+input[type="range"]::-moz-range-thumb:hover {
+    box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+}
+input[type="range"]:active::-moz-range-thumb {
+    box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+input[type="range"]:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 13px rgba(255,85,0, .2)    
+}
+
+/*=============
+Aesthetics 
+=========================*/
+
+h2 {
+    color: #5e3a3a; 
+    text-align: center;
+    font-size:22px;
+    background-color: white;
+}
+h3{
+    padding: 5px 0px;
+    color: #5e3a3a; 
+    margin:5px;
+    padding:2px 0px;
+    text-align: center;
+}
+
+.wrapper {
+    color: #4b4949; 
+    background: #f50;
+    max-width: 440px;
+    width: 80%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px 24px;
+    border-radius: 8px;
+}
+.wrapper.small{
+    width: 286px;
+    width:fit-content;
+    padding:2px;
+    height: 40px;
+    margin: 4px 24px;
+}
+
+.range {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    max-width: 250px;
+    margin: 0px auto;
+    height: 3.4rem;
+    width: 86%;
+    background: #fff;
+    padding: 0px 10px;
+    border-radius: 8px;
+}
+.range.small {
+    width: 160px;
+    height: 2.4rem;
+    margin:2px;
+}
+
+.value {
+    font-size: 20px;  
+    font-weight: bold; 
+    margin-left:-4px; 
+    width: 50px;
+    text-align: center;
+}
+.value.small {
+    font-size: 14px;  
+    margin-left:-4px; 
+    width: 40px;
+    text-align: center;
+}
+

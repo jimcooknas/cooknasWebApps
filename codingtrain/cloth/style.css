@@ -1,0 +1,158 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.canvasDiv{
+    margin:auto;
+    text-align: center;
+    display:block;
+    position:absolute;
+    left:50%;
+    translate: -50% 3%;
+}
+
+/* .panel{
+    margin:auto;
+    width:200px;
+    height:600px;
+    display:block;
+    position:absolute;
+    left:0px;
+    top:2.5%;
+    border-radius:0px 8px 8px 0px;
+    background-color: orange;;
+} */
+
+.center{
+    text-align: center;
+    padding-top:5px;
+    padding-bottom:5px;
+    margin:auto;
+}
+
+button{
+    padding:5px;
+    margin-top:5px;
+    margin-bottom:5px;
+    border-radius:6px;
+    min-width:85px;
+    background-color: darkorange;
+    color:black;
+}
+button:hover{
+    background-color: rgb(111, 62, 2);
+    color:white;
+}
+
+/* css for SlidingPanel */
+#menu__toggle {
+    opacity: 0;
+}
+#menu__toggle:checked + .menu__btn > span {
+    transform: translate(140px, 0px) rotate(45deg);
+}
+#menu__toggle:checked + .menu__btn > span::before {
+    top: 0;
+    transform: rotate(0deg);
+}
+#menu__toggle:checked + .menu__btn > span::after {
+    top: 0;
+    transform: rotate(90deg);
+}
+#menu__toggle:checked ~ .menu__box {
+    left: 0 !important;
+}
+.menu__btn {
+    position: fixed;
+    top: 28px;
+    left: 20px;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    z-index: 1;
+}
+.menu__btn > span,
+.menu__btn > span::before,
+.menu__btn > span::after {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background-color: #bbbbbb;/*#616161;*/
+    transition-duration: .35s;
+}
+.menu__btn > span:hover,
+.menu__btn > span:hover::before,
+.menu__btn > span:hover::after {
+    background-color: #000000;/*#616161;*/
+    transition-duration: .35s;
+}
+.menu__btn > span::before {
+    content: '';
+    top: -8px;
+    }
+.menu__btn > span::after {
+    content: '';
+    top: 8px;
+}
+.menu__box {
+    display: block;
+    position: fixed;
+    top: 10px;
+    left: -100%;
+    width: 200px;
+    height: 600px;
+    margin: 0;
+    padding: 10px 0;
+    border-radius: 0px 8px 8px 0px;
+    list-style: none;
+    background-color: #f7b61eee;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, .4);
+    transition-duration: .25s;
+}
+.menu__item {
+    display: block;
+    padding: 4px 4px;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 100;
+    text-decoration: none;
+    transition-duration: .25s;
+}
+.menu__item:hover {
+    background-color: #CFD8DC;
+    color:black;
+}
+/* end of css for SlidingPanel */
+
+.menu {
+    width: 180px;
+    z-index: 1;
+    background-color: white;
+    box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    display: none;
+    transition: 0.2s display ease-in;
+  
+    .menu-options {
+        list-style: none;
+        padding: 10px 0;
+        z-index: 1;
+        
+        .menu-option {
+            font-weight: 500;
+            z-index: 1;
+            font-size: 14px;
+            padding: 10px 20px 10px 20px;
+            border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+    
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+        }
+    }
+  }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <!-- Use p5.js for p5.Vector-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.1/p5.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta charset="utf-8" />
+
+  </head>
+  <body>
+        <div class="hamburger-menu">
+            <input id="menu__toggle" type="checkbox" />
+            <label class="menu__btn" for="menu__toggle">
+                <span></span>
+            </label>
+            <ul class="menu__box" id="panelBox">
+                <span class="menu__item menu__center menu__title">Apollonian Gasket</span>
+                <div class="menu__item menu__unhover menu__center">
+                    <button class="menu__button menu__center__center" id="refresh">Refresh</button>
+                </div>
+            </ul>
+        </div>
+        <main>
+            <canvas id="canvas" width="660" height="660"></canvas>
+        </main>
+        <script src="slidingPanel.js"></script>
+        <script src="circle.js"></script>
+        <script src="complex.js"></script>
+        <script src="sketch.js"></script>
+    </body>
+</html>
