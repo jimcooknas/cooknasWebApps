@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falling Sand and Water Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="panel">
+        <h3 class="center">Select Material</h3>
+        <label class="container">Sand
+            <input type="radio" name="radio" id="sand" onchange="materialChanged()">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">Water
+            <input type="radio" name="radio" id="water" onchange="materialChanged()">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">Wall
+            <input type="radio" checked="checked" name="radio" id="wall" onchange="materialChanged()">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">Eraser
+            <input type="radio" name="radio" id="eraser" onchange="materialChanged()">
+            <span class="checkmark"></span>
+        </label>
+        <!--<div class="tools">
+            <div class="btn" id="set_sand">Sand</div>
+            <div class="btn" id="set_water">Water</div>
+            <div class="btn" id="set_wall">Wall</div>
+            <div class="btn" id="set_eraser">Eraser</div>
+        </div>-->
+        <br>
+        <div class="sliderContainer">
+            <div style="width:100%;display:table;clear:both;margin-left:10px;margin-right:10px;">
+                <label class="label" style="display: table-cell;" for="traceSizeSlider">Trace Size</label>
+                
+                <label id="traceSizeLabel" class="label-val" style="display: table-cell;text-align: right;" for="traceSizeSlider">5</label>
+            </div>
+            <input type="range" id="traceSizeSlider" min="1" max="20" value="5" step="1" class="slider" oninput="traceSizeChanged()">
+        </div>
+        <div class="sliderContainer">
+            <div style="width:100%;display:table;clear:both;margin-left:10px;margin-right:10px;">
+                <label class="label" style="display: table-cell;" for="cellSizeSlider">Cell Size</label>
+                <label id="cellSizeLabel" class="label-val" style="display: table-cell;text-align: right;" for="cellSizeSlider">5</label>
+            </div>
+            <input type="range" id="cellSizeSlider" min="1" max="5" value="2" step="1" class="slider" oninput="cellSizeChanged()">
+        </div>
+        <h4 class="center" style="margin-bottom:0px;padding-bottom:0px;">Brush Size</h4>
+        <div class="circleContainer">
+            <button id="traceCircle"> </button>
+        </div>
+    </div>
+    <canvas id="canvas"></canvas>
+    
+    <script src="./main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+
+	<head>
+		<title>Euler Fluid</title>
+		<style>
+            body{
+                width:100%;
+                height:100%
+            }
+			.selectMain {
+				font-family: verdana; 
+				font-size: 12px;
+			}
+            #mainIFrame{
+                display:block;
+                position:absolute;
+                left:0px;
+                top:0px;
+                right:0px;
+                bottom:0px;
+                width:100%;
+                height:100%;
+            }
+        </style>
+    </head>
+    <body>
+        <iframe id="mainIFrame" src="indexTunnel.html" seamless style="display:block;width:100%;height:100%;"></iframe>
+        <div style="display: flex;position:absolute;right:2px;top:2px">
+            <select id="selectMain" class="selectMain">
+                <option value="indexTunnel.html" selected>Tunnel</option>
+                <option value="indexSoftBody.html">Soft Body</option>
+                <option value="indexFlipFluid.html">Flip Fluid</option>
+                <option value="indexMetaballs.html">Metaballs</option>
+                <option value="indexParticles.html">Particles</option>
+                <option value="indexFieldWater.html">Water Field</option>
+            </select>
+        </div>
+        
+    </body>
+    <script>
+        document.getElementById("selectMain").addEventListener("change", function(e){
+            document.getElementById("mainIFrame").src = document.getElementById("selectMain").value;
+        });
+    </script>
+</html>

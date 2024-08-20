@@ -1,0 +1,419 @@
+<!DOCTYPE >
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="./styles.css">
+        <title>Pass-By Destination</title>
+        <style>
+            .label{
+                display: table-cell;
+                width:75%;
+                font-size:12px;
+            }
+            .labelValue{
+                display: table-cell;
+                width:20%;
+                font-size: 13px;
+                font-weight: bold;
+                text-align: right;
+            }
+            .labelUnit{
+                display: table-cell;
+                width:5%;
+                font-size:12px;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script src="./common.js"></script>
+        <script src="./calc.js"></script>
+
+        <div style="width:240px;">
+            <h4>Round-Trip to Destination</h4>
+            <div>
+                <button id="btnDescr" style="width:45%;font-size:10px;font-weight: normal;">Description</button>
+                <button id="btnFuel" style="width:52%;font-size:10px;font-weight: normal;">Fuel Needed</button>
+            </div>
+            <span id="descr" style="font-size:10px;">
+                If you wish to pass by a distant star and return to Earth, but you don't need to stop there, then a 
+                looping route is better than a straight-out-and-back route.  A good course might be to head out at 
+                constant acceleration in a direction at about 45° to that of your destination.  At the appropriate point, 
+                you start a long arc such that the centrifugal acceleration you experience is also equivalent to Earth's 
+                gravity.  After 3/4 of a circle, you decelerate in a straight line until you arrive home.
+            </span><br>
+            <span id="fuelNeeded" style="font-size:9px;display:none">
+                <b>Needed Fuel</b><br>
+                There are a few technical difficulties you will have to overcome before you can head off into space.  
+                One of these difficulties is creating your propulsion system and generating fuel. The most efficient 
+                theoretical way to propel the rocket is to use a "photon drive".  This would convert mass to photons 
+                or other massless particles which shoot out the back of the rocket. Perhaps this may even be technically 
+                feasible if we ever produce an antimatter-driven "graser" (gamma-ray laser).<br>
+                Remember that energy is equivalent to mass, so provided mass can be converted to 100% radiation by means of matter-antimatter annihilation, we just want to find the mass <b>M</b> of the fuel required to accelerate the payload 
+                <b>m</b>. The answer is most easily worked out by conservation of energy and momentum.
+            </span>   
+        </div>
+        <table>
+            <tr">
+                <td class="left"> 
+                    <div id="panel" style="position:relative;width:100%;height:100%;background-color:#ffac4c;padding: 0px;">
+                        <div style="padding:10px;">
+                            <div class="combobox" id="comboDestination" onchange="selectDestination()">
+                                <select>
+                                    <!-- <option value="NearestStar">Nearest Star</option>-->
+                                </select>
+                            </div>
+                            <div class="slideContainer">
+                                <div style="text-align:center">
+                                    <span style="width:50%;padding:10px;text-align:end;">Gravity</span>
+                                    <span id="gravity-label" style="width:50%;padding:10px;text-align:left;font-weight:bold;">1.0 g</span>
+                                </div>
+                                <input type="range" class="slider" id="gravitySlider" min="0.2" max="5.0" step="0.1" value="1.0" ></input>
+                            </div>
+                            <br>
+                            <div style="display:table-row;">
+                                <span class="label">Distance: </span>
+                                <span id="distance" class="labelValue">1000</span>
+                                <span class="labelUnit"> ly</span>
+                            </div>
+                            <div style="display:table-row;">
+                                <span class="label">Trip Proper Time: </span>
+                                <span id="properTime" class="labelValue">10</span>
+                                <span class="labelUnit"> y</span>
+                            </div>
+                            <div style="display:table-row;">
+                                <span class="label">Trip Earth Time: </span>
+                                <span id="earthTime" class="labelValue">100</span>
+                                <span class="labelUnit"> y</span>
+                            </div>
+                            <div style="display:table-row;">
+                                <span class="label">Fuel Needed: </span>
+                                <span id="fuelValue" class="labelValue">10.0</span>
+                                <span id="fuelUnit" class="labelUnit"> y</span>
+                            </div>
+                            <button id="btnRunAgain" style="position:absolute;bottom:10px;width:90%">Run again</button>
+                        </div>
+                    </div>
+                </td>
+                <td class="right">
+                    <table id="right">
+                        <tr class="up">
+                            <td>
+                                <canvas id="myChart2"></canvas>
+                            </td>
+                        </tr>
+                        <tr class="down">
+                            <td>
+                                <canvas id="canvas2" style="width:auto;height:150px;background-color:#030303"></canvas>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <script>
+            var panel = document.getElementById("panel");
+            var canvas = document.getElementById("canvas2");
+            var cbDestination = document.querySelectorAll("select")[0];
+            var btnRunAgain = document.getElementById("btnRunAgain");
+            
+            var acc = 1.0;//acceleration as times g
+            var xyValues = [];
+            var dist;
+            var earthSize=20;
+            var starSize=40;
+            var shipSize = 20;
+            var distStep = 1000;
+            var curDistance=0;
+            var stepId=0;
+            var velocity=[];
+            var earthT = [];
+            var crewT = [];
+            var angle = 1;
+            var dir = 1;
+            var requestId=undefined;
+            
+            var traveler = {x:0, y:0};
+            var ctx = document.getElementById('canvas2').getContext('2d');
+
+
+            for(var i=0;i<destinations.length;i++){
+                let newOption = new Option(destinations[i].position,destinations[i].distance);
+                if(i==0)newOption.selecred=true;
+                cbDestination.add(newOption,);
+            }
+            cbDestination.selectedIndex=0;
+
+            for(var i=0;i<4.3;i+=4.3/distStep){
+                xyValues.push({x:getDistance(i), y:i});
+            }
+
+            var chart = new Chart("myChart2", {
+                type: "scatter",
+                //backgroundColor: "transparent",
+                data:{
+                    datasets:[{
+                        label: 'Proper Time',
+                        pointRadius:0,
+                        data: xyValues,
+                        showLine: true,
+                        fill: true,
+                        borderColor: 'rgba(250,250,250,1)',
+                    },{
+                        label: 'Traveling ship',
+                        pointRadius:6,
+                        data: [traveler],
+                        borderColor: 'rgba(200,200,0,1)',
+                        backgroundColor: 'rgba(250,250,0,0.0)',
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    scales:{
+                        xAxes:[{
+                            display:true,
+                            //text: 'Distance to Target (ly)',
+                            color: '#fff',
+                            padding:{top:5,left:0,right:0, bottom:0,},
+                            scaleLabel:{
+                                display:true,
+                                position:'bottom',
+                                labelString: 'Distance to Target (ly)',
+                                fontSize:12,
+                                fontColor:"#fff",
+                            }
+                        }],
+                        yAxes:[{
+                            display:true,
+                            //text: 'Proper time (Crew time) (y)',
+                            color: '#fff',
+                            padding:{top:5,left:0,right:0, bottom:0,},
+                            scaleLabel:{
+                                display:true,
+                                position:'left',
+                                labelString: 'Proper Time (Crew time) (ly)',
+                                fontSize:12,
+                                fontColor:"#fff",
+                            }
+                        }],
+                    },
+                    tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data){
+                                    //const title = data.labels[tooltipItem.index];
+                                    const dataset = data.datasets[tooltipItem.datasetIndex];
+                                    const value = dataset.data[tooltipItem.index]; 
+                                    return ["Distance:"+Number(dataset.data[tooltipItem.index].x).toFixed(2)+" ly","Proper time:"+Number(dataset.data[tooltipItem.index].y).toFixed(2)+" y"];    
+                                }
+                            },
+                    },
+                    title: {
+                        display: true,
+                        align: 'center',
+                        position:'top',
+                        text: 'Trip passing-by '+destinations[0].position,
+                        color: '#fff',
+                        padding:8,
+                        fullSize: true,
+                        fontSize: 18,
+                        fontWeight:'bold',
+                        fontColor:'#fff',
+                    },
+                    legend:{
+                        display:false,
+                    },
+                    plugins: [{
+                        //beforeDraw: chart => {
+                            // var ctx = chart.ctx;
+                            // ctx.save();
+                            // const image = background;//new Image();
+                            // //image.src = destinations[cbDestination.selectedIndex].back;
+                            // ctx.drawImage(image, chart.chartArea.left, chart.chartArea.top, chart.chartArea.width, chart.chartArea.height);
+                            // ctx.restore();
+                        //}
+                    }],
+                },
+                
+            });
+
+            function selectDestination(){
+                if(cbDestination.value!=undefined){
+                    dist = Number.parseFloat(cbDestination.value);
+                    star.src = destinations[cbDestination.selectedIndex].target;
+                    background.src = destinations[cbDestination.selectedIndex].back;
+                    //document.getElementById("myChart").style.backgroundImage = "url(destinations[cbDestination.selectedIndex].back)";
+                    xyValues.length=0;
+                    velocity.length=0;
+                    earthT.length=0;
+                    crewT.length=0;
+                    var maxProper = getProperTime(dist);
+                    document.getElementById("distance").textContent = dist<10000?dist.toFixed(1):dist.toExponential(1);
+                    document.getElementById("properTime").textContent = maxProper<10000?maxProper.toFixed(1):maxProper.toExponential(1);
+                    var eTime = getEarthTime(maxProper);
+                    document.getElementById("earthTime").textContent = eTime<10000?eTime.toFixed(1):eTime.toExponential(1);
+                    var fuel = getFuel(getProperTime(dist));
+                    var strUnit = fuel < 1000 ? fuel.toFixed(2)+" kg/kg" : (fuel/1000).toFixed(2)+" tn/kg";
+                    document.getElementById("fuelValue").textContent=fuel < 1000 ? fuel.toFixed(2): (fuel/1000).toFixed(2);
+                    document.getElementById("fuelUnit").textContent=fuel < 1000 ? " kg/kg" :" tn/kg";
+                    for(var i=0;i<maxProper;i+=maxProper/distStep){
+                        xyValues.push({x:getDistance(i), y:i});
+                        velocity.push(getVelocity(i));
+                        crewT.push(i);
+                        earthT.push(getEarthTime(i));
+                    }
+                    xyValues.push({x:dist, y:maxProper});
+                    velocity.push(getVelocity(maxProper));
+                    crewT.push(maxProper);
+                    earthT.push(getEarthTime(maxProper));
+                    //round-trip
+                    var cT = maxProper;
+                    var eT = getEarthTime(maxProper);
+                    for(var i=xyValues.length-1; i>0; i--){
+                        xyValues.push({x:xyValues[i].x, y:xyValues[i].y});
+                        velocity.push(velocity[i]);
+                        cT += (xyValues[i].y-xyValues[i-1].y);
+                        eT += (earthT[i]-earthT[i-1]);
+                        crewT.push(cT);
+                        earthT.push(eT);
+                    }
+                    xyValues.push({x:0, y:0});
+                    velocity.push(0);
+                    crewT.push(maxProper*2);
+                    earthT.push(eT+(earthT[1]-earthT[0]));
+                    velocity.push(0);
+                    maxProper *= 2;
+                    chart.data.datasets[0].data.push(xyValues);
+                    chart.options.title.text = 'Round trip to '+destinations[cbDestination.selectedIndex].position,
+                    chart.update();
+                    curDistance=0;
+                    stepId=0;
+                    dir=1;
+                    render();
+                }
+            }
+
+            // function gravityChange(){
+            //     document.getElementById("gravity-label").innerHTML = this.value;
+            // }
+            document.getElementById("gravitySlider").oninput = function() {
+                document.getElementById("gravity-label").innerText = Number(this.value).toFixed(1)+" g";
+                acc = Number(this.value);
+                selectDestination();
+            }
+
+            function render(){
+                if(stepId>distStep*2-1)return;
+                canvas.width = chart.width;
+                
+                //ctx.clearRect(0, 0, canvas.width, canvas.height)
+                ctx.drawImage(background, 0, 0, background.width, background.height, 0, 0, canvas.width, canvas.height);
+                var start = chart.config.data.datasets[0]._meta[0].data[0]._model.x;
+                var end = chart.config.data.datasets[0]._meta[0].data[distStep]._model.x;
+                if(stepId==10){
+                    //console.log(canvas.width+"x"+canvas.height);
+                    angle = Math.atan2(starSize/2,(end-start));
+                    //console.log("size:"+(starSize/2)+" end:"+end+" start:"+start+" angle:"+(angle*180/Math.PI)); 
+                }
+                //draw earth
+                ctx.drawImage(earth, 0, 0, 60, 60, start-earthSize/2, canvas.height/2-earthSize/2,earthSize,earthSize);
+                //calculate current distance and traveler
+                curDistance = xyValues[stepId].x;
+                traveler = {x:curDistance, y:xyValues[stepId].y};
+                //set data to traveler (removing existing data)
+                chart.data.datasets[1].data.pop();
+                chart.data.datasets[1].data.push(traveler);
+                chart.update();
+                //draw line
+                ctx.strokeStyle = 'rgba(255,255,0,0.2)';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(start,canvas.height/2);
+                var plusminus = 1;
+                for(var i=1;i<=stepId;i++){
+                    //ctx.lineTo(start+curDistance*(end-start)/dist, canvas.height/2);
+                    plusminus = i<=distStep ? 1 : -1;
+                    if(xyValues[i].x==xyValues[i-1].x){
+                        //ctx.arcTo(start+xyValues[i].x*(end-start)/dist+starSize/5, canvas.height/2, start+xyValues[i].x*(end-start)/dist, canvas.height/2+(xyValues[i].x*(end-start)/dist)*Math.sin(angle*Math.PI/180), starSize/2);
+                        ctx.lineTo(start+xyValues[i].x*(end-start)/dist+starSize*Math.cos(60*Math.PI/180)/2, canvas.height/2-starSize*Math.sin(60*Math.PI/180)/2);
+                        ctx.lineTo(start+xyValues[i].x*(end-start)/dist+starSize*Math.cos(30*Math.PI/180)/2, canvas.height/2-starSize*Math.sin(30*Math.PI/180)/2);
+                        ctx.lineTo(start+xyValues[i].x*(end-start)/dist+starSize*Math.cos(0*Math.PI/180)/2, canvas.height/2-starSize*Math.sin(0*Math.PI/180)/2);
+                        ctx.lineTo(start+xyValues[i].x*(end-start)/dist+starSize*Math.cos(-30*Math.PI/180)/2, canvas.height/2-starSize*Math.sin(-30*Math.PI/180)/2);
+                        ctx.lineTo(start+xyValues[i].x*(end-start)/dist+starSize*Math.cos(-60*Math.PI/180)/2, canvas.height/2-starSize*Math.sin(-60*Math.PI/180)/2);
+                    }else{
+                        ctx.lineTo(start+xyValues[i].x*(end-start)/dist, canvas.height/2-plusminus*(xyValues[i].x*(end-start)/dist)*Math.sin(angle));
+                    }
+                }
+                ctx.stroke();
+                //draw sthe star
+                ctx.drawImage(star, 0, 0, 60, 60, end-starSize/2, canvas.height/2-starSize/2, starSize, starSize);
+                //draw ship
+                plusminus = stepId<=distStep ? 1 : -1;
+                if(stepId > distStep){
+                    //after reaching target, flip ship to head to the Earth
+                    ctx.save();
+                    ctx.setTransform(-1,0,0,1,shipSize,0);
+                    ctx.drawImage(ship, 0, 0, 60, 60, -(start+curDistance*(end-start)/dist-shipSize/2), canvas.height/2-shipSize/2-plusminus*(xyValues[stepId].x*(end-start)/dist)*Math.sin(angle), shipSize, shipSize);
+                    ctx.restore();
+                }else{
+                    ctx.drawImage(ship, 0, 0, 60, 60, start+curDistance*(end-start)/dist-shipSize/2, canvas.height/2-shipSize/2-plusminus*(xyValues[stepId].x*(end-start)/dist)*Math.sin(angle), shipSize, shipSize);
+                }
+                //write text
+                ctx.font = '12px Tahoma';
+                ctx.fillStyle = "white";
+                ctx.textAlign='left';
+                var eTime = earthT[stepId];//getEarthTime(xyValues[stepId].y);
+                var sTime = eTime<100?eTime.toFixed(2):eTime<1000?eTime.toFixed(1):eTime.toFixed(0);
+                ctx.fillText("Earth time: "+sTime+" y",10,canvas.height/2+30);
+                ctx.textAlign='center';
+                var tx = start+curDistance*(end-start)/dist<70?70:start+curDistance*(end-start)/dist;
+                var ty = canvas.height/2-shipSize/2;
+                try{
+                    var textVel = "Vel: "+velocity[stepId].toFixed(12)+" c";
+                    var textProper = "Crew time: "+crewT[stepId].toFixed(2)+" y";
+                    var maxText = Math.max(ctx.measureText(textVel).width, ctx.measureText(textProper).width);
+                    tx = tx+maxText/2 > canvas.width ? canvas.width - maxText/2 : tx;
+                    ctx.fillText(textVel, tx, ty-30);
+                    ctx.fillText(textProper, tx, ty-10);
+                }catch(err){
+                    console.log("StepId:"+stepId+" Error:"+err.message);
+                }
+                ctx.textAlign='left';
+                var fuel = 2*getFuel(getProperTime(dist));
+                var strFuel = fuel < 1000 ? fuel.toFixed(2)+" kg/kg payload" : (fuel/1000).toFixed(2)+" tn/kg payload";
+                ctx.fillText("Fuel: " + strFuel, 10, 14);
+
+                stepId += dir;
+                if(stepId < 0) stepId = 0;
+                //if we reached the end then stop animating
+                if(stepId>2*distStep-1){
+                    ship.style.transform = 'rotate(180deg)';
+                }else{
+                    requestId = requestAnimationFrame(render);
+                }
+            }
+
+            btnRunAgain.addEventListener("click", function(e){
+                if(requestId!=undefined)cancelAnimationFrame(requestId);
+                selectDestination();
+            });
+
+            window.onload = function(){
+                selectDestination();
+            }
+
+            document.getElementById("btnDescr").addEventListener("click", function(e){
+                document.getElementById("descr").style.display="block";
+                document.getElementById("fuelNeeded").style.display="none";
+            });
+            document.getElementById("btnFuel").addEventListener("click", function(e){
+                document.getElementById("descr").style.display="none";
+                document.getElementById("fuelNeeded").style.display="block";
+            });
+            
+        </script>
+    </body>
+</html>

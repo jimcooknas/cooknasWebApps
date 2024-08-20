@@ -1,0 +1,254 @@
+body {
+    margin: 0;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
+    background-color: black;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
+}
+
+.btn {
+    padding: 6px 20px;
+    background: rgba(255, 255, 255, 0.317);
+    color: #fff;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    margin: 0 5px 5px 0;
+    display: inline-block;
+    backdrop-filter: blur(10px);
+    transition: 0.2s;
+    border: 2px solid transparent;
+    border-radius:8px;
+}
+
+.btn.selected {
+    border: 2px solid #fff;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.417);
+}
+
+.btn.secondary {
+    background: rgba(255, 255, 255, 0.117);
+    color: #fff;
+}
+
+.btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.217);
+}
+
+.tools {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px;
+}
+
+.panel{
+    display:block;
+    position:absolute;
+    width:200px;
+    height:100%;
+    /* padding:10px; */
+    top:0px;
+    left:0px;
+    background-color: orange;
+    border-radius:0px 12px 12px 0px;
+}
+
+.center{
+    width:100%;
+    text-align: center;
+}
+
+/***************************************/
+/********* Custom Radio Button *********/
+/* Customize the label (the container) */
+.container {
+    display: block;
+    position: relative;
+    width:100%;
+    left: 50%;
+    translate: -50% 0px;
+    padding-left: 35px;
+    padding-top: 6px;
+    margin-bottom: 12px;
+    margin-left:50px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+  
+/* Hide the browser's default radio button */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+  
+/* Create a custom radio button */
+.checkmark {
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+  
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+  
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+  
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+  
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+  
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+    top: 5px;
+    left: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+/********** end of Radio button *****************/
+
+/********** Range Input Styles **********/
+.sliderContainer{
+    width:80%;
+    margin:auto;
+}
+.label{
+    padding-top: 10px;
+    padding-bottom: 2px;
+    font-size: 14px;
+    font-weight: normal;
+}
+.label-val{
+    display: table-cell;text-align: right;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    padding-right:10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.slider{
+    width: 100%;
+    margin-right: 10px;
+    cursor:pointer;
+}
+/*Range Reset*/
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    /*width: 15rem;*/
+}
+/* Removes default focus */
+input[type="range"]:focus {
+    outline: none;
+}
+/***** Chrome, Safari, Opera and Edge Chromium styles *****/
+/* slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+    background-color: #055a5f;
+    border-radius: 0.5rem;
+    height: 0.5rem;  
+}
+/* slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    margin-top: -4px; /* Centers thumb on the track */
+    border-radius: 4px;
+    /*custom styles*/
+    background-color: #5ca59b;
+    height: 1rem;
+    width: 0.8rem;
+}
+input[type="range"]:focus::-webkit-slider-thumb {   
+    border: 1px solid #053a5f;
+    outline: 3px solid #053a5f;
+    outline-offset: 0.125rem; 
+}
+/******** Firefox styles ********/
+/* slider track */
+input[type="range"]::-moz-range-track {
+    background-color: #055a5f;
+    border-radius: 0.5rem;
+    height: 0.5rem;
+}
+/* slider thumb */
+input[type="range"]::-moz-range-thumb {
+    border: none; /*Removes extra border that FF applies*/
+    border-radius: 4px; /*Removes default border-radius that FF applies*/
+    /*custom styles*/
+    background-color: #5ca59b;
+    height: 1rem;
+    width: 0.8rem;
+}
+input[type="range"]:focus::-moz-range-thumb {
+    border: 1px solid #053a5f;
+    outline: 3px solid #053a5f;
+    outline-offset: 0.125rem; 
+}
+/********** and of Range Input Styles **********/
+
+#traceCircle{
+    border-radius: 50%;
+    padding:0px;
+    width:20px;
+    height:20px;
+}
+
+.circleContainer{
+    margin:auto;
+    margin-top:4px;
+    text-align: center;
+    align-content: center;
+    width:200px;
+    height:200px;
+    background-color: chocolate;
+}
+
+.spanCircle{
+    width:100%;
+    font-size:14px;
+    margin-top:40px;
+}
