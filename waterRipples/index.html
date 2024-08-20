@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>jQuery WebGL Ripples</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+        <script src="http://www.cooknas.com/waterRipples/dist/jquery.ripples.js"></script>
+        <style>
+            * { margin: 0; padding: 0; }
+            html {
+                height: 100%;
+            }
+
+            body {
+                color: #1c1b1b;
+                font-size: 16px;
+                font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+                background-image: url(colorful-pebbles2.jpg);
+                background-size: cover;
+                background-position: 50% 0;
+                height: 100%;
+                text-align: center;
+                cursor:pointer;
+            }
+
+            body:before {
+                content: '';
+                display: inline-block;
+                vertical-align: middle;
+                height: 100%;
+            }
+
+            main {
+                display: inline-block;
+                vertical-align: middle;
+                background: url(colorful-pebbles.jpg);
+                padding:  100px;
+                max-width: 500px;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+                cursor:default;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+            h2 {
+                font-size: 18px;
+                margin-top: 6px;
+            }
+            p {
+                text-align: left;
+                margin-top: 20px;
+            }
+            a {
+                color: #ff6800;
+            }
+            pre {
+                text-align: left;
+                margin-top: 20px;
+            }
+
+            .error {
+                display: none;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                background: #000;
+                color: #f00;
+                padding: 5px;
+                max-width: 50%;
+            }
+
+            button {
+                font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+                padding: 0 0.8em;
+                line-height: 2em;
+                border: none;
+                background: #666;
+                color: #fff;
+                text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+                border-radius: 4px;
+                cursor: pointer;
+                margin-bottom: 0.5em;
+                box-shadow: 0 2px 3px rgba(0,0,0,0.5);
+            }
+
+            button:hover {
+                background: #888;
+            }
+
+            code { font-size: 0.8em; display: inline; }
+
+            .disable {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+            }
+
+            .code-string { color:#ec7600 }
+            .code-cbracket { font-weight:bold }
+            .code-number { color:#ffcd22 }
+
+            .panel{
+                width:12vw;
+                height: 90%;
+                min-width: 142px;
+                position: absolute;
+                border-radius: 0px 8px 8px 0px;
+                background-color: #ffffff;
+                padding:10px;
+                left: 0px;
+                top: 5%;
+                transition: transform 0.5s;
+            }
+            .panelHandle{
+                width:30px;
+                height: 30px;
+                position: absolute;
+                border-radius: 0px 4px 4px 0px;
+                background-color: #ffffff;
+                left: 99%;
+                top: 5px;
+                cursor: pointer;
+            }
+            .label{
+                padding-top: 10px;
+                padding-bottom: 2px;
+                font-size: 12px;
+            }
+            .label-val{
+                padding-top: 5px;
+                padding-bottom: 2px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .btn{
+                border-radius: 6px;
+                min-width: 30px;
+                cursor: pointer;
+            }
+            .btn:hover{
+                background-color: #055a5f;
+                color: yellow;
+                font-weight: bold;
+            }
+
+            .slider{
+                width: 100%;
+                cursor:pointer;
+            }
+
+            /********** Range Input Styles **********/
+            /*Range Reset*/
+            input[type="range"] {
+                -webkit-appearance: none;
+                appearance: none;
+                background: transparent;
+                cursor: pointer;
+                /*width: 15rem;*/
+            }
+            /* Removes default focus */
+            input[type="range"]:focus {
+                outline: none;
+            }
+            /***** Chrome, Safari, Opera and Edge Chromium styles *****/
+            /* slider track */
+            input[type="range"]::-webkit-slider-runnable-track {
+                background-color: #055a5f;
+                border-radius: 0.5rem;
+                height: 0.5rem;  
+            }
+            /* slider thumb */
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none; /* Override default look */
+                appearance: none;
+                margin-top: -4px; /* Centers thumb on the track */
+                border-radius: 4px;
+                /*custom styles*/
+                background-color: #5ca59b;
+                height: 1rem;
+                width: 0.8rem;
+            }
+            input[type="range"]:focus::-webkit-slider-thumb {   
+                border: 1px solid #053a5f;
+                outline: 3px solid #053a5f;
+                outline-offset: 0.125rem; 
+            }
+            /******** Firefox styles ********/
+            /* slider track */
+            input[type="range"]::-moz-range-track {
+                background-color: #055a5f;
+                border-radius: 0.5rem;
+                height: 0.5rem;
+            }
+            /* slider thumb */
+            input[type="range"]::-moz-range-thumb {
+                border: none; /*Removes extra border that FF applies*/
+                border-radius: 4px; /*Removes default border-radius that FF applies*/
+                /*custom styles*/
+                background-color: #5ca59b;
+                height: 1rem;
+                width: 0.8rem;
+            }
+            input[type="range"]:focus::-moz-range-thumb {
+                border: 1px solid #053a5f;
+                outline: 3px solid #053a5f;
+                outline-offset: 0.125rem; 
+            }
+
+            /* CheckBox */
+            /* Customize the label (the container) */
+            .container {
+                display: block;
+                position: relative;
+                padding-left: 25px;
+                margin-bottom: 12px;
+                cursor: pointer;
+                font-size: 13px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            /* Hide the browser's default checkbox */
+            .container input {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+                height: 0;
+                width: 0;
+            }
+
+            /* Create a custom checkbox */
+            .checkmark {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 20px;
+                width: 20px;
+                background-color: #eee;
+            }
+
+            /* On mouse-over, add a grey background color */
+            .container:hover input ~ .checkmark {
+                background-color: #ccc;
+            }
+
+            /* When the checkbox is checked, add a blue background */
+            .container input:checked ~ .checkmark {
+                background-color: #2196F3;
+            }
+
+            /* Create the checkmark/indicator (hidden when not checked) */
+            .checkmark:after {
+                content: "";
+                position: absolute;
+                display: none;
+            }
+
+            /* Show the checkmark when checked */
+            .container input:checked ~ .checkmark:after {
+                display: block;
+            }
+
+            /* Style the checkmark/indicator */
+            .container .checkmark:after {
+                left: 7px;
+                top: 2px;
+                width: 5px;
+                height: 10px;
+                border: solid white;
+                border-width: 0 3px 3px 0;
+                -webkit-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                transform: rotate(45deg);
+            }
+            /* */
+            .toggleButton{
+                position: absolute;
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+                border-radius: 6px;
+                min-width: 60px;
+                cursor: pointer;
+            }
+            .toggleButton:hover{
+                background-color: #055a5f;
+                color: white;
+                font-weight: bold;
+            }
+        </style>
+
+    </head>
+    <body>
+        <main style="width:300px;height:300px">
+            <!-- <header>
+                <h1>jQuery Ripples</h1>
+                <h2>A simple WebGL-based ripple effect.</h2>
+            </header>
+            <p>Background images are often boring. Use this effect to make your static CSS background images more interactive!</p>
+            <p>It's as easy as:</p>
+
+            <pre><code>
+                $(<span class="code-string">'body'</span>).ripples(<span class="code-cbracket">{</span>
+                    resolution: <span class="code-number">512</span>,
+                    dropRadius: <span class="code-number">20</span>,
+                    perturbance: <span class="code-number">0.04</span>,
+                <span class="code-cbracket">}</span>);
+            </code></pre>
+
+            <p>You can add drops programmatically by doing <code>$(<span class="code-string">'body'</span>).ripples(<span class="code-string">"drop"</span>, x, y, radius, strength)</code></p>
+
+            <p>And you can change its state:<br>
+            <button class="js-ripples-pause" type="button">
+                <code>$(<span class="code-string">'body'</span>).ripples(<span class="code-string">"pause"</span>)</code>
+            </button>
+
+            <button class="js-ripples-play" type="button">
+                <code>$(<span class="code-string">'body'</span>).ripples(<span class="code-string">"play"</span>)</code>
+            </button>
+            </p>span
+
+            <p>Download or fork this effect at <a href="//github.com/sirxemic/jquery.ripples/">Github</a>.</p>-->
+        </main>
+        <!--
+        <button class="js-ripples-disable disable">
+            Click here if your PC can't handle this effect very well
+            (<code>$(<span class="code-string">'body'</span>).ripples(<span class="code-string">"destroy"</span>)</code>)
+        </button> -->
+
+        <div id="panel" class="panel">
+            <div id="particlesPanel" style="width:100%;">
+                <p style="font-size:18px;font-weight: bold;text-align: center;">WebGL Ripples</p>
+                <label class="label">Background Image</label><br>
+                <div style="width:100%;display:table;left:0px;vertical-align: middle;">
+                    <select id="imageFile" style="display: table-cell;width:120px;font-size:12px;font-weight:normal;text-align:left;border-radius:3px;">
+                        <option>colorful-pebbles</option>
+                        <option>grayPebbles</option>
+                        <option>pebble-color</option>
+                        <option>white-pebbles</option>
+                    </select>
+                    <!--<input type="text" id="imageFile" style="display: table-cell;width:120px;font-size:12px;font-weight:normal;text-align:left;border-radius:3px;" value="colorful-pebbles.jpg">-->
+                    <input type="button" id="btnSet" class="btn" style="width:30px;font-size:12px;display:table-cell;float:right;margin-left:3px;" value="Set" >
+                </div>
+                <div style="width:100%;display:table;clear:both;">
+                    <label class="label" style="display: table-cell;">Backround Drops Radius</label>
+                    <label id="backRadiusLabel" class="label-val" style="display: table-cell;text-align: right;">20</label>
+                </div>
+                <input type="range" id="backRadiusSlider" min="15" max="50" value="20" class="slider">
+                <br>
+                <div style="width:100%;display:table;clear:both;">
+                <label class="label" style="display: table-cell;">Color Image Drops Radius</label>
+                <label id="mainRadiusLabel" class="label-val" style="display: table-cell;text-align: right;">20</label>
+                </div>
+                <input type="range" id="mainRadiusSlider" min="15" max="50" value="20" class="slider" > 
+                <br>
+                <br>
+                <label class="container">Allow Mouse Drops
+                    <input type="checkbox" id="checkMouseDrops" class="checkMouseDrops"><!--checked="checked"-->
+                    <span class="checkmark"></span>
+                </label>
+                <!-- <div style="width:100%;display:table;clear:both;">
+                    <label class="label" style="display: table-cell;">Collision Loss (%)</label>
+                    <label id="collisionLossValue" class="label-val" style="display: table-cell;text-align: right;">0.0</label>
+                </div>
+                <input type="range" id="collisionLoss" min="0" max="50" value="0" class="slider" onchange="collisionLossSlider()">
+                <br><br> -->
+                <br>
+                <div style="width:100%;left:10px;right:10px">
+                    <input type="button" id="btnStartStop" class="btn" style="width:100%;height:35px;" value="Stop">
+                </div>
+                <br>
+                <!--<div style="width:100%;display:table;clear:both;">
+                    <label class="label" style="display: table-cell;">Tot.Energy:</label>
+                    <label id="totalEnergy" class="label-val" style="display: table-cell;text-align: right;">0.0</label>
+                </div>
+                <br>
+                <div style="width:100%;display:table;clear:both;">
+                    <label class="label" style="display: table-cell;">Energy Loss:</label>
+                    <label id="energyLoss" class="label-val" style="display: table-cell;text-align: right;">0.0</label>
+                </div>
+                <br>
+                <div style="width:100%;display:table;clear:both;">
+                    <label class="label" style="display: table-cell;">Collisions:</label>
+                    <label id="numOfCollisions" class="label-val" style="display: table-cell;text-align: right;">0</label>
+                </div>-->
+            </div>
+            
+            <div id="panelHandle" class="panelHandle">
+                <i id="eyeSymbol" class="fa fa-eye-slash" style="width:100%;text-align: center;margin-top: 5px;"></i>
+            </div>
+        </div>
+
+        <div class="error">Error</div>
+
+        
+        <script>
+        var ripplesRunning = true;
+        var panelHidden = false;
+        var timer;
+        var backSlider = document.getElementById("backRadiusSlider").value;
+        var mainSlider = document.getElementById("mainRadiusSlider").value;
+
+        $(document).ready(function() {
+            try {
+                $('body').ripples({
+                    resolution: 512,
+                    dropRadius: 20, //px
+                    perturbance: 0.04,
+                });
+                $('main').ripples({
+                    resolution: 128,
+                    dropRadius: 10, //px
+                    perturbance: 0.04,
+                    interactive: false,
+                });
+            }
+            catch (e) {
+                $('.error').show().text(e);
+            }
+
+            $('.js-ripples-disable').on('click', function() {
+                $('body, main').ripples('destroy');
+                $(this).hide();
+            });
+
+            $('.js-ripples-play').on('click', function() {
+                $('body, main').ripples('play');
+            });
+
+            $('.js-ripples-pause').on('click', function() {
+                $('body, main').ripples('pause');
+            });
+
+            $('.btn').on('click', function(e){
+                if(e.target.id == "btnStartStop"){
+                    ripplesRunning = !ripplesRunning;
+                    if(ripplesRunning){
+                        e.target.value = "Stop";
+                        $('body, main').ripples('play');
+                        timer = setInterval(function() {
+                            var $el = $('main');
+                            var x = Math.random() * $el.outerWidth();
+                            var y = Math.random() * $el.outerHeight();
+                            var dropRadius = 20;
+                            var strength = 0.04 + Math.random() * 0.04;
+
+                            $el.ripples('drop', x, y, dropRadius, strength);
+                        }, 1000);
+                    }else{
+                        e.target.value = "Start";
+                        $('body, main').ripples('pause');
+                        clearInterval(timer);
+                    }
+                }
+                if(e.target.id == "btnSet"){
+                    var file = document.getElementById("imageFile").value;
+                    var file1 = './'+file+".jpg";
+                    var file2 = './'+file+"2.jpg";
+                    $('main').ripples('set', 'imageUrl', './'+file1);
+                    $('body').ripples('set', 'imageUrl', './'+file2);
+                }
+            });
+
+            $('.panelHandle').on('click', function() {
+                if(panelHidden){
+                    document.getElementById("panel").style.transform = "translateX(0)";
+                    document.getElementById("eyeSymbol").classList.remove("fa-eye");
+                    document.getElementById("eyeSymbol").classList.add("fa-eye-slash");
+                }else{
+                    document.getElementById("panel").style.transform = "translateX(-100%)";
+                    document.getElementById("eyeSymbol").classList.remove("fa-eye-slash");
+                    document.getElementById("eyeSymbol").classList.add("fa-eye");
+                }
+                panelHidden = !panelHidden;
+            });
+
+            $('.slider').on('click', function() {
+                backSlider = document.getElementById("backRadiusSlider").value;
+                document.getElementById("backRadiusLabel").textContent = backSlider;
+                mainSlider = document.getElementById("mainRadiusSlider").value;
+                document.getElementById("mainRadiusLabel").textContent = mainSlider;
+                $('body').ripples('set', 'dropRadius', backSlider);
+                $('main').ripples('set', 'dropRadius', mainSlider);
+            });
+
+            $('#checkMouseDrops').change( function() {
+                var val = this.checked;
+                console.log(val);
+                if(val){
+                    $('main').css('cursor', 'pointer');
+                    $('main').ripples('set', 'interactive', val);
+                    clearInterval(timer);
+                }else{
+                    $('main').css('cursor', 'default');
+                    $('main').ripples('set', 'interactive', val);
+                    timer = setInterval(function() {
+                            var $el = $('main');
+                            var x = Math.random() * $el.outerWidth();
+                            var y = Math.random() * $el.outerHeight();
+                            var dropRadius = mainSlider;
+                            var strength = 0.04 + Math.random() * 0.04;
+
+                            $el.ripples('drop', x, y, dropRadius, strength);
+                        }, 1000);
+                }
+            });
+
+            // Automatic drops
+            timer = setInterval(function() {
+                var $el = $('main');
+                var x = Math.random() * $el.outerWidth();
+                var y = Math.random() * $el.outerHeight();
+                var dropRadius = mainSlider;
+                var strength = 0.04 + Math.random() * 0.04;
+
+                $el.ripples('drop', x, y, dropRadius, strength);
+            }, 1000);
+        });
+        </script>
+    </body>
+</html>
