@@ -1,0 +1,177 @@
+body {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: center;
+    background: url("./cards/velvet-bg.jpg");
+}
+
+.icon{
+    height:50px;
+    width:50px;
+    padding: 0px 0px;
+}
+
+h2{
+    padding: 2px;
+    margin:2px;
+}
+
+#dealer-cards img {
+    height: 140px;
+    width: 100px;
+    margin: 4px;
+}
+
+#your-cards img {
+    height: 140px;
+    width: 100px;
+    margin: 4px;
+}
+
+#card-deck img {
+    height: 140px;
+    width: 100px;
+    float:center;
+    position: absolute;
+}
+
+#hit,#stay,#new {
+    width: 140px;
+    height: 50px;
+    font-size: 20px;
+    border-radius:8px;
+    margin:4px;
+}
+
+#hit:hover:enabled, #stay:hover:enabled, #new:hover:enabled{
+    background-color: darkslateblue;
+    color:white;
+}
+
+.score{
+    display:block;
+    font-size:68px;
+    font-weight: 600;
+    color:rgb(117, 2, 2);
+    padding: 0px;
+    height: 80px;
+}
+
+#card-deck{
+    display:flex;
+    text-align: center;
+    min-width:100px;
+    min-height:300px;
+}
+
+.scores{
+    width:100px;
+}
+.money{
+    width:245px;
+}
+.card{
+    width:750px;
+    max-height: 120px;
+}    
+.deck{
+    width:18%;
+    height:100%;
+    position:relative;
+    /* background-color: coral; */
+}
+
+tr {
+    max-height:160px;
+}
+
+
+tr.spaceUnder{
+   min-height:175px; 
+}
+
+.money{
+    text-align: center;
+    align-content: center;
+}
+
+td.money img{
+    width:80px;
+    height:80px;
+}
+tr.bet-row{
+    height:100px;
+    /* background-color: rgba(247, 139, 8, 0.2); */
+}
+
+#bet{
+    font-size:48px;
+    font-weight: bold;
+    color:blue;
+}
+
+.your-money{
+    cursor: pointer;
+}
+
+.dealer-money1{
+    position:absolute;
+    left:20px;
+    translate: 100px 0px;
+}
+.dealer-money2{
+    position:absolute;
+    left:58px;
+    translate: 100px 0px;
+}
+.dealer-money3{
+    position:absolute;
+    left:96px;
+    translate: 100px 0px;
+}
+
+#dealers-total-money{
+    font-size:48px;
+    font-weight: 600;
+    position:absolute;
+    top:20px;
+    left:140px;
+    z-index: 10;
+}
+#yours-total-money{
+    font-size:48px;
+    font-weight: 600;
+}
+
+.message {
+    display:none;
+    position: absolute;
+    width:100vw;
+    height: 180px;
+    left:0px;
+    top:50%;
+    translate: 0% -70%;
+    background-color: rgba(254, 0, 0, 0.8);
+    text-align: center;
+    align-content: center;
+    z-index: 15;
+}
+#results{
+    display:inline-block;
+    font-size:72px;
+    font-weight: 800;
+}
+
+.moving-card{
+    height: 140px;
+    width: 100px;
+    position: absolute;
+    display:block;
+    z-index: 2;
+    /* animation-name: moveCard;
+    animation-duration: 1s;
+    animation-iteration-count: 1; */
+}
+
+/* @keyframes moveCard{
+    0%
+} */

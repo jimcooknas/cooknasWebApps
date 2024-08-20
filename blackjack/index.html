@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Black Jack</title>
+        <link rel="stylesheet" href="blackjack.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="blackjack.js"></script>
+    </head>
+
+    <body>
+        <table>
+            <tr class="spaceUnder">
+                <td class="scores">
+                    <img src="./cards/dealer.png" class="icon">
+                    <h2>Dealer:<br><span id="dealer-sum" class="score" style="width:80px;"></span></h2>
+                </td>
+                <td class="money">
+                    <div>
+                        <span id="dealers-total-money">10000</span>
+                        <img src="./cards/chip100.png" class="dealer-money1">
+                        <img src="./cards/chip500.png" class="dealer-money2">
+                        <img src="./cards/chip1000.png" class="dealer-money3">
+                        <br>
+                    </div>
+                </td>
+                <td class="card">
+                    <div id="dealer-cards">
+                        <img id="hidden" src="./cards/BACK.png">
+                    </div>
+                </td>
+                <td rowspan="3" class="deck">
+                    <div id="card-deck"></div>
+                    <button id="hit">Hit</button>
+                    <button id="stay">Stay</button>
+                    <button id="new">New Game</button>
+                </td>
+            </tr>
+            <tr class="bet-row">
+                <td><h2>Bet:</h2></td>
+                <td id="bet">0</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="./cards/player.png" class="icon">
+                    <h2>You:<br><span id="your-sum" class="score"></span></h2>
+                </td>
+                <td class="money">
+                    <img src="./cards/chip100.png" id="chip100" class="your-money">
+                    <img src="./cards/chip500.png" id="chip500" class="your-money">
+                    <img src="./cards/chip1000.png" id="chip1000" class="your-money">
+                    <br>
+                    <span id="yours-total-money">5000</span>
+                </td>
+                <td>
+                    <div id="your-cards"></div>
+                </td>
+            </tr>
+        </table>    
+        <!-- <button id="hit">Hit</button>
+        <button id="stay">Stay</button>
+        <button id="new">New Game</button> -->
+        <div class="message">
+            <span id="results"></span>
+        </div>    
+    </body>
+</html>
